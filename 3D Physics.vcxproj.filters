@@ -96,9 +96,6 @@
     <ClInclude Include="Imgui\imgui_internal.h">
       <Filter>Resources\Imgui</Filter>
     </ClInclude>
-    <ClInclude Include="Imgui\imgui_user.h">
-      <Filter>Resources\Imgui</Filter>
-    </ClInclude>
     <ClInclude Include="Imgui\stb_rect_pack.h">
       <Filter>Resources\Imgui</Filter>
     </ClInclude>
@@ -171,9 +168,6 @@
       <Filter>Resources\Imgui</Filter>
     </ClCompile>
     <ClCompile Include="Imgui\imgui_impl_sdl_gl3.cpp">
-      <Filter>Resources\Imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="Imgui\imgui_user2.cpp">
       <Filter>Resources\Imgui</Filter>
     </ClCompile>
   </ItemGroup>
