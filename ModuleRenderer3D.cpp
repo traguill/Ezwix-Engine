@@ -1,12 +1,18 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleRenderer3D.h"
+#include "Glew\include\glew.h"
 #include "SDL\include\SDL_opengl.h"
 #include <gl/GL.h>
 #include <gl/GLU.h>
 
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
+#pragma comment (lib, "Glew/libx86/glew32.lib") 
+
+#include "Imgui\imgui.h"
+#include "Imgui\imgui_impl_sdl_gl3.h"
+
 
 ModuleRenderer3D::ModuleRenderer3D(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -28,6 +34,13 @@ bool ModuleRenderer3D::Init()
 	{
 		LOG("OpenGL context could not be created! SDL_Error: %s\n", SDL_GetError());
 		ret = false;
+	}
+
+	GLenum gl_enum = glewInit();
+
+	if (GLEW_OK != gl_enum)
+	{
+		LOG("Glew failed");
 	}
 	
 	if(ret == true)
@@ -99,6 +112,8 @@ bool ModuleRenderer3D::Init()
 	// Projection matrix for
 	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT, 20.0f);
 
+	ImGui_ImplSdlGL3_Init(App->window->window);
+
 	return ret;
 }
 
@@ -123,6 +138,7 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 // PostUpdate present buffer to screen
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
+	ImGui::Render();
 	SDL_GL_SwapWindow(App->window->window);
 	return UPDATE_CONTINUE;
 }
@@ -131,7 +147,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 bool ModuleRenderer3D::CleanUp()
 {
 	LOG("Destroying 3D Renderer");
-
+	ImGui_ImplSdlGL3_Shutdown();
 	SDL_GL_DeleteContext(context);
 
 	return true;

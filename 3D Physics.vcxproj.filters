@@ -22,6 +22,12 @@
     <Filter Include="Sources\Snippets">
       <UniqueIdentifier>{9854e5a4-924a-487e-b1ca-44ff255ea020}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{e38c5204-abc5-4c81-b487-730d5b20b914}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources\Imgui">
+      <UniqueIdentifier>{d56418a9-c7aa-4cf6-a2f7-9013c999c61d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -78,6 +84,30 @@
     <ClInclude Include="PhysVehicle3D.h">
       <Filter>Sources\Helpers</Filter>
     </ClInclude>
+    <ClInclude Include="Imgui\imconfig.h">
+      <Filter>Resources\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Imgui\imgui.h">
+      <Filter>Resources\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Imgui\imgui_impl_sdl_gl3.h">
+      <Filter>Resources\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Imgui\imgui_internal.h">
+      <Filter>Resources\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Imgui\imgui_user.h">
+      <Filter>Resources\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Imgui\stb_rect_pack.h">
+      <Filter>Resources\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Imgui\stb_textedit.h">
+      <Filter>Resources\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Imgui\stb_truetype.h">
+      <Filter>Resources\Imgui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -130,6 +160,21 @@
     </ClCompile>
     <ClCompile Include="PhysVehicle3D.cpp">
       <Filter>Sources\Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="Imgui\imgui.cpp">
+      <Filter>Resources\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Imgui\imgui_demo.cpp">
+      <Filter>Resources\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Imgui\imgui_draw.cpp">
+      <Filter>Resources\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Imgui\imgui_impl_sdl_gl3.cpp">
+      <Filter>Resources\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Imgui\imgui_user2.cpp">
+      <Filter>Resources\Imgui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
