@@ -6,6 +6,9 @@
 
 #include "Imgui\imgui.h"
 
+#include "MathGeoLib\include\MathGeoLib.h"
+#include "MathGeoLib\include\MathBuildConfig.h"
+
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 }
@@ -19,7 +22,10 @@ bool ModuleSceneIntro::Start()
 	LOG("Loading Intro assets");
 	bool ret = true;
 
+	math::float2 math_float(2.1f, -3.2f);
 	
+	math_float.y = math::Abs(math_float.y);
+
 
 	return ret;
 }
