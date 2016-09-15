@@ -23,7 +23,7 @@ PhysVehicle3D::~PhysVehicle3D()
 // ----------------------------------------------------------------------------
 void PhysVehicle3D::Render()
 {
-	Cylinder wheel;
+	Cylinder_P wheel;
 
 	wheel.color = color;
 
@@ -38,7 +38,7 @@ void PhysVehicle3D::Render()
 		wheel.Render();
 	}
 
-	Cube chassis(info.chassis_size.x, info.chassis_size.y, info.chassis_size.z);
+	Cube_P chassis(info.chassis_size.x, info.chassis_size.y, info.chassis_size.z);
 	vehicle->getChassisWorldTransform().getOpenGLMatrix(&chassis.transform);
 	chassis.color = color;
 	btQuaternion q = vehicle->getChassisWorldTransform().getRotation();
@@ -51,7 +51,7 @@ void PhysVehicle3D::Render()
 
 	chassis.Render();
 
-	Cube nose(info.nose_size.x, info.nose_size.y, info.nose_size.z);
+	Cube_P nose(info.nose_size.x, info.nose_size.y, info.nose_size.z);
 	vehicle->getChassisWorldTransform().getOpenGLMatrix(&nose.transform);
 	nose.color = color;
 	btQuaternion q_n = vehicle->getChassisWorldTransform().getRotation();
