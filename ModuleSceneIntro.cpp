@@ -9,6 +9,8 @@
 #include "MathGeoLib\include\MathGeoLib.h"
 #include "MathGeoLib\include\MathBuildConfig.h"
 
+#include "Random.h"
+
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 }
@@ -22,10 +24,14 @@ bool ModuleSceneIntro::Start()
 	LOG("Loading Intro assets");
 	bool ret = true;
 
-	math::float2 math_float(2.1f, -3.2f);
-	
-	math_float.y = math::Abs(math_float.y);
-
+	Random rnd;
+	int ran[30];
+	for (int i = 0; i < 30; i++)
+	{
+		
+		ran[i] = rnd.RandomInt(3, 5);
+	}
+	int a = 0;
 
 	return ret;
 }
