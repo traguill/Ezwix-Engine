@@ -11,12 +11,12 @@ ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(ap
 {
 	CalculateViewMatrix();
 
-	X = vec3(1.0f, 0.0f, 0.0f);
-	Y = vec3(0.0f, 1.0f, 0.0f);
-	Z = vec3(0.0f, 0.0f, 1.0f);
+	X = vec(1.0f, 0.0f, 0.0f);
+	Y = vec(0.0f, 1.0f, 0.0f);
+	Z = vec(0.0f, 0.0f, 1.0f);
 
-	Position = vec3(0.0f, 0.0f, 5.0f);
-	Reference = vec3(0.0f, 0.0f, 0.0f);
+	Position = vec(0.0f, 0.0f, 5.0f);
+	Reference = vec(0.0f, 0.0f, 0.0f);
 }
 
 ModuleCamera3D::~ModuleCamera3D()
@@ -44,7 +44,7 @@ update_status ModuleCamera3D::Update(float dt)
 {
 	// Debug camera mode: Disabled for the final game (but better keep the code)
 
-	/*vec3 newPos(0,0,0);
+	/*vec newPos(0,0,0);
 	float speed = 3.0f * dt;
 	if(App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT)
 		speed = 8.0f * dt;
@@ -77,9 +77,9 @@ update_status ModuleCamera3D::Update(float dt)
 		{
 			float DeltaX = (float)dx * Sensitivity;
 
-			X = rotate(X, DeltaX, vec3(0.0f, 1.0f, 0.0f));
-			Y = rotate(Y, DeltaX, vec3(0.0f, 1.0f, 0.0f));
-			Z = rotate(Z, DeltaX, vec3(0.0f, 1.0f, 0.0f));
+			X = rotate(X, DeltaX, vec(0.0f, 1.0f, 0.0f));
+			Y = rotate(Y, DeltaX, vec(0.0f, 1.0f, 0.0f));
+			Z = rotate(Z, DeltaX, vec(0.0f, 1.0f, 0.0f));
 		}
 
 		if(dy != 0)
@@ -91,7 +91,7 @@ update_status ModuleCamera3D::Update(float dt)
 
 			if(Y.y < 0.0f)
 			{
-				Z = vec3(0.0f, Z.y > 0.0f ? 1.0f : -1.0f, 0.0f);
+				Z = vec(0.0f, Z.y > 0.0f ? 1.0f : -1.0f, 0.0f);
 				Y = cross(Z, X);
 			}
 		}
@@ -106,14 +106,16 @@ update_status ModuleCamera3D::Update(float dt)
 }
 
 // -----------------------------------------------------------------
-void ModuleCamera3D::Look(const vec3 &Position, const vec3 &Reference, bool RotateAroundReference)
+void ModuleCamera3D::Look(const vec &Position, const vec &Reference, bool RotateAroundReference)
 {
 	this->Position = Position;
 	this->Reference = Reference;
 
-	Z = normalize(Position - Reference);
-	X = normalize(cross(vec3(0.0f, 1.0f, 0.0f), Z));
-	Y = cross(Z, X);
+	Z = (Position - Reference);
+	Z.Normalize();
+	X = vec(0.0f, 1.0f, 0.0f).Cross(Z);
+	X.Normalize();
+	Y = Z.Cross(X);
 
 	if(!RotateAroundReference)
 	{
@@ -125,20 +127,22 @@ void ModuleCamera3D::Look(const vec3 &Position, const vec3 &Reference, bool Rota
 }
 
 // -----------------------------------------------------------------
-void ModuleCamera3D::LookAt( const vec3 &Spot)
+void ModuleCamera3D::LookAt( const vec &Spot)
 {
 	Reference = Spot;
 
-	Z = normalize(Position - Reference);
-	X = normalize(cross(vec3(0.0f, 1.0f, 0.0f), Z));
-	Y = cross(Z, X);
+	Z = (Position - Reference);
+	Z.Normalize();
+	X = vec(0.0f, 1.0f, 0.0f).Cross(Z);
+	X.Normalize();
+	Y = Z.Cross(X);
 
 	CalculateViewMatrix();
 }
 
 
 // -----------------------------------------------------------------
-void ModuleCamera3D::Move(const vec3 &Movement)
+void ModuleCamera3D::Move(const vec &Movement)
 {
 	Position += Movement;
 	Reference += Movement;
@@ -148,7 +152,7 @@ void ModuleCamera3D::Move(const vec3 &Movement)
 // ------------------------------------------------------------------
 void ModuleCamera3D::Move(Direction d, float speed)
 {
-	vec3 newPos(0, 0, 0);
+	vec newPos(0, 0, 0);
 	switch (d)
 	{
 	case GO_RIGHT:
@@ -176,14 +180,14 @@ void ModuleCamera3D::Move(Direction d, float speed)
 // -----------------------------------------------------------------
 float* ModuleCamera3D::GetViewMatrix()
 {
-	return &ViewMatrix;
+	return *ViewMatrix.v;
 }
 
 // -----------------------------------------------------------------
 void ModuleCamera3D::CalculateViewMatrix()
 {
-	ViewMatrix = mat4x4(X.x, Y.x, Z.x, 0.0f, X.y, Y.y, Z.y, 0.0f, X.z, Y.z, Z.z, 0.0f, -dot(X, Position), -dot(Y, Position), -dot(Z, Position), 1.0f);
-	ViewMatrixInverse = inverse(ViewMatrix);
+	ViewMatrix = float4x4(X.x, Y.x, Z.x, 0.0f, X.y, Y.y, Z.y, 0.0f, X.z, Y.z, Z.z, 0.0f, -(X.Dot( Position)), -(Y.Dot(Position)), -(Z.Dot(Position)), 1.0f);
+	ViewMatrixInverse = ViewMatrix.Inverted();
 }
 
 void ModuleCamera3D::Rotate(float x, float y)
@@ -198,39 +202,60 @@ void ModuleCamera3D::Rotate(float x, float y)
 	if (dx != 0)
 	{
 		float DeltaX = (float)dx * Sensitivity;
+	
+		Quat quaternion;
+		quaternion.RotateAxisAngle(vec(0.0f, 1.0f, 0.0f), DeltaX);
 
-		X = rotate(X, DeltaX, vec3(0.0f, 1.0f, 0.0f));
-		Y = rotate(Y, DeltaX, vec3(0.0f, 1.0f, 0.0f));
-		Z = rotate(Z, DeltaX, vec3(0.0f, 1.0f, 0.0f));
+		X = quaternion * X;
+		Y = quaternion * Y;
+		Z = quaternion * Z;
 	}
 
 	if (dy != 0)
 	{
 		float DeltaY = (float)dy * Sensitivity;
 
-		Y = rotate(Y, DeltaY, X);
-		Z = rotate(Z, DeltaY, X);
+		Quat quaternion;
+		quaternion.RotateAxisAngle(X, DeltaY);
+		Y = quaternion * Y;
+		Z = quaternion * Z;
 
 		if (Y.y < 0.0f)
 		{
-			Z = vec3(0.0f, Z.y > 0.0f ? 1.0f : -1.0f, 0.0f);
-			Y = cross(Z, X);
+			Z = vec(0.0f, Z.y > 0.0f ? 1.0f : -1.0f, 0.0f);
+			Y = Z.Cross(X);
 		}
 	}
 
-	Position = Reference + Z * length(Position);
+	Position = Reference + Z * Position.Length();
 
 	CalculateViewMatrix();
 }
 // -----------------------------------------------------------------
 
-void ModuleCamera3D::From3Dto2D(vec3 point, int& x, int& y)
+void ModuleCamera3D::From3Dto2D(vec point, int& x, int& y)
 {
-	mat4x4 projection;
-	projection = perspective(60.0f, (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.125f, 512.0f);
+	//Calculate perspective
+	float4x4 perspective;
+	float fov = 60.0f;
+	float _near = 0.125f;
+	float _far = 512.0f;
 
-	vec3 screen = multiply(point, ViewMatrix);
-	screen = multiply(screen, projection);
+	perspective.SetIdentity();
+	float tan_theta_over2 = tan(fov * pi / 360.0f);
+
+	perspective[0][0] = 1.0f / tan_theta_over2;
+	perspective[1][1] = ((float)SCREEN_WIDTH / (float)SCREEN_HEIGHT) / tan_theta_over2;
+	perspective[2][2] = (_near + _far) / (_near - _far);
+	perspective[3][2] = 2 * _near * _far / (_near - _far);
+	perspective[2][3] = -1;
+	perspective[3][3] = 0;
+
+	float4x4 projection = perspective;
+
+	float4 screen_mat = ViewMatrix * float4(point, 1);
+	vec screen = screen_mat.xyz();
+	screen = float4(projection * screen_mat).xyz();
 
 	screen.x /= screen.z;
 	screen.y /= screen.z;

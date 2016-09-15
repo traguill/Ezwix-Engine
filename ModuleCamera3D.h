@@ -1,7 +1,7 @@
 #pragma once
 #include "Module.h"
 #include "Globals.h"
-#include "glmath.h"
+#include "MathGeoLib\include\MathGeoLib.h"
 #include <list>
 #include "p2Point.h"
 
@@ -29,9 +29,9 @@ public:
 	update_status Update(float dt);
 	bool CleanUp();
 
-	void Look(const vec3 &Position, const vec3 &Reference, bool RotateAroundReference = false);
-	void LookAt(const vec3 &Spot);
-	void Move(const vec3 &Movement);
+	void Look(const vec &Position, const vec &Reference, bool RotateAroundReference = false);
+	void LookAt(const vec &Spot);
+	void Move(const vec &Movement);
 	void Move(Direction d, float speed);
 	float* GetViewMatrix();
 
@@ -39,7 +39,7 @@ public:
 
 
 	//Transform a 3D point to a point of the screen
-	void From3Dto2D(vec3 point, int& x, int& y); 
+	void From3Dto2D(vec point, int& x, int& y); 
 
 private:
 
@@ -47,9 +47,9 @@ private:
 
 public:
 	
-	vec3 X, Y, Z, Position, Reference;
+	vec X, Y, Z, Position, Reference;
 
 private:
 
-	mat4x4 ViewMatrix, ViewMatrixInverse;
+	float4x4 ViewMatrix, ViewMatrixInverse;
 };

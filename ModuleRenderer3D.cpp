@@ -160,8 +160,24 @@ void ModuleRenderer3D::OnResize(int width, int height, float fovy)
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	ProjectionMatrix = perspective(fovy, (float)width / (float)height, 0.125f, 512.0f);
-	glLoadMatrixf(&ProjectionMatrix);
+
+	//Calculate perspective
+	float4x4 perspective;
+	float _near = 0.125f;
+	float _far = 512.0f;
+
+	perspective.SetIdentity();
+	float tan_theta_over2 = tan(fovy * pi / 360.0f);
+
+	perspective[0][0] = 1.0f / tan_theta_over2;
+	perspective[1][1] = ((float)width / (float)height) / tan_theta_over2;
+	perspective[2][2] = (_near + _far) / (_near - _far);
+	perspective[3][2] = 2 * _near * _far / (_near - _far);
+	perspective[2][3] = -1;
+	perspective[3][3] = 0;
+
+	ProjectionMatrix = perspective;
+	glLoadMatrixf(*ProjectionMatrix.v);
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
