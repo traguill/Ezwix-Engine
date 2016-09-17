@@ -44,7 +44,7 @@ update_status ModuleCamera3D::Update(float dt)
 {
 	// Debug camera mode: Disabled for the final game (but better keep the code)
 
-	/*vec newPos(0,0,0);
+	vec newPos(0,0,0);
 	float speed = 3.0f * dt;
 	if(App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT)
 		speed = 8.0f * dt;
@@ -69,38 +69,41 @@ update_status ModuleCamera3D::Update(float dt)
 		int dx = -App->input->GetMouseXMotion();
 		int dy = -App->input->GetMouseYMotion();
 
-		float Sensitivity = 0.25f;
+		float Sensitivity = 0.025f;
 
 		Position -= Reference;
 
 		if(dx != 0)
 		{
 			float DeltaX = (float)dx * Sensitivity;
-
-			X = rotate(X, DeltaX, vec(0.0f, 1.0f, 0.0f));
-			Y = rotate(Y, DeltaX, vec(0.0f, 1.0f, 0.0f));
-			Z = rotate(Z, DeltaX, vec(0.0f, 1.0f, 0.0f));
+			Quat quaternion;
+			quaternion = quaternion.RotateAxisAngle(vec(0.0f, 1.0f, 0.0f), DeltaX);
+			X = quaternion * X;
+			Y = quaternion * Y;
+			Z = quaternion * Z;
 		}
 
 		if(dy != 0)
 		{
 			float DeltaY = (float)dy * Sensitivity;
 
-			Y = rotate(Y, DeltaY, X);
-			Z = rotate(Z, DeltaY, X);
+			Quat quaternion2;
+			quaternion2 = quaternion2.RotateAxisAngle(X, DeltaY);
+			Y = quaternion2 * Y;
+			Z = quaternion2 * Z;
 
 			if(Y.y < 0.0f)
 			{
 				Z = vec(0.0f, Z.y > 0.0f ? 1.0f : -1.0f, 0.0f);
-				Y = cross(Z, X);
+				Y = Z.Cross(X);
 			}
 		}
 
-		Position = Reference + Z * length(Position);
+		Position = Reference + Z * Position.Length();
 	}
 
 	// Recalculate matrix -------------
-	CalculateViewMatrix();*/
+	CalculateViewMatrix();
 
 	return UPDATE_CONTINUE;
 }
@@ -204,7 +207,7 @@ void ModuleCamera3D::Rotate(float x, float y)
 		float DeltaX = (float)dx * Sensitivity;
 	
 		Quat quaternion;
-		quaternion.RotateAxisAngle(vec(0.0f, 1.0f, 0.0f), DeltaX);
+		quaternion = quaternion.RotateAxisAngle(vec(0.0f, 1.0f, 0.0f), DeltaX);
 
 		X = quaternion * X;
 		Y = quaternion * Y;
@@ -216,7 +219,7 @@ void ModuleCamera3D::Rotate(float x, float y)
 		float DeltaY = (float)dy * Sensitivity;
 
 		Quat quaternion;
-		quaternion.RotateAxisAngle(X, DeltaY);
+		quaternion = quaternion.RotateAxisAngle(X, DeltaY);
 		Y = quaternion * Y;
 		Z = quaternion * Z;
 

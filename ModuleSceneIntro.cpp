@@ -24,14 +24,8 @@ bool ModuleSceneIntro::Start()
 	LOG("Loading Intro assets");
 	bool ret = true;
 
-	Random rnd;
-	int ran[30];
-	for (int i = 0; i < 30; i++)
-	{
-		
-		ran[i] = rnd.RandomInt(3, 5);
-	}
-	int a = 0;
+	App->camera->Move(vec(1.0f, 1.0f, 0.0f));
+	App->camera->LookAt(vec(0, 0, 0));
 
 	return ret;
 }
@@ -47,6 +41,7 @@ bool ModuleSceneIntro::CleanUp()
 // Update
 update_status ModuleSceneIntro::Update(float dt)
 {
+
 	//Create the menu bar
 	if(ImGui::BeginMainMenuBar())
 	{
@@ -62,9 +57,12 @@ update_status ModuleSceneIntro::Update(float dt)
 
 		ImGui::EndMainMenuBar();
 	}
+
+
+	
 	
 
-	ImGui::ShowTestWindow();
+
 	return UPDATE_CONTINUE;
 }
 

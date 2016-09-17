@@ -56,7 +56,7 @@ bool ModulePhysics3D::Start()
 	vehicle_raycaster = new btDefaultVehicleRaycaster(world);
 
 	// Big plane as ground
-	{
+	
 		btCollisionShape* colShape = new btStaticPlaneShape(btVector3(0, 1, 0), 0);
 
 		btDefaultMotionState* myMotionState = new btDefaultMotionState();
@@ -64,7 +64,7 @@ bool ModulePhysics3D::Start()
 
 		btRigidBody* body = new btRigidBody(rbInfo);
 		world->addRigidBody(body);
-	}
+	
 
 	return true;
 }
@@ -129,14 +129,6 @@ update_status ModulePhysics3D::Update(float dt)
 			++item;
 		}
 
-
-		if(App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
-		{
-			Sphere_P s(1);
-			s.SetPos(App->camera->Position.x, App->camera->Position.y, App->camera->Position.z);
-			float force = 30.0f;
-			AddBody(s)->Push(-(App->camera->Z.x * force), -(App->camera->Z.y * force), -(App->camera->Z.z * force));
-		}
 	}
 
 	return UPDATE_CONTINUE;

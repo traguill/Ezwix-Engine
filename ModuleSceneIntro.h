@@ -2,7 +2,7 @@
 #include "Module.h"
 #include "Globals.h"
 #include "Primitive.h"
-
+#include <list>
 
 
 class ModuleSceneIntro : public Module
@@ -18,5 +18,6 @@ public:
 	
 
 public:
-	
+	list<Cylinder_P> spheres;
+	list<PhysBody3D*> bodies;
 };

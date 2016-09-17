@@ -84,7 +84,9 @@ void Primitive::InnerRender() const
 // ------------------------------------------------------------
 void Primitive::SetPos(float x, float y, float z)
 {
-	transform.SetTranslatePart(x, y, z);
+	transform.v[3][0] = x;
+	transform.v[3][1] = y;
+	transform.v[3][2] = z;
 }
 
 // ------------------------------------------------------------
