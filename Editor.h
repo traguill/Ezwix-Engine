@@ -34,6 +34,8 @@ private:
 	void RotateCube();
 	void CreateBoundingSphere();
 
+	void RayCastTest();
+
 private:
 	//Testing
 	float2 range;
@@ -69,5 +71,10 @@ private:
 	vec point3_pos = point3_pos.zero;
 
 	string point_plane = "";
+
+	//Test4
+	bool remove_points = false;
+
+	Line_P line;
 
 };

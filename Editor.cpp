@@ -48,6 +48,10 @@ update_status Editor::Update(float dt)
 
 	ret = EditorWindows(); //Update the windows of the editor
 
+	if (remove_points)
+	{
+		RayCastTest();
+	}
 
 	//Render
 	Render();
@@ -186,6 +190,11 @@ update_status Editor::EditorWindows()
 		ImGui::Text(point_plane.c_str());
 	}
 
+	if (ImGui::CollapsingHeader("Test4"))
+	{
+		ImGui::Checkbox("RayCast to remove points", &remove_points);
+	}
+
 	ImGui::End();
 
 	ImGui::ShowTestWindow();
@@ -301,6 +310,8 @@ void Editor::Render()
 	{
 		point3.Render();
 	}
+
+	line.Render();
 }
 
 void Editor::ClearObjects()
@@ -367,4 +378,51 @@ void Editor::CreateBoundingSphere()
 
 	render_sphere = true;
 
+}
+
+void Editor::RayCastTest()
+{
+	if(App->input->GetMouseButton(1) == KEY_DOWN)
+	{
+		LOG("Click");
+		vec ray = App->camera->Raycast();
+		Ray raycast;
+		raycast.pos = App->camera->Position;
+		raycast.dir = ray.Normalized();
+
+		line.origin = App->camera->Position;
+		line.destination = line.origin + (30 * raycast.dir);
+		
+		list<Sphere_P>::iterator item = points.begin();
+
+		float min_distance = 36956453123;
+		float distance;
+		list<Sphere_P>::iterator point_remove = points.end();
+		while (item != points.end())
+		{
+			Sphere s;
+			s.pos = (*item).GetPos();
+			s.r = (*item).radius;
+
+			bool hit = raycast.Intersects(s, NULL, NULL, &distance);
+
+			if (hit)
+			{
+				if (distance < min_distance)
+				{
+					min_distance = distance;
+					point_remove = item;
+				}
+			}
+
+			++item;
+		}
+
+		if (point_remove != points.end())
+		{
+			points.erase(point_remove);
+			LOG("Point removed");
+		}
+
+	}
 }

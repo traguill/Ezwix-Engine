@@ -44,6 +44,8 @@ public:
 	//Transform a 2D point into a screenPoint
 	vec ScreenToWorld(int x, int y);
 
+	vec Raycast();
+
 private:
 
 	void CalculateViewMatrix();

@@ -292,3 +292,24 @@ vec ModuleCamera3D::ScreenToWorld(int x, int y)
 
 	return vec(point.x, point.y, point.z);
 }
+
+
+vec ModuleCamera3D::Raycast()
+{
+	float4 ray_ndc; //Normalized Device Coordinates
+	ray_ndc.x = (2.0f * App->input->GetMouseX()) / SCREEN_WIDTH - 1.0f;
+	ray_ndc.y = 1.0f - (2.0f * App->input->GetMouseY()) / SCREEN_HEIGHT;
+	ray_ndc.z = -1.0f;
+	ray_ndc.w = 1.0f;
+
+	float4 ray_eye = App->renderer3D->ProjectionMatrix.Inverted() * ray_ndc;
+
+	ray_eye.z = -1.0f;
+	ray_eye.w = 0.0f;
+
+
+	vec ray_world = (ViewMatrix.Inverted() * ray_eye).xyz();
+	ray_world.Normalize();
+
+	return ray_world;
+}
