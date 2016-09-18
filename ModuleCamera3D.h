@@ -39,7 +39,10 @@ public:
 
 
 	//Transform a 3D point to a point of the screen
-	void From3Dto2D(vec point, int& x, int& y); 
+	void WorldToScreen(vec point, int& x, int& y); 
+
+	//Transform a 2D point into a screenPoint
+	vec ScreenToWorld(int x, int y);
 
 private:
 

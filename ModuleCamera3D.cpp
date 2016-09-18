@@ -236,7 +236,7 @@ void ModuleCamera3D::Rotate(float x, float y)
 }
 // -----------------------------------------------------------------
 
-void ModuleCamera3D::From3Dto2D(vec point, int& x, int& y)
+void ModuleCamera3D::WorldToScreen(vec point, int& x, int& y)
 {
 	//Calculate perspective
 	float4x4 perspective;
@@ -268,4 +268,27 @@ void ModuleCamera3D::From3Dto2D(vec point, int& x, int& y)
 }
 
 // -----------------------------------------------------------------
+//TODO: Review
+vec ModuleCamera3D::ScreenToWorld(int x, int y)
+{
+	float2 mouse_pos(App->input->GetMouseX(), App->input->GetMouseY());
 
+	float4x4 projection = ViewMatrix * App->renderer3D->ProjectionMatrix;
+	projection.Inverse();
+
+	float4 vector;
+	vector.x = ((2.0f * mouse_pos.x) / SCREEN_WIDTH) -1.0f;
+	vector.y = ((2.0f * mouse_pos.y) / SCREEN_HEIGHT) -1.0f;
+	vector.z = ((2.0f * 0.125f) / 512.0f) -1.0f; //Depth value. Is this correct?
+	vector.w = 1.0f;
+
+	float4 point = vector * projection;
+
+	point.w = 1.0f / point.w;
+
+	point.x *= point.w;
+	point.y *= point.w;
+	point.z *= point.w;
+
+	return vec(point.x, point.y, point.z);
+}

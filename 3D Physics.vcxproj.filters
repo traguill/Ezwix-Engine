@@ -34,6 +34,9 @@
     <Filter Include="Resources\MathGeoLib\Include">
       <UniqueIdentifier>{8334c496-d247-4b2f-aada-03744ac44d8d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Editor">
+      <UniqueIdentifier>{d05c1069-6881-4ba2-80e0-c93f2a5ee2b1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -55,9 +58,6 @@
       <Filter>Sources\Modules</Filter>
     </ClInclude>
     <ClInclude Include="p2Point.h">
-      <Filter>Sources\Containers</Filter>
-    </ClInclude>
-    <ClInclude Include="glmath.h">
       <Filter>Sources\Containers</Filter>
     </ClInclude>
     <ClInclude Include="Application.h">
@@ -303,6 +303,9 @@
     <ClInclude Include="Random.h">
       <Filter>Sources\Tools</Filter>
     </ClInclude>
+    <ClInclude Include="Editor.h">
+      <Filter>Sources\Editor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -331,9 +334,6 @@
     </ClCompile>
     <ClCompile Include="Main.cpp">
       <Filter>Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="glmath.cpp">
-      <Filter>Sources\Containers</Filter>
     </ClCompile>
     <ClCompile Include="Primitive.cpp">
       <Filter>Sources\Helpers</Filter>
@@ -479,6 +479,9 @@
     <ClCompile Include="Random.cpp">
       <Filter>Sources\Tools</Filter>
     </ClCompile>
+    <ClCompile Include="Editor.cpp">
+      <Filter>Sources\Editor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="ListIterator.snippet">
@@ -505,6 +508,5 @@
     <None Include="MathGeoLib\include\Geometry\TriangleMesh_IntersectRay_SSE.inl">
       <Filter>Resources\MathGeoLib\Include</Filter>
     </None>
-    <None Include="ClassDiagram.cd" />
   </ItemGroup>
 </Project>

@@ -104,7 +104,11 @@ void Primitive::Scale(float x, float y, float z)
 // ------------------------------------------------------------
 vec Primitive::GetPos()const
 {
-	return transform.TranslatePart();
+	vec ret;
+	ret.x = transform.v[3][0];
+	ret.y = transform.v[3][1];
+	ret.z = transform.v[3][2];
+	return ret;
 }
 
 // CUBE ============================================

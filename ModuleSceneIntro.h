@@ -1,7 +1,6 @@
 #pragma once
 #include "Module.h"
 #include "Globals.h"
-#include "Primitive.h"
 #include <list>
 
 
@@ -14,10 +13,4 @@ public:
 	bool Start();
 	update_status Update(float dt);
 	bool CleanUp();
-
-	
-
-public:
-	list<Cylinder_P> spheres;
-	list<PhysBody3D*> bodies;
 };
