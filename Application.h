@@ -42,6 +42,8 @@ public:
 	update_status Update();
 	bool CleanUp();
 
+	void OpenURL(const char* url);
+
 private:
 
 	void AddModule(Module* mod);
