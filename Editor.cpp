@@ -3,6 +3,8 @@
 #include "Imgui\imgui.h"
 #include "Random.h"
 #include "FPSGraph.h"
+#include "WindowOptions.h"
+#include "HardwareInfo.h"
 
 Editor::Editor(Application* app, bool start_enabled) : Module(app, start_enabled)
 {}
@@ -22,6 +24,8 @@ bool Editor::Start()
 
 	//Create Windows
 	windows.push_back(fps_graph_win = new FPSGraph());
+	windows.push_back(winoptions_win = new WindowOptions(App));
+	windows.push_back(hardware_win = new HardwareInfo());
 
 	return ret;
 }
@@ -126,7 +130,14 @@ void Editor::WindowsMenu()
 		if (ImGui::MenuItem("FPS Graph"))
 		{
 			fps_graph_win->SetActive(true);
-			
+		}
+		if (ImGui::MenuItem("Window Options"))
+		{
+			winoptions_win->SetActive(true);
+		}
+		if (ImGui::MenuItem("Hardware Info"))
+		{
+			hardware_win->SetActive(true);
 		}
 			
 		ImGui::EndMenu();

@@ -78,6 +78,7 @@
     <ClInclude Include="Editor.h" />
     <ClInclude Include="FPSGraph.h" />
     <ClInclude Include="Globals.h" />
+    <ClInclude Include="HardwareInfo.h" />
     <ClInclude Include="Imgui\imconfig.h" />
     <ClInclude Include="Imgui\imgui.h" />
     <ClInclude Include="Imgui\imgui_impl_sdl_gl3.h" />
@@ -164,12 +165,14 @@
     <ClInclude Include="Random.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Window.h" />
+    <ClInclude Include="WindowOptions.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="Color.cpp" />
     <ClCompile Include="Editor.cpp" />
     <ClCompile Include="FPSGraph.cpp" />
+    <ClCompile Include="HardwareInfo.cpp" />
     <ClCompile Include="Imgui\imgui.cpp" />
     <ClCompile Include="Imgui\imgui_demo.cpp" />
     <ClCompile Include="Imgui\imgui_draw.cpp" />
@@ -226,6 +229,7 @@
     <ClCompile Include="Random.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Window.cpp" />
+    <ClCompile Include="WindowOptions.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ListIterator.snippet" />

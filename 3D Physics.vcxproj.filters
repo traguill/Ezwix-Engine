@@ -315,6 +315,12 @@
     <ClInclude Include="FPSGraph.h">
       <Filter>Sources\Editor\Windows</Filter>
     </ClInclude>
+    <ClInclude Include="WindowOptions.h">
+      <Filter>Sources\Editor\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="HardwareInfo.h">
+      <Filter>Sources\Editor\Windows</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -495,6 +501,12 @@
       <Filter>Sources\Editor</Filter>
     </ClCompile>
     <ClCompile Include="FPSGraph.cpp">
+      <Filter>Sources\Editor\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowOptions.cpp">
+      <Filter>Sources\Editor\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="HardwareInfo.cpp">
       <Filter>Sources\Editor\Windows</Filter>
     </ClCompile>
   </ItemGroup>

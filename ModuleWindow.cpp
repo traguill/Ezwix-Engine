@@ -92,3 +92,40 @@ void ModuleWindow::SetTitle(const char* title)
 {
 	SDL_SetWindowTitle(window, title);
 }
+
+void ModuleWindow::SetFullScreen(bool value)
+{
+	Uint32 flag;
+	if (value)
+		flag = SDL_WINDOW_FULLSCREEN;
+	else
+		flag = 0;
+
+	SDL_SetWindowFullscreen(window, flag);
+}
+
+void ModuleWindow::SetBorderless(bool value)
+{
+	SDL_bool flag;
+	if (value)
+		flag = SDL_TRUE;
+	else
+		flag = SDL_FALSE;
+	SDL_SetWindowBordered(window, flag);
+}
+
+void ModuleWindow::SetFullDesktop(bool value)
+{
+	Uint32 flag;
+	if (value)
+		flag = SDL_WINDOW_FULLSCREEN_DESKTOP;
+	else
+		flag = 0;
+
+	SDL_SetWindowFullscreen(window, flag);
+}
+
+void ModuleWindow::SetResizable(bool value)
+{
+	//TODO save for next time the engine opens
+}

@@ -7,6 +7,8 @@
 #include <vector>
 
 class FPSGraph;
+class WindowOptions;
+class HardwareInfo;
 
 class Editor : public Module
 {
@@ -32,5 +34,6 @@ private:
 
 	//Windows
 	FPSGraph* fps_graph_win = nullptr;
-
+	WindowOptions* winoptions_win = nullptr;
+	HardwareInfo* hardware_win = nullptr;
 };
