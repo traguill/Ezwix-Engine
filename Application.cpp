@@ -1,4 +1,5 @@
 #include "Application.h"
+#include "PerfTimer.h"
 
 Application::Application()
 {
@@ -66,21 +67,37 @@ bool Application::Init()
 		ret = (*i)->Start();
 		++i;
 	}
+
+	capped_ms = 1000 / fps;
 	
 	ms_timer.Start();
+	last_sec_frame_time.Start();
 	return ret;
 }
 
 // ---------------------------------------------
 void Application::PrepareUpdate()
 {
-	dt = (float)ms_timer.Read() / 1000.0f;
+	frame_count++;
+	dt = ms_timer.ReadSec();
 	ms_timer.Start();
 }
 
 // ---------------------------------------------
 void Application::FinishUpdate()
 {
+	if (last_sec_frame_time.Read() > 1000)
+	{
+		last_sec_frame_time.Start();
+		last_sec_frame_count = frame_count;
+		frame_count = 0;
+	}
+
+	uint32_t last_frame_ms = ms_timer.Read();
+	if (capped_ms > 0 && last_frame_ms < capped_ms)
+	{
+		SDL_Delay(capped_ms - last_frame_ms);
+	}
 }
 
 // Call PreUpdate, Update and PostUpdate on all modules
@@ -141,4 +158,16 @@ void Application::AddModule(Module* mod)
 void Application::OpenURL(const char* url)
 {
 	ShellExecuteA(NULL, "open", url, NULL, NULL, SW_SHOWNORMAL);
+}
+
+void Application::SetMaxFPS(int max_fps)
+{
+	fps = max_fps;
+	if (fps == 0) fps = -1;
+	capped_ms = 1000 / fps;
+}
+
+int Application::GetFPS()
+{
+	return last_sec_frame_count;
 }

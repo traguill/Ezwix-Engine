@@ -18,6 +18,25 @@ using namespace std;
 class Application
 {
 public:
+
+	Application();
+	~Application();
+
+	bool Init();
+	update_status Update();
+	bool CleanUp();
+
+	void OpenURL(const char* url);
+	void SetMaxFPS(int max_fps);
+	int GetFPS();
+
+private:
+
+	void AddModule(Module* mod);
+	void PrepareUpdate();
+	void FinishUpdate();
+
+public:
 	ModuleWindow* window;
 	ModuleInput* input;
 	ModuleAudio* audio;
@@ -32,21 +51,9 @@ private:
 	Timer	ms_timer;
 	float	dt;
 	list<Module*> list_modules;
-
-public:
-
-	Application();
-	~Application();
-
-	bool Init();
-	update_status Update();
-	bool CleanUp();
-
-	void OpenURL(const char* url);
-
-private:
-
-	void AddModule(Module* mod);
-	void PrepareUpdate();
-	void FinishUpdate();
+	int fps = 60;
+	int capped_ms = -1;
+	int frame_count = 0;
+	int last_sec_frame_count = 0;
+	Timer last_sec_frame_time;
 };

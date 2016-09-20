@@ -23,7 +23,7 @@ bool Editor::Start()
 	App->camera->LookAt(vec(0, 0, 0));
 
 	//Create Windows
-	windows.push_back(fps_graph_win = new FPSGraph());
+	windows.push_back(fps_graph_win = new FPSGraph(App));
 	windows.push_back(winoptions_win = new WindowOptions(App));
 	windows.push_back(hardware_win = new HardwareInfo());
 
@@ -80,8 +80,6 @@ update_status Editor::EditorWindows()
 		}
 		ImGui::EndMainMenuBar();
 	}
-
-	ImGui::ShowTestWindow();
 
 	//Windows ----------------------------------------------------------------------------------------------------
 	vector<Window*>::iterator win = windows.begin();
