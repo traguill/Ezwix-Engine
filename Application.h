@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __APPLICATION_H__
+#define __APPLICATION_H__
 
 #include <list>
 #include "Globals.h"
@@ -56,4 +57,9 @@ private:
 	int frame_count = 0;
 	int last_sec_frame_count = 0;
 	Timer last_sec_frame_time;
+
 };
+
+extern Application* App;
+
+#endif 

@@ -9,6 +9,7 @@
 class FPSGraph;
 class WindowOptions;
 class HardwareInfo;
+class Console;
 
 class Editor : public Module
 {

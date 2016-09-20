@@ -2,9 +2,8 @@
 #include "SDL\include\SDL.h"
 #include "ModuleWindow.h"
 
-WindowOptions::WindowOptions(Application* app)
+WindowOptions::WindowOptions()
 {
-	this->App = app;
 	brightness = SDL_GetWindowBrightness(App->window->window);
 }
 

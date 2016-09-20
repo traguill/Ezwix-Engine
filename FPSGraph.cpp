@@ -1,8 +1,8 @@
 #include "FPSGraph.h"
+#include "Application.h"
 
-FPSGraph::FPSGraph(Application* app)
+FPSGraph::FPSGraph()
 {
-	App = app;
 	App->SetMaxFPS(max_fps);
 }
 

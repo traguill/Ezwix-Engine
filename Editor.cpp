@@ -5,9 +5,12 @@
 #include "FPSGraph.h"
 #include "WindowOptions.h"
 #include "HardwareInfo.h"
+#include "Console.h"
 
 Editor::Editor(Application* app, bool start_enabled) : Module(app, start_enabled)
-{}
+{
+	windows.push_back(console = new Console()); //Create console in the constructor to get ALL init logs from other modules.
+}
 
 Editor::~Editor()
 {}
@@ -23,8 +26,8 @@ bool Editor::Start()
 	App->camera->LookAt(vec(0, 0, 0));
 
 	//Create Windows
-	windows.push_back(fps_graph_win = new FPSGraph(App));
-	windows.push_back(winoptions_win = new WindowOptions(App));
+	windows.push_back(fps_graph_win = new FPSGraph());
+	windows.push_back(winoptions_win = new WindowOptions());
 	windows.push_back(hardware_win = new HardwareInfo());
 
 	return ret;
@@ -139,5 +142,10 @@ void Editor::WindowsMenu()
 		}
 			
 		ImGui::EndMenu();
+	}
+
+	if (ImGui::MenuItem("Console"))
+	{
+		console->SetActive(true);
 	}
 }

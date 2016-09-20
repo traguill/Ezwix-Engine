@@ -8,13 +8,11 @@
 class WindowOptions : public Window
 {
 public:
-	WindowOptions(Application* app);
+	WindowOptions();
 	~WindowOptions();
 
 	void Draw();
 private:
-
-	Application* App;
 
 	float brightness;
 	bool fullscreen = false;
