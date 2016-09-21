@@ -109,6 +109,10 @@ bool ModuleRenderer3D::Init()
 		glEnable(GL_COLOR_MATERIAL);
 	}
 
+	LOG("-------------Versions------------------");
+	LOG("OpenGL Version: %s",glGetString(GL_VERSION));
+	LOG("Glew Version: %s", glewGetString(GLEW_VERSION));
+
 	// Projection matrix for
 	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT, 20.0f);
 

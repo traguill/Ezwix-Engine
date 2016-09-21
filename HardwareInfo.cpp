@@ -1,11 +1,14 @@
 #include "HardwareInfo.h"
 #include "SDL\include\SDL.h"
 #include <string>
+#include "Globals.h"
 
 using namespace std;
 
 HardwareInfo::HardwareInfo()
-{}
+{
+	
+}
 
 HardwareInfo::~HardwareInfo()
 {}
