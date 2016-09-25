@@ -40,6 +40,9 @@
     <Filter Include="Sources\Editor\Windows">
       <UniqueIdentifier>{f5cf776b-6322-43a6-9d76-bc1c61abf58b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\MemoryManagement">
+      <UniqueIdentifier>{d2a4b768-e0d5-4ade-bc26-1fe93f70ba9c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -327,6 +330,18 @@
     <ClInclude Include="Console.h">
       <Filter>Sources\Editor\Windows</Filter>
     </ClInclude>
+    <ClInclude Include="Allocator.h">
+      <Filter>Sources\MemoryManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="LinearAllocator.h">
+      <Filter>Sources\MemoryManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="StackAllocator.h">
+      <Filter>Sources\MemoryManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="PoolAllocator.h">
+      <Filter>Sources\MemoryManagement</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -520,6 +535,15 @@
     </ClCompile>
     <ClCompile Include="Console.cpp">
       <Filter>Sources\Editor\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="LinearAllocator.cpp">
+      <Filter>Sources\MemoryManagement</Filter>
+    </ClCompile>
+    <ClCompile Include="StackAllocator.cpp">
+      <Filter>Sources\MemoryManagement</Filter>
+    </ClCompile>
+    <ClCompile Include="PoolAllocator.cpp">
+      <Filter>Sources\MemoryManagement</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
