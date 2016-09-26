@@ -2,6 +2,8 @@
 #include "PerfTimer.h"
 #include "LinearAllocator.h"
 
+
+
 Application::Application()
 {
 	window = new ModuleWindow(this);

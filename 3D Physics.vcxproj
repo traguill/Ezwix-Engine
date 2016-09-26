@@ -75,6 +75,7 @@
   <ItemGroup>
     <ClInclude Include="Allocator.h" />
     <ClInclude Include="Application.h" />
+    <ClInclude Include="AutoProfile.h" />
     <ClInclude Include="Color.h" />
     <ClInclude Include="Console.h" />
     <ClInclude Include="Editor.h" />
@@ -167,6 +168,7 @@
     <ClInclude Include="PhysVehicle3D.h" />
     <ClInclude Include="PoolAllocator.h" />
     <ClInclude Include="Primitive.h" />
+    <ClInclude Include="Profiler.h" />
     <ClInclude Include="Random.h" />
     <ClInclude Include="StackAllocator.h" />
     <ClInclude Include="Timer.h" />
@@ -175,6 +177,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="AutoProfile.cpp" />
     <ClCompile Include="Color.cpp" />
     <ClCompile Include="Console.cpp" />
     <ClCompile Include="Editor.cpp" />
@@ -236,6 +239,7 @@
     <ClCompile Include="PhysVehicle3D.cpp" />
     <ClCompile Include="PoolAllocator.cpp" />
     <ClCompile Include="Primitive.cpp" />
+    <ClCompile Include="Profiler.cpp" />
     <ClCompile Include="Random.cpp" />
     <ClCompile Include="StackAllocator.cpp" />
     <ClCompile Include="Timer.cpp" />

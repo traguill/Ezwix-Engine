@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include "Application.h"
+#include "Profiler.h"
 #include "Globals.h"
 
 #include "SDL/include/SDL.h"
@@ -18,6 +19,8 @@ enum main_states
 Application* App = nullptr;
 Console* console = nullptr;
 
+Profiler g_Profiler;
+
 int main(int argc, char ** argv)
 {
 	LOG("Starting game '%s'...", TITLE);
@@ -33,6 +36,7 @@ int main(int argc, char ** argv)
 
 			LOG("-------------- Application Creation --------------");
 			App = new Application();
+			
 			state = MAIN_START;
 			break;
 

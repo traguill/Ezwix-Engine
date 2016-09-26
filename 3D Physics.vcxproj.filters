@@ -43,6 +43,9 @@
     <Filter Include="Sources\MemoryManagement">
       <UniqueIdentifier>{d2a4b768-e0d5-4ade-bc26-1fe93f70ba9c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Profiler">
+      <UniqueIdentifier>{932b0f29-0944-4b89-abb1-f982cd488491}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -342,6 +345,12 @@
     <ClInclude Include="PoolAllocator.h">
       <Filter>Sources\MemoryManagement</Filter>
     </ClInclude>
+    <ClInclude Include="AutoProfile.h">
+      <Filter>Sources\Profiler</Filter>
+    </ClInclude>
+    <ClInclude Include="Profiler.h">
+      <Filter>Sources\Profiler</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -544,6 +553,12 @@
     </ClCompile>
     <ClCompile Include="PoolAllocator.cpp">
       <Filter>Sources\MemoryManagement</Filter>
+    </ClCompile>
+    <ClCompile Include="AutoProfile.cpp">
+      <Filter>Sources\Profiler</Filter>
+    </ClCompile>
+    <ClCompile Include="Profiler.cpp">
+      <Filter>Sources\Profiler</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

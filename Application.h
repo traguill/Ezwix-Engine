@@ -14,6 +14,8 @@
 #include "ModulePhysics3D.h"
 #include "Editor.h"
 
+#include "AutoProfile.h"
+
 using namespace std; 
 
 class Application
