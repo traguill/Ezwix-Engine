@@ -94,6 +94,7 @@ update_status Editor::EditorWindows()
 	vector<Window*>::iterator win = windows.begin();
 	while (win != windows.end())
 	{
+		PROFILE("Editor::Update-PaintWindows");
 		(*win)->Draw();
 		++win;
 	}

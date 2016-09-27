@@ -18,6 +18,9 @@ Profiler::~Profiler()
 
 void Profiler::StoreSample(const char* name, double time)
 {
+	if (!is_playing)
+		return;
+
 	map<const char*, ProfilerSample>::iterator it = samples.find(name);
 
 	if (it != samples.end())
@@ -43,6 +46,9 @@ void Profiler::StoreSample(const char* name, double time)
 //Called every frame
 void Profiler::Update()
 {
+	if (!is_playing)
+		return;
+
 	map<const char*, ProfilerSample>::iterator it = samples.begin();
 
 	for (it; it != samples.end(); it++)
@@ -72,6 +78,18 @@ void Profiler::Draw()
 
 	ImGui::Begin("Profiler", &active);
 
+	ImGui::Checkbox("Play", &is_playing);
+
+	ImGui::SliderInt("Frames", &current_frame, 0, MAX_TIME_ITEMS -1);
+
+	if (ImGui::IsItemHovered())
+		ImGui::SetTooltip("0 is 600 frames back and 600 is the actual frame.");
+
+	ImGui::Separator();
+	static ImGuiTextFilter filter;
+	filter.Draw("Search");
+	ImGui::Separator();
+
 	ImGui::Columns(4, "Profiler_table");
 
 	ImGui::Text("Name"); ImGui::NextColumn();
@@ -84,17 +102,22 @@ void Profiler::Draw()
 
 	while (it != samples.end())
 	{
+		if (filter.PassFilter((*it).first))
+		{
+			ImGui::Text((*it).first);
+			ImGui::NextColumn();
 
-		ImGui::Text((*it).first);
-		ImGui::NextColumn();
+			ImGui::Text("%0.5f", (*it).second.total_ms[current_frame]);
+			ImGui::NextColumn();
 
-		ImGui::Text("%0.5f", (*it).second.total_ms[0]);
-		ImGui::NextColumn();
+			ImGui::Text("%d", (*it).second.calls[current_frame]);
+			ImGui::NextColumn();
 
-		ImGui::Text("%d", (*it).second.calls[0]);
-		ImGui::NextColumn();
+			float self_time = (*it).second.total_ms[current_frame] / (*it).second.calls[current_frame];
 
-		
+			ImGui::Text("%0.5f", self_time);
+			ImGui::NextColumn();
+		}
 
 		it++;
 	}

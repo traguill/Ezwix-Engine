@@ -29,6 +29,10 @@ public:
 
 private:
 	map<const char*, ProfilerSample> samples;
+
+	//Window
+	int current_frame = MAX_TIME_ITEMS -1;
+	bool is_playing = false;
 };
 
 extern Profiler g_Profiler;
