@@ -25,6 +25,4 @@ private:
 	//Testing
 	uint id;
 	uint id_indices;
-	vector<uint> indices;
-	vector<vec> vertices;
 };
