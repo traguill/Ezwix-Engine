@@ -1,7 +1,7 @@
 #include "Application.h"
 #include "PerfTimer.h"
 #include "LinearAllocator.h"
-
+#include "Profiler.h"
 
 
 Application::Application()
@@ -90,6 +90,9 @@ void Application::PrepareUpdate()
 // ---------------------------------------------
 void Application::FinishUpdate()
 {
+	//Update Profiler
+	g_Profiler.Update();
+
 	if (last_sec_frame_time.Read() > 1000)
 	{
 		last_sec_frame_time.Start();

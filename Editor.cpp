@@ -6,6 +6,7 @@
 #include "WindowOptions.h"
 #include "HardwareInfo.h"
 #include "Console.h"
+#include "Profiler.h"
 
 Editor::Editor(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -26,6 +27,7 @@ bool Editor::Start()
 	App->camera->LookAt(vec(0, 0, 0));
 
 	//Create Windows
+	windows.push_back(&g_Profiler);
 	windows.push_back(fps_graph_win = new FPSGraph());
 	windows.push_back(winoptions_win = new WindowOptions());
 	windows.push_back(hardware_win = new HardwareInfo());
@@ -42,6 +44,8 @@ bool Editor::CleanUp()
 
 update_status Editor::Update(float dt)
 {
+	PROFILE("Editor::Update()");
+
 	update_status ret = UPDATE_CONTINUE;
 	
 
@@ -84,6 +88,8 @@ update_status Editor::EditorWindows()
 		ImGui::EndMainMenuBar();
 	}
 
+	ImGui::ShowTestWindow();
+
 	//Windows ----------------------------------------------------------------------------------------------------
 	vector<Window*>::iterator win = windows.begin();
 	while (win != windows.end())
@@ -121,7 +127,7 @@ void Editor::HelpMenu()
 
 			ImGui::EndPopup();
 		}
-	}	
+	}
 }
 
 void Editor::WindowsMenu()
@@ -147,5 +153,10 @@ void Editor::WindowsMenu()
 	if (ImGui::MenuItem("Console"))
 	{
 		console->SetActive(true);
+	}
+	
+	if (ImGui::MenuItem("Profiler"))
+	{
+		g_Profiler.SetActive(true);
 	}
 }
