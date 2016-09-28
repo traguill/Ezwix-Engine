@@ -13,6 +13,7 @@
 #include "ModuleCamera3D.h"
 #include "ModulePhysics3D.h"
 #include "Editor.h"
+#include "ModuleMeshes.h"
 
 #include "AutoProfile.h"
 
@@ -47,6 +48,7 @@ public:
 	ModuleRenderer3D* renderer3D;
 	ModuleCamera3D* camera;
 	ModulePhysics3D* physics;
+	ModuleMeshes* meshes;
 	Editor* editor;
 
 private:

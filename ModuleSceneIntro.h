@@ -7,6 +7,8 @@
 #include "MathGeoLib\include\MathGeoLib.h"
 #include "MathGeoLib\include\MathBuildConfig.h"
 
+class Mesh;
+
 class ModuleSceneIntro : public Module
 {
 public:
@@ -17,12 +19,9 @@ public:
 	update_status Update(float dt);
 	bool CleanUp();
 
-private:
-	void DrawVertexArray();
 
 private:
 
 	//Testing
-	uint id;
-	uint id_indices;
+	vector<Mesh> object;
 };

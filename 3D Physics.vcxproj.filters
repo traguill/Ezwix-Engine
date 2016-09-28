@@ -351,6 +351,9 @@
     <ClInclude Include="Profiler.h">
       <Filter>Sources\Profiler</Filter>
     </ClInclude>
+    <ClInclude Include="ModuleMeshes.h">
+      <Filter>Sources\Modules</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -559,6 +562,9 @@
     </ClCompile>
     <ClCompile Include="Profiler.cpp">
       <Filter>Sources\Profiler</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleMeshes.cpp">
+      <Filter>Sources\Modules</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

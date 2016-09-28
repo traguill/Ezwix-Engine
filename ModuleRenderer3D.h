@@ -8,6 +8,8 @@
 
 using namespace math;
 
+class Mesh;
+
 class ModuleRenderer3D : public Module
 {
 public:
@@ -20,6 +22,8 @@ public:
 	bool CleanUp();
 
 	void OnResize(int width, int height, float fovy);
+
+	void Draw(Mesh mesh);
 
 public:
 

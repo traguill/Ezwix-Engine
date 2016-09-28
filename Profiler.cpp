@@ -48,7 +48,7 @@ void Profiler::Update()
 {
 	if (!is_playing)
 		return;
-
+	
 	map<const char*, ProfilerSample>::iterator it = samples.begin();
 
 	for (it; it != samples.end(); it++)

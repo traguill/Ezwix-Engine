@@ -3,6 +3,7 @@
 #include "ModuleRenderer3D.h"
 #include "Glew\include\glew.h"
 #include "SDL\include\SDL_opengl.h"
+#include "ModuleMeshes.h"
 #include <gl/GL.h>
 #include <gl/GLU.h>
 
@@ -187,4 +188,14 @@ void ModuleRenderer3D::OnResize(int width, int height, float fovy)
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
+}
+
+void ModuleRenderer3D::Draw(Mesh mesh)
+{
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.id_indices);
+	glVertexPointer(3, GL_FLOAT, 0, NULL);
+
+	glDrawElements(GL_TRIANGLES, mesh.num_indices, GL_UNSIGNED_INT, NULL);
+	glDisableClientState(GL_VERTEX_ARRAY);
 }
