@@ -33,8 +33,16 @@ bool ModuleMeshes::CleanUp()
 vector<Mesh> ModuleMeshes::Load(const char* path)
 {
 	vector<Mesh> ret;
+	char* buff;
+	uint size = App->file_system->Load(path, &buff);
 
-	const aiScene* scene = aiImportFile(path, aiProcessPreset_TargetRealtime_MaxQuality);
+	if (size == 0)
+	{
+		LOG("Error loading %s", path);
+		return ret; 
+	}
+	
+	const aiScene* scene = aiImportFileFromMemory(buff, size, aiProcessPreset_TargetRealtime_MaxQuality, NULL);
 
 	if (scene != nullptr && scene->HasMeshes())
 	{
@@ -86,6 +94,8 @@ vector<Mesh> ModuleMeshes::Load(const char* path)
 	{
 		LOG("Error loading scene %s. ERROR: %s", path, aiGetErrorString());
 	}
+
+	delete[] buff;
 
 	return ret;
 }

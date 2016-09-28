@@ -15,6 +15,7 @@ Application::Application()
 	physics = new ModulePhysics3D(this);
 	meshes = new ModuleMeshes(this);
 	editor = new Editor(this);
+	file_system = new ModuleFileSystem(this);
 
 
 	// The order of calls is very important!
@@ -22,6 +23,7 @@ Application::Application()
 	// They will CleanUp() in reverse order
 
 	// Main Modules
+	AddModule(file_system);
 	AddModule(window);
 	AddModule(camera);
 	AddModule(input);
