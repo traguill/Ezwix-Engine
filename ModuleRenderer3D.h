@@ -31,4 +31,5 @@ public:
 	SDL_GLContext context;
 	float3x3 NormalMatrix;
 	float4x4 ModelMatrix, ViewMatrix, ProjectionMatrix;
+
 };

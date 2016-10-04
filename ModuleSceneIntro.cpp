@@ -22,7 +22,12 @@ bool ModuleSceneIntro::Start()
 	bool ret = true;
 
 	
-	object = App->meshes->Load("chair.fbx");
+	object = App->meshes->Load("cube_testing.fbx");
+	
+
+	lenna_id = App->meshes->LoadTexture("lenna.png");
+
+	object.begin()->id_texture = lenna_id;
 
 	return ret;
 }

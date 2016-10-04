@@ -15,6 +15,14 @@ struct Mesh
 	uint id_indices = 0;
 	uint num_indices = 0;
 	uint* indices = nullptr;
+
+	//UVs
+	uint id_uvs = 0;
+	uint num_uvs = 0;
+	float* uvs = nullptr;
+
+	//Texture
+	uint id_texture = 0; 
 };
 
 class ModuleMeshes : public Module
@@ -27,6 +35,8 @@ public:
 	bool CleanUp();
 
 	vector<Mesh> Load(const char* path);
+
+	uint LoadTexture(char* path);
 };
 
 #endif // __MODULEMESHES_H__

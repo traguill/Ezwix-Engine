@@ -24,4 +24,6 @@ private:
 
 	//Testing
 	vector<Mesh> object;
+public:
+	uint lenna_id = 0;
 };
