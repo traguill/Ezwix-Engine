@@ -46,6 +46,9 @@
     <Filter Include="Sources\Profiler">
       <UniqueIdentifier>{932b0f29-0944-4b89-abb1-f982cd488491}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\GameObjects">
+      <UniqueIdentifier>{96fd846a-1986-4c6c-961f-8cc8f7e78379}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -357,6 +360,12 @@
     <ClInclude Include="ModuleFileSystem.h">
       <Filter>Sources\Modules</Filter>
     </ClInclude>
+    <ClInclude Include="ModuleGOManager.h">
+      <Filter>Sources\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>Sources\GameObjects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -571,6 +580,12 @@
     </ClCompile>
     <ClCompile Include="ModuleFileSystem.cpp">
       <Filter>Sources\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleGOManager.cpp">
+      <Filter>Sources\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>Sources\GameObjects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

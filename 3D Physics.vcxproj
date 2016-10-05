@@ -80,6 +80,7 @@
     <ClInclude Include="Console.h" />
     <ClInclude Include="Editor.h" />
     <ClInclude Include="FPSGraph.h" />
+    <ClInclude Include="GameObject.h" />
     <ClInclude Include="Globals.h" />
     <ClInclude Include="HardwareInfo.h" />
     <ClInclude Include="Imgui\imconfig.h" />
@@ -156,6 +157,7 @@
     <ClInclude Include="MathGeoLib\include\Time\Clock.h" />
     <ClInclude Include="ModuleCamera3D.h" />
     <ClInclude Include="ModuleFileSystem.h" />
+    <ClInclude Include="ModuleGOManager.h" />
     <ClInclude Include="ModuleMeshes.h" />
     <ClInclude Include="ModulePhysics3D.h" />
     <ClInclude Include="ModuleRenderer3D.h" />
@@ -184,6 +186,7 @@
     <ClCompile Include="Console.cpp" />
     <ClCompile Include="Editor.cpp" />
     <ClCompile Include="FPSGraph.cpp" />
+    <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="HardwareInfo.cpp" />
     <ClCompile Include="Imgui\imgui.cpp" />
     <ClCompile Include="Imgui\imgui_demo.cpp" />
@@ -232,6 +235,7 @@
     <ClCompile Include="ModuleAudio.cpp" />
     <ClCompile Include="ModuleCamera3D.cpp" />
     <ClCompile Include="ModuleFileSystem.cpp" />
+    <ClCompile Include="ModuleGOManager.cpp" />
     <ClCompile Include="ModuleInput.cpp" />
     <ClCompile Include="ModuleMeshes.cpp" />
     <ClCompile Include="ModulePhysics3D.cpp" />

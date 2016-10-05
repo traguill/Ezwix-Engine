@@ -117,6 +117,7 @@ bool ModuleRenderer3D::Init()
 	// Projection matrix for
 	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT, 20.0f);
 
+	ImGui_ImplSdlGL3_Init(App->window->window);
 	
 	return ret;
 }

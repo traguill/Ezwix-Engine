@@ -15,6 +15,7 @@
 #include "Editor.h"
 #include "ModuleMeshes.h"
 #include "ModuleFileSystem.h"
+#include "ModuleGOManager.h"
 
 #include "AutoProfile.h"
 
@@ -51,6 +52,7 @@ public:
 	ModulePhysics3D* physics;
 	ModuleMeshes* meshes;
 	ModuleFileSystem* file_system;
+	ModuleGOManager* go_manager;
 	Editor* editor;
 
 private:

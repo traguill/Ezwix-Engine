@@ -16,6 +16,7 @@ Application::Application()
 	meshes = new ModuleMeshes(this);
 	editor = new Editor(this);
 	file_system = new ModuleFileSystem(this);
+	go_manager = new ModuleGOManager(this);
 
 
 	// The order of calls is very important!
@@ -30,6 +31,7 @@ Application::Application()
 	AddModule(meshes);
 	AddModule(audio);
 	AddModule(physics);
+	AddModule(go_manager);
 	
 	// Scenes
 	AddModule(scene_intro);
