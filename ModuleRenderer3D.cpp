@@ -192,6 +192,7 @@ void ModuleRenderer3D::OnResize(int width, int height, float fovy)
 
 void ModuleRenderer3D::Draw(Mesh mesh, float4x4 matrix, uint texture_id)
 {
+	glColor4f(1, 1, 1, 1);
 	glPushMatrix();
 	glMultMatrixf(*matrix.v);
 

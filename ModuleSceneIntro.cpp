@@ -23,7 +23,7 @@ bool ModuleSceneIntro::Start()
 	bool ret = true;
 
 	
-	App->meshes->Load("Town/Street environment_V01.FBX");
+	App->meshes->Load("test_scene.fbx");
 	
 
 	return ret;

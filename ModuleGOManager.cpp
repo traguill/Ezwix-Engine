@@ -142,7 +142,8 @@ void ModuleGOManager::InspectorWindow()
 
 void ModuleGOManager::UpdateGameObjects(float dt, GameObject* object)
 {
-	object->Update(dt);
+	if(root != object)
+		object->Update(dt);
 
 	std::vector<GameObject*>::const_iterator child = object->GetChilds()->begin();
 	for (child; child != object->GetChilds()->end(); ++child)

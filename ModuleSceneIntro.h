@@ -26,7 +26,6 @@ private:
 	//Testing
 	vector<Mesh> object;
 public:
-	uint lenna_id = 0;
 
 	GameObject* test_object = nullptr;
 	ComponentTransform* test_transform = nullptr;

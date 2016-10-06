@@ -135,6 +135,9 @@ void ModuleMeshes::LoadNode(aiNode* node,const aiScene* scene, GameObject* paren
 		{
 			game_object = go_root;
 		}
+
+		if(node->mName.length > 0)
+			game_object->name = node->mName.C_Str();
 		
 
 		//Mesh --------------------------------------------------------------------------------------------------------------------------------
@@ -207,6 +210,7 @@ void ModuleMeshes::LoadNode(aiNode* node,const aiScene* scene, GameObject* paren
 			{
 				ComponentMaterial* c_material = (ComponentMaterial*)game_object->AddComponent(C_MATERIAL);
 
+				
 				c_material->texture_id = LoadTexture(path.data); //TODO: check for errors
 
 				LOG("Texture id %d Load: %s", c_material->texture_id, path.data);

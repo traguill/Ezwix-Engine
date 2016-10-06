@@ -48,6 +48,10 @@ void ComponentTransform::OnInspector()
 			SetScale(scale);
 		}
 
+		ImGui::Text("%0.2f %0.2f %0.2f %0.2f", transform_matrix.v[0][0], transform_matrix.v[0][1], transform_matrix.v[0][2], transform_matrix.v[0][3]);
+		ImGui::Text("%0.2f %0.2f %0.2f %0.2f", transform_matrix.v[1][0], transform_matrix.v[1][1], transform_matrix.v[1][2], transform_matrix.v[1][3]);
+		ImGui::Text("%0.2f %0.2f %0.2f %0.2f", transform_matrix.v[2][0], transform_matrix.v[2][1], transform_matrix.v[2][2], transform_matrix.v[2][3]);
+		ImGui::Text("%0.2f %0.2f %0.2f %0.2f", transform_matrix.v[3][0], transform_matrix.v[3][1], transform_matrix.v[3][2], transform_matrix.v[3][3]);
 	}
 }
 
@@ -55,9 +59,9 @@ void ComponentTransform::SetPosition(math::float3 pos)
 {
 	position = pos;
 
-	transform_matrix.v[3][0] = pos.x;
-	transform_matrix.v[3][1] = pos.y;
-	transform_matrix.v[3][2] = pos.z;
+	transform_matrix.v[3][0] = position.x;
+	transform_matrix.v[3][1] = position.y;
+	transform_matrix.v[3][2] = position.z;
 
 	CalculateFinalTransform();
 }
@@ -128,7 +132,7 @@ void ComponentTransform::CalculateFinalTransform()
 	{
 		ComponentTransform* parent_transform = (ComponentTransform*)parent->GetComponent(C_TRANSFORM);
 		assert(parent_transform);
-
+		
 		final_transform_matrix = parent_transform->final_transform_matrix * transform_matrix;
 	}
 	else
