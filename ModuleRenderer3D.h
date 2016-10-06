@@ -23,7 +23,7 @@ public:
 
 	void OnResize(int width, int height, float fovy);
 
-	void Draw(Mesh mesh);
+	void Draw(Mesh mesh, float4x4 matrix, uint texture_id);
 
 public:
 

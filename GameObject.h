@@ -4,12 +4,17 @@
 #include <vector>
 #include <string>
 
+class Component;
+enum ComponentType;
+
 class GameObject
 {
 public:
 	GameObject();
 	GameObject(GameObject* parent);
 	~GameObject();
+
+	void Update(float dt);
 
 	bool AddChild(GameObject* child);
 	bool RemoveChild(GameObject* child);
@@ -18,6 +23,12 @@ public:
 	const std::vector<GameObject*>* GetChilds();
 	size_t ChildCount();
 
+	bool IsActive();
+	void SetActive(bool value);
+
+	Component* AddComponent(ComponentType type);
+	const std::vector<Component*>* GetComponents();
+	void* GetComponent(ComponentType type);
 
 public:
 	std::string name = "Empty GameObject";
@@ -25,6 +36,10 @@ public:
 private:
 	GameObject* parent = nullptr;
 	std::vector<GameObject*> childs;
+
+	bool active = true;
+
+	std::vector<Component*> components;
 };
 
 #endif // !__GAMEOBJECT_H__

@@ -4,6 +4,9 @@
 #include "Module.h"
 #include <cstdint>
 
+class aiNode;
+class aiScene;
+
 struct Mesh
 {
 	//Vertices
@@ -34,9 +37,13 @@ public:
 	bool Init();
 	bool CleanUp();
 
-	vector<Mesh> Load(const char* path);
+	bool Load(const char* path);
 
 	uint LoadTexture(char* path);
+
+private:
+
+	void LoadNode(aiNode* node,const aiScene* scene,GameObject* parent);
 };
 
 #endif // __MODULEMESHES_H__

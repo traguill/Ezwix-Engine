@@ -23,9 +23,13 @@ private:
 	void HierarchyWindow();
 	void DisplayGameObjectsChilds(const std::vector<GameObject*>* childs);
 
+	void InspectorWindow();
+
+	void UpdateGameObjects(float dt, GameObject* obj);
 private:
-	
 	GameObject* root = nullptr;
+
+	GameObject* selected_GO = nullptr;
 
 };
 

@@ -1,5 +1,9 @@
 #include "GameObject.h"
 #include "Application.h"
+#include "Component.h"
+#include "ComponentTransform.h"
+#include "ComponentMesh.h"
+#include "ComponentMaterial.h"
 
 GameObject::GameObject()
 {}
@@ -8,7 +12,25 @@ GameObject::GameObject(GameObject* parent) : parent(parent)
 {}
 
 GameObject::~GameObject()
-{}
+{
+	for (std::vector<Component*>::iterator component = components.begin(); component != components.end(); ++component)
+	{
+		delete (*component);
+		(*component) = nullptr;
+	}
+
+	components.clear();
+}
+
+void GameObject::Update(float dt)
+{
+	std::vector<Component*>::iterator comp = components.begin();
+
+	for (comp; comp != components.end(); comp++)
+	{
+		(*comp)->Update(dt);
+	}
+}
 
 bool GameObject::AddChild(GameObject* child)
 {
@@ -68,4 +90,73 @@ const std::vector<GameObject*>* GameObject::GetChilds()
 size_t GameObject::ChildCount()
 {
 	return childs.size();
+}
+
+bool GameObject::IsActive()
+{
+	return active;
+}
+
+void GameObject::SetActive(bool value)
+{
+	if (value == true && parent->IsActive() == false)
+		return;
+
+	if ((value == true && active == false) || (value == false && active == true))
+	{
+		active = value;
+
+		for (std::vector<GameObject*>::iterator child = childs.begin(); child != childs.end(); ++child)
+			(*child)->SetActive(value);
+	}
+}
+
+Component* GameObject::AddComponent(ComponentType type)
+{
+	Component* item = nullptr;
+
+	switch (type)
+	{
+	case C_TRANSFORM:
+		item = new ComponentTransform(type);
+		break;
+	case C_MESH:
+		item = new ComponentMesh(type);
+		break;
+	case C_MATERIAL:
+		item = new ComponentMaterial(type);
+		break;
+	default:
+		break;
+	}
+
+	if (item != nullptr)
+	{
+		components.push_back(item);
+		item->parent = this; //TODO: Change this for a secure implementation
+	}
+		
+
+	return item;
+}
+
+const std::vector<Component*>* GameObject::GetComponents()
+{
+	return &components;
+}
+
+void* GameObject::GetComponent(ComponentType type)
+{
+	std::vector<Component*>::iterator comp = components.begin();
+
+	while (comp != components.end())
+	{
+		if ((*comp)->GetType() == type)
+		{
+			return (*comp);
+		}
+		++comp;
+	}
+
+	return NULL;
 }

@@ -1,5 +1,6 @@
 #include "Application.h"
 #include "ModuleGOManager.h"
+#include "Component.h"
 #include "GameObject.h"
 #include "Imgui\imgui.h"
 
@@ -12,40 +13,25 @@ ModuleGOManager::~ModuleGOManager()
 {
 	if(root)
 		delete root;
+
+	selected_GO = nullptr;
 }
 
 bool ModuleGOManager::Start()
 {
-
-	GameObject* a = CreateGameObject(NULL);
-	a->name = "A";
-
-	GameObject* b = CreateGameObject(NULL);
-	b->name = "B";
-
-	GameObject* c = CreateGameObject(a);
-	c->name = "A";
-
-	GameObject* d = CreateGameObject(a);
-	d->name = "D";
-
-	GameObject* e = CreateGameObject(a);
-	e->name = "E";
-
-	GameObject* f = CreateGameObject(d);
-	f->name = "A";
-
-	GameObject* g = CreateGameObject(b);
-	a->name = "A";
 
 	return true;
 }
 
 update_status ModuleGOManager::Update(float dt)
 {
-	
+	//Update GameObjects
+	if(root)
+		UpdateGameObjects(dt, root);
+
 	//Display windows
 	HierarchyWindow();
+	InspectorWindow();
 
 	return UPDATE_CONTINUE;
 }
@@ -94,18 +80,75 @@ void ModuleGOManager::DisplayGameObjectsChilds(const std::vector<GameObject*>* c
 {
 	for (vector<GameObject*>::const_iterator object = (*childs).begin(); object != (*childs).end(); ++object)
 	{
+		uint flags = 0;
+		if ((*object) == selected_GO)
+			flags = ImGuiTreeNodeFlags_Selected;
+
 		if ((*object)->ChildCount() > 0)
 		{
-			if (ImGui::TreeNode((*object)->name.data()))
+			if (ImGui::TreeNodeEx((*object)->name.data(), flags))
 			{
+				if (ImGui::IsItemClicked(0))
+				{
+					selected_GO = (*object);
+				}
+
 				DisplayGameObjectsChilds((*object)->GetChilds());
 				ImGui::TreePop();
 			}
 		}
 		else
 		{
-			ImGui::Bullet();
-			ImGui::Selectable((*object)->name.data());
+			if (ImGui::TreeNodeEx((*object)->name.data(), flags | ImGuiTreeNodeFlags_Leaf))
+			{
+				if (ImGui::IsItemClicked(0))
+				{
+					selected_GO = (*object);
+				}
+				ImGui::TreePop();
+			}
 		}
 	}
+}
+
+void ModuleGOManager::InspectorWindow()
+{
+	ImGui::Begin("Inspector");
+
+	if (selected_GO)
+	{
+		//Active
+		bool is_active = selected_GO->IsActive();
+		if (ImGui::Checkbox("", &is_active))
+		{
+			selected_GO->SetActive(is_active);
+		}
+
+		//Name
+		ImGui::SameLine();
+		ImGui::TextColored(ImVec4(1, 1, 1, 1), selected_GO->name.data());
+
+		//Components
+		const std::vector<Component*>* components = selected_GO->GetComponents();
+		for (std::vector<Component*>::const_iterator component = (*components).begin(); component != (*components).end(); ++component)
+		{
+			(*component)->OnInspector();
+		}
+	}
+
+	ImGui::End();
+}
+
+
+void ModuleGOManager::UpdateGameObjects(float dt, GameObject* object)
+{
+	object->Update(dt);
+
+	std::vector<GameObject*>::const_iterator child = object->GetChilds()->begin();
+	for (child; child != object->GetChilds()->end(); ++child)
+	{
+		UpdateGameObjects(dt, (*child));
+	}
+	
+
 }

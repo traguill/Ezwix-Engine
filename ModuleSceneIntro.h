@@ -1,13 +1,14 @@
 #pragma once
 #include "Module.h"
 #include "Globals.h"
-#include "StackAllocator.h"
 #include <list>
 
 #include "MathGeoLib\include\MathGeoLib.h"
 #include "MathGeoLib\include\MathBuildConfig.h"
 
 class Mesh;
+class GameObject;
+class ComponentTransform;
 
 class ModuleSceneIntro : public Module
 {
@@ -26,4 +27,7 @@ private:
 	vector<Mesh> object;
 public:
 	uint lenna_id = 0;
+
+	GameObject* test_object = nullptr;
+	ComponentTransform* test_transform = nullptr;
 };

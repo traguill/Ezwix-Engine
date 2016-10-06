@@ -1,11 +1,12 @@
 #include "Application.h"
 #include "ModuleSceneIntro.h"
-
+#include "GameObject.h"
 #include "Glew\include\glew.h"
 #include <gl\GL.h>
-
+#include "Component.h"
 #include "ModuleRenderer3D.h"
-
+#include "ComponentTransform.h"
+#include "ComponentMesh.h"
 #include "Random.h"
 
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
@@ -22,12 +23,8 @@ bool ModuleSceneIntro::Start()
 	bool ret = true;
 
 	
-	object = App->meshes->Load("cube_testing.fbx");
+	App->meshes->Load("Town/Street environment_V01.FBX");
 	
-
-	lenna_id = App->meshes->LoadTexture("lenna.png");
-
-	object.begin()->id_texture = lenna_id;
 
 	return ret;
 }
@@ -43,14 +40,7 @@ bool ModuleSceneIntro::CleanUp()
 // Update
 update_status ModuleSceneIntro::Update(float dt)
 {
-	glColor4f(1, 1, 1, 1);
-	vector<Mesh>::iterator item = object.begin();
-
-	while (item != object.end())
-	{
-		App->renderer3D->Draw((*item));
-		item++;
-	}
+	
 
 	return UPDATE_CONTINUE;
 }
