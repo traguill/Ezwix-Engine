@@ -213,7 +213,6 @@ void ModuleMeshes::LoadNode(aiNode* node,const aiScene* scene, GameObject* paren
 			if (path.length > 0)
 			{
 				ComponentMaterial* c_material = (ComponentMaterial*)game_object->AddComponent(C_MATERIAL);
-
 				
 				c_material->texture_id = LoadTexture(path.data); //TODO: check for errors
 

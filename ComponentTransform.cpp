@@ -4,7 +4,7 @@
 #include "imgui\imgui.h"
 
 
-ComponentTransform::ComponentTransform(ComponentType type) : Component(type)
+ComponentTransform::ComponentTransform(ComponentType type, GameObject* game_object) : Component(type, game_object)
 {
 	CalculateFinalTransform();
 }
@@ -14,14 +14,13 @@ ComponentTransform::~ComponentTransform()
 }
 
 void ComponentTransform::Update(float dt)
-{
-	CalculateFinalTransform(); //TODO: Don't update the matrix every frame.
-}
+{}
 
 void ComponentTransform::OnInspector()
 {
 	if (ImGui::CollapsingHeader("Transform"))
 	{
+
 		ImVec4 white = ImVec4(1, 1, 1, 1);
 	
 		//Position
@@ -29,7 +28,7 @@ void ComponentTransform::OnInspector()
 		ImGui::SameLine();
 
 		float3 position = this->position;
-		if (ImGui::InputFloat3("##pos", position.ptr()))
+		if (ImGui::DragFloat3("##pos", position.ptr()))
 		{
 			SetPosition(position);
 		}
@@ -39,7 +38,7 @@ void ComponentTransform::OnInspector()
 		ImGui::SameLine();
 
 		float3 rotation = this->rotation_euler;
-		if (ImGui::InputFloat3("##rot", rotation_euler.ptr()))
+		if (ImGui::DragFloat3("##rot", rotation_euler.ptr()))
 		{
 			SetRotation(rotation_euler);
 		}
@@ -49,11 +48,12 @@ void ComponentTransform::OnInspector()
 		ImGui::SameLine();
 
 		float3 scale = this->scale;
-		if (ImGui::InputFloat3("##scale", scale.ptr()))
+		if (ImGui::DragFloat3("##scale", scale.ptr()))
 		{
 			SetScale(scale);
 		}
 
+		//Local Matrix
 		ImGui::Text("%0.2f %0.2f %0.2f %0.2f", transform_matrix.v[0][0], transform_matrix.v[0][1], transform_matrix.v[0][2], transform_matrix.v[0][3]);
 		ImGui::Text("%0.2f %0.2f %0.2f %0.2f", transform_matrix.v[1][0], transform_matrix.v[1][1], transform_matrix.v[1][2], transform_matrix.v[1][3]);
 		ImGui::Text("%0.2f %0.2f %0.2f %0.2f", transform_matrix.v[2][0], transform_matrix.v[2][1], transform_matrix.v[2][2], transform_matrix.v[2][3]);
@@ -130,6 +130,7 @@ math::float4x4 ComponentTransform::GetTransformMatrix()
 
 void ComponentTransform::CalculateFinalTransform()
 {
+	GameObject* game_object = GetGameObject();
 	if (game_object)
 	{
 		if (game_object->GetParent())
@@ -152,8 +153,7 @@ void ComponentTransform::CalculateFinalTransform()
 		else
 		{
 			final_transform_matrix = transform_matrix;
-		}
-		
+		}	
 	}
 	else
 	{	

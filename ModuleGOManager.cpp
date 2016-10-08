@@ -127,7 +127,7 @@ void ModuleGOManager::InspectorWindow()
 
 		//Name
 		ImGui::SameLine();
-		ImGui::TextColored(ImVec4(1, 1, 1, 1), selected_GO->name.data());
+		ImGui::InputText("###goname", selected_GO->name._Myptr(), selected_GO->name.capacity());
 
 		//Components
 		const std::vector<Component*>* components = selected_GO->GetComponents();
@@ -143,7 +143,7 @@ void ModuleGOManager::InspectorWindow()
 
 void ModuleGOManager::UpdateGameObjects(float dt, GameObject* object)
 {
-	if(root != object)
+	if(root != object && object->IsActive() == true)
 		object->Update(dt);
 
 	std::vector<GameObject*>::const_iterator child = object->GetChilds()->begin();

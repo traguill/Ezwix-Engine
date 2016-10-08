@@ -7,7 +7,7 @@
 class ComponentTransform : public Component
 {
 public:
-	ComponentTransform(ComponentType type);
+	ComponentTransform(ComponentType type, GameObject* game_object);
 	~ComponentTransform();
 
 	void Update(float dt);

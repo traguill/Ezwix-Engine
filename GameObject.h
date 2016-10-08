@@ -31,7 +31,7 @@ public:
 	void* GetComponent(ComponentType type);
 
 public:
-	std::string name = "Empty GameObject";
+	std::string name;
 
 private:
 	GameObject* parent = NULL;

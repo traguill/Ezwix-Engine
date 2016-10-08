@@ -6,7 +6,7 @@
 #include "ComponentTransform.h"
 #include "ComponentMaterial.h"
 
-ComponentMesh::ComponentMesh(ComponentType type) : Component(type)
+ComponentMesh::ComponentMesh(ComponentType type, GameObject* game_object) : Component(type, game_object)
 {
 }
 
@@ -18,10 +18,14 @@ ComponentMesh::~ComponentMesh()
 
 void ComponentMesh::Update(float dt)
 {
-	ComponentTransform* trans = (ComponentTransform*)game_object->GetComponent(C_TRANSFORM);
+	//Component must be active to update
+	if (!IsActive())
+		return;
+
+	ComponentTransform* trans = (ComponentTransform*)GetGameObject()->GetComponent(C_TRANSFORM);
 	assert(trans);
 	
-	ComponentMaterial* material = (ComponentMaterial*)game_object->GetComponent(C_MATERIAL);
+	ComponentMaterial* material = (ComponentMaterial*)GetGameObject()->GetComponent(C_MATERIAL);
 	uint texture_id = 0;
 
 	if (material)
@@ -35,6 +39,13 @@ void ComponentMesh::OnInspector()
 {
 	if (ImGui::CollapsingHeader("Geometry Mesh"))
 	{
+		//Active
+		bool is_active = IsActive();
+		if (ImGui::Checkbox("###activeMesh", &is_active))
+		{
+			SetActive(is_active);
+		}
+
 		if (mesh)
 		{
 			ImGui::Text("Number vertices %d", mesh->num_vertices);

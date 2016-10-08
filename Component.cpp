@@ -2,7 +2,7 @@
 #include "GameObject.h"
 #include "Globals.h"
 
-Component::Component(ComponentType type) : type (type)
+Component::Component(ComponentType type, GameObject* game_object) : type (type), game_object(game_object)
 {}
 
 Component::~Component()
@@ -11,9 +11,14 @@ Component::~Component()
 void Component::OnInspector()
 {}
 
-ComponentType Component::GetType()
+ComponentType Component::GetType() const
 {
 	return type;
+}
+
+GameObject * Component::GetGameObject() const
+{
+	return game_object;
 }
 
 bool Component::IsActive()
@@ -29,3 +34,4 @@ void Component::SetActive(bool value)
 void Component::Update(float dt)
 {
 }
+

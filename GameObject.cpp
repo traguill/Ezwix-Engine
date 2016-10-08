@@ -6,10 +6,16 @@
 #include "ComponentMaterial.h"
 
 GameObject::GameObject()
-{}
+{
+	name.resize(30);
+	name = "Empty GameObject";
+}
 
 GameObject::GameObject(GameObject* parent) : parent(parent)
-{}
+{
+	name.resize(30);
+	name = "Empty GameObject";
+}
 
 GameObject::~GameObject()
 {
@@ -118,13 +124,13 @@ Component* GameObject::AddComponent(ComponentType type)
 	switch (type)
 	{
 	case C_TRANSFORM:
-		item = new ComponentTransform(type);
+		item = new ComponentTransform(type, this);
 		break;
 	case C_MESH:
-		item = new ComponentMesh(type);
+		item = new ComponentMesh(type, this);
 		break;
 	case C_MATERIAL:
-		item = new ComponentMaterial(type);
+		item = new ComponentMaterial(type, this);
 		break;
 	default:
 		break;
@@ -133,7 +139,6 @@ Component* GameObject::AddComponent(ComponentType type)
 	if (item != nullptr)
 	{
 		components.push_back(item);
-		item->game_object = this; //TODO: Change this for a secure implementation
 	}
 	else
 	{

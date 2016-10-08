@@ -8,7 +8,7 @@ struct Mesh;
 class ComponentMesh : public Component
 {
 public:
-	ComponentMesh(ComponentType type);
+	ComponentMesh(ComponentType type, GameObject* game_object);
 	~ComponentMesh();
 
 	void Update(float dt);

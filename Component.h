@@ -14,7 +14,7 @@ class Component
 {
 public:
 	
-	Component(ComponentType type);
+	Component(ComponentType type, GameObject* game_object);
 	virtual ~Component();
 
 	virtual void Update(float dt);
@@ -23,12 +23,12 @@ public:
 	void SetActive(bool value);
 	virtual void OnInspector();
 
-	ComponentType GetType();
+	ComponentType GetType()const;
+	GameObject* GetGameObject()const;
 
 private:
 	bool active = true;
 	ComponentType type;
-public:
 	GameObject* game_object = nullptr;
 
 };

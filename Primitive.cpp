@@ -98,7 +98,7 @@ void Primitive::SetRotation(float angle, const vec &u)
 // ------------------------------------------------------------
 void Primitive::Scale(float x, float y, float z)
 {
-	transform.Scale(x, y, z); //TODO: check if this implementation is correct. It may create a new matrix just with the new scale. Make sure old data of the matrix is conserved.
+	transform.Scale(x, y, z); 
 }
 
 // ------------------------------------------------------------

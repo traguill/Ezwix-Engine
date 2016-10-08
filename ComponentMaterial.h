@@ -6,7 +6,7 @@
 class ComponentMaterial : public Component
 {
 public:
-	ComponentMaterial(ComponentType type);
+	ComponentMaterial(ComponentType type, GameObject* game_object);
 	~ComponentMaterial();
 
 	void OnInspector();
