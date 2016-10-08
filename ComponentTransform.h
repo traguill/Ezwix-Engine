@@ -10,6 +10,8 @@ public:
 	ComponentTransform(ComponentType type);
 	~ComponentTransform();
 
+	void Update(float dt);
+
 	void OnInspector();
 
 	void SetPosition(math::float3 pos);

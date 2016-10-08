@@ -7,6 +7,7 @@
 ModuleGOManager::ModuleGOManager(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 	root = new GameObject();
+	root->AddComponent(C_TRANSFORM);
 }
 
 ModuleGOManager::~ModuleGOManager()

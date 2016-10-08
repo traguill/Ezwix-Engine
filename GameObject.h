@@ -34,7 +34,7 @@ public:
 	std::string name = "Empty GameObject";
 
 private:
-	GameObject* parent = nullptr;
+	GameObject* parent = NULL;
 	std::vector<GameObject*> childs;
 
 	bool active = true;

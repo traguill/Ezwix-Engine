@@ -1,5 +1,6 @@
 #include "ComponentTransform.h"
 #include "GameObject.h"
+#include "Globals.h"
 #include "imgui\imgui.h"
 
 
@@ -10,6 +11,11 @@ ComponentTransform::ComponentTransform(ComponentType type) : Component(type)
 
 ComponentTransform::~ComponentTransform()
 {
+}
+
+void ComponentTransform::Update(float dt)
+{
+	CalculateFinalTransform(); //TODO: Don't update the matrix every frame.
 }
 
 void ComponentTransform::OnInspector()
@@ -59,9 +65,7 @@ void ComponentTransform::SetPosition(math::float3 pos)
 {
 	position = pos;
 
-	transform_matrix.v[3][0] = position.x;
-	transform_matrix.v[3][1] = position.y;
-	transform_matrix.v[3][2] = position.z;
+	transform_matrix = transform_matrix.FromTRS(position, rotation, scale);
 
 	CalculateFinalTransform();
 }
@@ -74,7 +78,7 @@ void ComponentTransform::SetRotation(math::float3 rot_euler)
 
 	rotation = rotation.FromEulerXYZ(rot_deg.z, rot_deg.y, rot_deg.x);
 
-	transform_matrix.SetRotatePart(rotation);
+	transform_matrix = transform_matrix.FromTRS(position, rotation, scale);
 
 	CalculateFinalTransform();
 }
@@ -83,7 +87,7 @@ void ComponentTransform::SetRotation(math::Quat rot)
 {
 	rotation = rot;
 
-	transform_matrix.SetRotatePart(rotation);
+	transform_matrix = transform_matrix.FromTRS(position, rotation, scale);
 
 	rotation_euler = RadToDeg(rotation.ToEulerXYZ());
 
@@ -94,9 +98,7 @@ void ComponentTransform::SetScale(math::float3 scale)
 {
 	this->scale = scale;
 
-	transform_matrix.v[0][0] = scale.x;
-	transform_matrix.v[1][1] = scale.y;
-	transform_matrix.v[2][2] = scale.z;
+	transform_matrix = transform_matrix.FromTRS(position, rotation, this->scale);
 
 	CalculateFinalTransform();
 }
@@ -123,20 +125,38 @@ math::float3 ComponentTransform::GetScale()
 
 math::float4x4 ComponentTransform::GetTransformMatrix()
 {
-	return final_transform_matrix;
+	return final_transform_matrix.Transposed();
 }
 
 void ComponentTransform::CalculateFinalTransform()
 {
-	if (parent)
+	if (game_object)
 	{
-		ComponentTransform* parent_transform = (ComponentTransform*)parent->GetComponent(C_TRANSFORM);
-		assert(parent_transform);
+		if (game_object->GetParent())
+		{
+			ComponentTransform* parent_transform = (ComponentTransform*)game_object->GetParent()->GetComponent(C_TRANSFORM);
+			assert(parent_transform);
+
+			final_transform_matrix = parent_transform->final_transform_matrix * transform_matrix;
+
+			std::vector<GameObject*>::const_iterator go_childs = game_object->GetChilds()->begin();
+			for (go_childs; go_childs != game_object->GetChilds()->end(); ++go_childs)
+			{
+				ComponentTransform* transform = (ComponentTransform*)(*go_childs)->GetComponent(C_TRANSFORM);
+				if (transform)
+				{
+					transform->CalculateFinalTransform();
+				}
+			}
+		}
+		else
+		{
+			final_transform_matrix = transform_matrix;
+		}
 		
-		final_transform_matrix = parent_transform->final_transform_matrix * transform_matrix;
 	}
 	else
-	{
-		final_transform_matrix = transform_matrix;
+	{	
+		LOG("Error: Component created but not attached to any gameobject");
 	}
 }

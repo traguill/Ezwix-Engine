@@ -18,10 +18,10 @@ ComponentMesh::~ComponentMesh()
 
 void ComponentMesh::Update(float dt)
 {
-	ComponentTransform* trans = (ComponentTransform*)parent->GetComponent(C_TRANSFORM);
+	ComponentTransform* trans = (ComponentTransform*)game_object->GetComponent(C_TRANSFORM);
 	assert(trans);
 	
-	ComponentMaterial* material = (ComponentMaterial*)parent->GetComponent(C_MATERIAL);
+	ComponentMaterial* material = (ComponentMaterial*)game_object->GetComponent(C_MATERIAL);
 	uint texture_id = 0;
 
 	if (material)

@@ -67,7 +67,11 @@ bool ModuleMeshes::Load(const char* path)
 	{
 		aiNode* root = scene->mRootNode;
 
-		LoadNode(root, scene, NULL);
+		//Load root childs. Do not load the root node (unnecessary)
+		for (int i = 0; i < root->mNumChildren; i++)
+		{
+			LoadNode(root->mChildren[i], scene, NULL);
+		}
 		
 		aiReleaseImport(scene);
 

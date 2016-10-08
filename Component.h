@@ -29,7 +29,7 @@ private:
 	bool active = true;
 	ComponentType type;
 public:
-	GameObject* parent = nullptr;
+	GameObject* game_object = nullptr;
 
 };
 #endif // !__COMPONENT_H__

@@ -133,7 +133,11 @@ Component* GameObject::AddComponent(ComponentType type)
 	if (item != nullptr)
 	{
 		components.push_back(item);
-		item->parent = this; //TODO: Change this for a secure implementation
+		item->game_object = this; //TODO: Change this for a secure implementation
+	}
+	else
+	{
+		LOG("Error while adding component to %s", this->name);
 	}
 		
 
