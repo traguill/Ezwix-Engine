@@ -11,7 +11,7 @@ void ComponentMaterial::OnInspector()
 {
 	if (ImGui::CollapsingHeader("Material"))
 	{
-
+		ImGui::Image((ImTextureID)texture_id, ImVec2(250, 250));
 	}
 
 
