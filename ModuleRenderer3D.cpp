@@ -115,7 +115,7 @@ bool ModuleRenderer3D::Init()
 	LOG("Glew Version: %s", glewGetString(GLEW_VERSION));
 
 	// Projection matrix for
-	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT, 20.0f);
+	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT, 60.0f);
 
 	ImGui_ImplSdlGL3_Init(App->window->window);
 	
@@ -176,8 +176,8 @@ void ModuleRenderer3D::OnResize(int width, int height, float fovy)
 	perspective.SetIdentity();
 	float tan_theta_over2 = tan(fovy * pi / 360.0f);
 
-	perspective[0][0] = 1.0f / tan_theta_over2;
-	perspective[1][1] = ((float)width / (float)height) / tan_theta_over2;
+	perspective[0][0] = (1.0f / tan_theta_over2) / ((float) width / (float)height);
+	perspective[1][1] = 1.0f / tan_theta_over2;
 	perspective[2][2] = (_near + _far) / (_near - _far);
 	perspective[3][2] = 2 * _near * _far / (_near - _far);
 	perspective[2][3] = -1;
