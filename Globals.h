@@ -34,3 +34,8 @@ enum update_status
 #define WIN_FULLSCREEN_DESKTOP false
 #define VSYNC true
 #define TITLE "Ezwix Engine"
+
+//Folders
+#define ASSETS_FOLDER "/Assets/"
+#define LIBRARY_FOLDER "/Library/"
+#define LIBRARY_TEXTURES_FOLDER "/Library/Textures/"

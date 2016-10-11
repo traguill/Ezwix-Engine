@@ -35,7 +35,8 @@ public:
 	unsigned int Load(const char* file, char** buffer) const;
 	SDL_RWops* Load(const char* file) const;
 
-	unsigned int Save(const char* file, const char* buffer, unsigned int size) const;
+	unsigned int Save(const char* file, const void* buffer, unsigned int size) const;
+	bool SaveUnique(const char* file, const void* buffer, unsigned int size, const char* path, const char* extension,std::string& output_name);
 
 	bool GetEnumerateFiles(const char* dir, std::vector<const char*>& buffer);
 

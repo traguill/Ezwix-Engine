@@ -140,7 +140,7 @@ int close_sdl_rwops(SDL_RWops *rw)
 }
 
 // Save a whole buffer to disk
-unsigned int ModuleFileSystem::Save(const char* file, const char* buffer, unsigned int size) const
+unsigned int ModuleFileSystem::Save(const char* file, const void* buffer, unsigned int size) const
 {
 	unsigned int ret = 0;
 
@@ -165,6 +165,19 @@ unsigned int ModuleFileSystem::Save(const char* file, const char* buffer, unsign
 	return ret;
 }
 
+bool ModuleFileSystem::SaveUnique(const char * file, const void* buffer, unsigned int size, const char * path, const char * extension,std::string& output_name)
+{ //TODO: check if the file already exists
+	char name[300];
+	sprintf_s(name, 300, "%s%s.%s", path, file, extension);
+	if (Save(name, buffer, size) > 0)
+	{
+		output_name = name;
+		return true;
+	}
+	else
+		return false;
+}
+
 bool ModuleFileSystem::GetEnumerateFiles(const char * dir, std::vector<const char*>& buffer)
 {
 	char** ef =PHYSFS_enumerateFiles(dir);
@@ -182,28 +195,26 @@ bool ModuleFileSystem::GetEnumerateFiles(const char * dir, std::vector<const cha
 void ModuleFileSystem::SearchResourceFolders()
 {
 	//Create Assets and Library if doesn't exist
-	string assets = "/Assets/";
-	if (PHYSFS_exists((assets).data()) == 0)
+	if (PHYSFS_exists(ASSETS_FOLDER) == 0)
 	{
-		if (PHYSFS_mkdir(assets.data()) != 0)
+		if (PHYSFS_mkdir(ASSETS_FOLDER) != 0)
 		{
-			LOG("Directory %s created", assets.data());
+			LOG("Directory %s created", ASSETS_FOLDER);
 		}
 		else
 		{
-			LOG("Error while creating directory %s. %s", assets.data(), PHYSFS_getLastError());
+			LOG("Error while creating directory %s. %s", ASSETS_FOLDER, PHYSFS_getLastError());
 		}
 	}
-	string library = "/Library/";
-	if (PHYSFS_exists((library).data()) == 0)
+	if (PHYSFS_exists(LIBRARY_FOLDER) == 0)
 	{
-		if (PHYSFS_mkdir(library.data()) != 0)
+		if (PHYSFS_mkdir(LIBRARY_FOLDER) != 0)
 		{
-			LOG("Directory %s created", library.data());
+			LOG("Directory %s created", LIBRARY_FOLDER);
 		}
 		else
 		{
-			LOG("Error while creating directory %s. %s", library.data(), PHYSFS_getLastError());
+			LOG("Error while creating directory %s. %s", LIBRARY_FOLDER, PHYSFS_getLastError());
 		}
 	}
 }

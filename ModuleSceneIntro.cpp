@@ -9,6 +9,9 @@
 #include "ComponentMesh.h"
 #include "Random.h"
 
+//Tesing
+#include "MaterialImporter.h"
+
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 }
@@ -22,7 +25,6 @@ bool ModuleSceneIntro::Start()
 	LOG("Loading Intro assets");
 	bool ret = true;
 
-	
 	App->meshes->Load("Street environment_V01.fbx");
 	
 
