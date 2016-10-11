@@ -381,6 +381,9 @@
     <ClInclude Include="ComponentMaterial.h">
       <Filter>Sources\GameObjects\Components</Filter>
     </ClInclude>
+    <ClInclude Include="Assets.h">
+      <Filter>Sources\Editor\Windows</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -613,6 +616,9 @@
     </ClCompile>
     <ClCompile Include="ComponentMaterial.cpp">
       <Filter>Sources\GameObjects\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Assets.cpp">
+      <Filter>Sources\Editor\Windows</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

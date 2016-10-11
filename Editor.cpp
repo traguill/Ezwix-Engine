@@ -6,6 +6,7 @@
 #include "WindowOptions.h"
 #include "HardwareInfo.h"
 #include "Console.h"
+#include "Assets.h"
 #include "Profiler.h"
 
 Editor::Editor(Application* app, bool start_enabled) : Module(app, start_enabled)
@@ -31,6 +32,7 @@ bool Editor::Start()
 	windows.push_back(fps_graph_win = new FPSGraph());
 	windows.push_back(winoptions_win = new WindowOptions());
 	windows.push_back(hardware_win = new HardwareInfo());
+	windows.push_back(assets = new Assets());
 
 	return ret;
 }
@@ -159,5 +161,10 @@ void Editor::WindowsMenu()
 	if (ImGui::MenuItem("Profiler"))
 	{
 		g_Profiler.SetActive(true);
+	}
+
+	if (ImGui::MenuItem("Assets"))
+	{
+		assets->SetActive(true);
 	}
 }

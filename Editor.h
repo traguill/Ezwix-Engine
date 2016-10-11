@@ -10,6 +10,7 @@ class FPSGraph;
 class WindowOptions;
 class HardwareInfo;
 class Console;
+class Assets;
 
 class Editor : public Module
 {
@@ -37,4 +38,5 @@ private:
 	FPSGraph* fps_graph_win = nullptr;
 	WindowOptions* winoptions_win = nullptr;
 	HardwareInfo* hardware_win = nullptr;
+	Assets* assets = nullptr;
 };

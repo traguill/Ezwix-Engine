@@ -75,6 +75,7 @@
   <ItemGroup>
     <ClInclude Include="Allocator.h" />
     <ClInclude Include="Application.h" />
+    <ClInclude Include="Assets.h" />
     <ClInclude Include="AutoProfile.h" />
     <ClInclude Include="Color.h" />
     <ClInclude Include="Component.h" />
@@ -185,6 +186,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="Assets.cpp" />
     <ClCompile Include="AutoProfile.cpp" />
     <ClCompile Include="Color.cpp" />
     <ClCompile Include="Component.cpp" />

@@ -34,21 +34,13 @@ bool ModuleFileSystem::Init()
 	//AddPath() manually
 
 
-	// Ask SDL for a write dir
-	char* write_path = SDL_GetPrefPath("Ezwix-Organization", "Ezwix");
-
-	if (PHYSFS_setWriteDir(write_path) == 0)
+	if (PHYSFS_setWriteDir(".") == 0)
 	{
 		LOG("File System error while creating write dir: %s\n", PHYSFS_getLastError());
 	}
-	else
-	{
-		// We add the writing directory as a reading directory too with speacial mount point
-		LOG("Writing directory is %s\n", write_path);
-		AddPath(write_path, GetSaveDirectory());
-	}
 
-	SDL_free(write_path);
+	//Search Assets and Library folders
+	SearchResourceFolders();
 
 	return ret;
 }
@@ -171,4 +163,47 @@ unsigned int ModuleFileSystem::Save(const char* file, const char* buffer, unsign
 		LOG("File System error while opening file %s: %s\n", file, PHYSFS_getLastError());
 
 	return ret;
+}
+
+bool ModuleFileSystem::GetEnumerateFiles(const char * dir, std::vector<const char*>& buffer)
+{
+	char** ef =PHYSFS_enumerateFiles(dir);
+
+	for (char** i = ef; *i != NULL; i++)
+	{
+		buffer.push_back(*i);
+	}
+
+	PHYSFS_freeList(ef);
+
+	return (ef != NULL) ? true : false;
+}
+
+void ModuleFileSystem::SearchResourceFolders()
+{
+	//Create Assets and Library if doesn't exist
+	string assets = "/Assets/";
+	if (PHYSFS_exists((assets).data()) == 0)
+	{
+		if (PHYSFS_mkdir(assets.data()) != 0)
+		{
+			LOG("Directory %s created", assets.data());
+		}
+		else
+		{
+			LOG("Error while creating directory %s. %s", assets.data(), PHYSFS_getLastError());
+		}
+	}
+	string library = "/Library/";
+	if (PHYSFS_exists((library).data()) == 0)
+	{
+		if (PHYSFS_mkdir(library.data()) != 0)
+		{
+			LOG("Directory %s created", library.data());
+		}
+		else
+		{
+			LOG("Error while creating directory %s. %s", library.data(), PHYSFS_getLastError());
+		}
+	}
 }

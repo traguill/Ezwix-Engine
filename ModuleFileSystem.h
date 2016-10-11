@@ -37,7 +37,11 @@ public:
 
 	unsigned int Save(const char* file, const char* buffer, unsigned int size) const;
 
+	bool GetEnumerateFiles(const char* dir, std::vector<const char*>& buffer);
+
 private:
+
+	void SearchResourceFolders();
 
 };
 

@@ -38,7 +38,7 @@ void ComponentTransform::OnInspector()
 		ImGui::SameLine();
 
 		float3 rotation = this->rotation_euler;
-		if (ImGui::DragFloat3("##rot", rotation_euler.ptr()))
+		if (ImGui::DragFloat3("##rot", rotation_euler.ptr(), 1.0f, -360.0f, 360.0f))
 		{
 			SetRotation(rotation_euler);
 		}
