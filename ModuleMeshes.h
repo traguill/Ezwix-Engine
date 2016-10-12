@@ -24,8 +24,14 @@ struct Mesh
 	uint num_uvs = 0;
 	float* uvs = nullptr;
 
-	//Texture
-	uint id_texture = 0; 
+	//Normals
+	float* normals = nullptr;
+
+	//Vertex colors
+	float* colors = nullptr;
+
+	const char* name = nullptr;
+
 };
 
 class ModuleMeshes : public Module

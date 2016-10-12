@@ -194,27 +194,10 @@ bool ModuleFileSystem::GetEnumerateFiles(const char * dir, std::vector<const cha
 
 void ModuleFileSystem::SearchResourceFolders()
 {
-	//Create Assets and Library if doesn't exist
-	if (PHYSFS_exists(ASSETS_FOLDER) == 0)
-	{
-		if (PHYSFS_mkdir(ASSETS_FOLDER) != 0)
-		{
-			LOG("Directory %s created", ASSETS_FOLDER);
-		}
-		else
-		{
-			LOG("Error while creating directory %s. %s", ASSETS_FOLDER, PHYSFS_getLastError());
-		}
-	}
-	if (PHYSFS_exists(LIBRARY_FOLDER) == 0)
-	{
-		if (PHYSFS_mkdir(LIBRARY_FOLDER) != 0)
-		{
-			LOG("Directory %s created", LIBRARY_FOLDER);
-		}
-		else
-		{
-			LOG("Error while creating directory %s. %s", LIBRARY_FOLDER, PHYSFS_getLastError());
-		}
-	}
+	const char* folders[] = { ASSETS_FOLDER, LIBRARY_FOLDER, LIBRARY_TEXTURES_FOLDER, LIBRARY_MESHES_FOLDER }; //4 folders
+
+	for (int i = 0; i < 4; i++)
+		if (PHYSFS_exists(folders[i]) == 0)
+			PHYSFS_mkdir(folders[i]);
+	
 }

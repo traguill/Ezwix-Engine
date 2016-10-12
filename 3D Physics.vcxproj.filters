@@ -632,6 +632,9 @@
     <ClCompile Include="MaterialImporter.cpp">
       <Filter>Sources\Importer</Filter>
     </ClCompile>
+    <ClCompile Include="MeshImporter.cpp">
+      <Filter>Sources\Importer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="ListIterator.snippet">

@@ -39,3 +39,4 @@ enum update_status
 #define ASSETS_FOLDER "/Assets/"
 #define LIBRARY_FOLDER "/Library/"
 #define LIBRARY_TEXTURES_FOLDER "/Library/Textures/"
+#define LIBRARY_MESHES_FOLDER "/Library/Meshes/"

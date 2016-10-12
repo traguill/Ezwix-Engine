@@ -23,6 +23,8 @@
 #include "ComponentMesh.h"
 #include "ComponentMaterial.h"
 
+#include "MeshImporter.h"
+
 ModuleMeshes::ModuleMeshes(Application* app, bool start_enabled) : Module(app, start_enabled)
 {}
 
@@ -147,13 +149,18 @@ void ModuleMeshes::LoadNode(aiNode* node,const aiScene* scene, GameObject* paren
 		//Mesh --------------------------------------------------------------------------------------------------------------------------------
 
 		ComponentMesh* c_mesh = (ComponentMesh*)game_object->AddComponent(C_MESH);
-		Mesh* mesh = new Mesh();
 
+		string mesh_path;
+		bool ret = MeshImporter::Import(mesh_to_load, mesh_path);
+
+		Mesh* mesh = MeshImporter::Load(mesh_path.data());
+
+	
 		//Vertices ------------------------------------------------------------------------------------------------------
-		mesh->num_vertices = mesh_to_load->mNumVertices;
+		/*mesh->num_vertices = mesh_to_load->mNumVertices;
 		mesh->vertices = new float[mesh->num_vertices * 3];
 		memcpy(mesh->vertices, mesh_to_load->mVertices, sizeof(float)*mesh->num_vertices * 3);
-		LOG("Mesh Loaded with %d vertices", mesh->num_vertices);
+		LOG("Mesh Loaded with %d vertices", mesh->num_vertices);*/
 
 		//Load buffer to VRAM
 		glGenBuffers(1, (GLuint*)&(mesh->id_vertices));
@@ -161,7 +168,7 @@ void ModuleMeshes::LoadNode(aiNode* node,const aiScene* scene, GameObject* paren
 		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 3 * mesh->num_vertices, mesh->vertices, GL_STATIC_DRAW);
 
 		//Indices --------------------------------------------------------------------------------------------------------
-		if (mesh_to_load->HasFaces())
+		/*if (mesh_to_load->HasFaces())
 		{
 			mesh->num_indices = mesh_to_load->mNumFaces * 3;
 			mesh->indices = new uint[mesh->num_indices];
@@ -176,7 +183,7 @@ void ModuleMeshes::LoadNode(aiNode* node,const aiScene* scene, GameObject* paren
 					memcpy(&mesh->indices[f * 3], mesh_to_load->mFaces[f].mIndices, 3 * sizeof(uint));
 				}
 			}
-		}
+		}*/
 
 		//Load indices buffer to VRAM
 		glGenBuffers(1, (GLuint*) &(mesh->id_indices));
@@ -184,7 +191,7 @@ void ModuleMeshes::LoadNode(aiNode* node,const aiScene* scene, GameObject* paren
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * mesh->num_indices, mesh->indices, GL_STATIC_DRAW);
 
 		//Load UVs -----------------------------------------------------------------------------------------------------------------------
-		if (mesh_to_load->HasTextureCoords(0))
+		/*if (mesh_to_load->HasTextureCoords(0))
 		{
 			mesh->num_uvs = mesh_to_load->mNumVertices; //Same size as vertices
 			mesh->uvs = new float[mesh->num_uvs * 2];
@@ -192,12 +199,12 @@ void ModuleMeshes::LoadNode(aiNode* node,const aiScene* scene, GameObject* paren
 			{
 				memcpy(&mesh->uvs[uvs_item * 2], &mesh_to_load->mTextureCoords[0][uvs_item].x, sizeof(float));
 				memcpy(&mesh->uvs[(uvs_item * 2) + 1], &mesh_to_load->mTextureCoords[0][uvs_item].y, sizeof(float));
-			}
+			}*/
 
 			glGenBuffers(1, (GLuint*)&(mesh->id_uvs));
 			glBindBuffer(GL_ARRAY_BUFFER, mesh->id_uvs);
 			glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 2 * mesh->num_uvs, mesh->uvs, GL_STATIC_DRAW);
-		}
+		
 
 		c_mesh->SetMesh(mesh);
 
