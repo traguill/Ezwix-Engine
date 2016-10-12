@@ -27,7 +27,7 @@ bool MaterialImporter::Import(const char* file, const char * path, std::string &
 		data = new ILubyte[size];
 		if (ilSaveL(IL_DDS, data, size) > 0)
 		{
-			ret = App->file_system->SaveUnique(file, data, size, LIBRARY_FOLDER, "dds", output_file);
+			ret = App->file_system->SaveUnique(file, data, size, LIBRARY_TEXTURES_FOLDER, "dds", output_file);
 		}
 		delete[] data;
 		data = nullptr;

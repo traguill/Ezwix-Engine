@@ -25,6 +25,8 @@
 
 #include "MeshImporter.h"
 
+#include "MaterialImporter.h"
+
 ModuleMeshes::ModuleMeshes(Application* app, bool start_enabled) : Module(app, start_enabled)
 {}
 
@@ -89,7 +91,7 @@ bool ModuleMeshes::Load(const char* path)
 	return ret;
 }
 
-uint ModuleMeshes::LoadTexture(char* path)
+uint ModuleMeshes::LoadTexture(const char* path)
 {
 	ILuint id;
 	ilGenImages(1, &id);
@@ -221,9 +223,11 @@ void ModuleMeshes::LoadNode(aiNode* node,const aiScene* scene, GameObject* paren
 			{
 				ComponentMaterial* c_material = (ComponentMaterial*)game_object->AddComponent(C_MATERIAL);
 				
-				c_material->texture_id = LoadTexture(path.data); //TODO: check for errors
+				string texture_name;
+				MaterialImporter::Import("texture", path.data, texture_name);
+				c_material->texture_id = LoadTexture(texture_name.data());
 
-				LOG("Texture id %d Load: %s", c_material->texture_id, path.data);
+				LOG("Texture id %i Load: %s", c_material->texture_id, texture_name.data());
 			}
 			
 		}

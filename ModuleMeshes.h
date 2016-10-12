@@ -45,7 +45,7 @@ public:
 
 	bool Load(const char* path);
 
-	uint LoadTexture(char* path);
+	uint LoadTexture(const char* path);
 
 private:
 
