@@ -167,8 +167,38 @@ unsigned int ModuleFileSystem::Save(const char* file, const void* buffer, unsign
 
 bool ModuleFileSystem::SaveUnique(const char * file, const void* buffer, unsigned int size, const char * path, const char * extension,std::string& output_name)
 { //TODO: check if the file already exists
+	
+	char name_to_save[50];
+	sprintf_s(name_to_save, 50, "%s.%s", file, extension);
+
+	vector<const char*> files_in_path;
+	GetEnumerateFiles(path, files_in_path);
+
+	int copies = 0;
+
+	bool name_unique = false;
+
+	while (name_unique == false)
+	{
+		name_unique = true;
+
+		vector<const char*>::iterator name_file = files_in_path.begin();
+		for (name_file; name_file != files_in_path.end(); name_file++)
+		{
+			if (strcmp((*name_file), name_to_save) == 0)
+			{
+				//add +1 to the file number
+				++copies;
+				sprintf_s(name_to_save, 50, "%s%d.%s", file, copies, extension);
+				name_unique = false;
+				break;
+			}
+		}	
+	}
+
 	char name[300];
-	sprintf_s(name, 300, "%s%s.%s", path, file, extension);
+	sprintf_s(name, 300, "%s%s", path, name_to_save);
+
 	if (Save(name, buffer, size) > 0)
 	{
 		output_name = name;
