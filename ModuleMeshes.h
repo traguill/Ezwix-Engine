@@ -43,13 +43,13 @@ public:
 	bool Init();
 	bool CleanUp();
 
-	bool Load(const char* path);
+	bool Load(const char* path, const char* base_path);
 
 	uint LoadTexture(const char* path);
 
 private:
 
-	void LoadNode(aiNode* node,const aiScene* scene,GameObject* parent);
+	void LoadNode(aiNode* node,const aiScene* scene,GameObject* parent, const char* base_path);
 };
 
 #endif // __MODULEMESHES_H__

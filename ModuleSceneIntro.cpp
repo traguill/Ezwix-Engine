@@ -25,7 +25,7 @@ bool ModuleSceneIntro::Start()
 	LOG("Loading Intro assets");
 	bool ret = true;
 
-	App->meshes->Load("Street environment_V01.fbx");
+	//App->meshes->Load("Street environment_V01.fbx");
 	
 
 	return ret;

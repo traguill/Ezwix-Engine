@@ -171,7 +171,7 @@ bool ModuleFileSystem::SaveUnique(const char * file, const void* buffer, unsigne
 	char name_to_save[50];
 	sprintf_s(name_to_save, 50, "%s.%s", file, extension);
 
-	vector<const char*> files_in_path;
+	vector<string> files_in_path;
 	GetEnumerateFiles(path, files_in_path);
 
 	int copies = 0;
@@ -182,10 +182,11 @@ bool ModuleFileSystem::SaveUnique(const char * file, const void* buffer, unsigne
 	{
 		name_unique = true;
 
-		vector<const char*>::iterator name_file = files_in_path.begin();
+		vector<string>::iterator name_file = files_in_path.begin();
 		for (name_file; name_file != files_in_path.end(); name_file++)
 		{
-			if (strcmp((*name_file), name_to_save) == 0)
+			
+			if ((*name_file).compare(name_to_save) == 0)
 			{
 				//add +1 to the file number
 				++copies;
@@ -208,7 +209,7 @@ bool ModuleFileSystem::SaveUnique(const char * file, const void* buffer, unsigne
 		return false;
 }
 
-bool ModuleFileSystem::GetEnumerateFiles(const char * dir, std::vector<const char*>& buffer)
+bool ModuleFileSystem::GetEnumerateFiles(const char * dir, std::vector<std::string>& buffer)
 {
 	char** ef =PHYSFS_enumerateFiles(dir);
 
@@ -220,6 +221,26 @@ bool ModuleFileSystem::GetEnumerateFiles(const char * dir, std::vector<const cha
 	PHYSFS_freeList(ef);
 
 	return (ef != NULL) ? true : false;
+}
+
+void ModuleFileSystem::GetFilesAndDirectories(const char * dir, std::vector<string>& folders, std::vector<string>& files)
+{
+	char** ef = PHYSFS_enumerateFiles(dir);
+
+	string directory(dir);
+	for (char**i = ef; *i != NULL; i++)
+	{
+		if (PHYSFS_isDirectory((directory+(*i)).c_str()))
+		{
+			folders.push_back(*i);
+		}
+		else
+		{
+			files.push_back(*i);
+		}
+	}
+
+	PHYSFS_freeList(ef);
 }
 
 void ModuleFileSystem::SearchResourceFolders()

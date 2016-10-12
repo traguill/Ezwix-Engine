@@ -53,7 +53,7 @@ bool ModuleMeshes::CleanUp()
 	return true;
 }
 
-bool ModuleMeshes::Load(const char* path)
+bool ModuleMeshes::Load(const char* path, const char* base_path)
 {
 	bool ret = false;
 	char* buff;
@@ -74,7 +74,7 @@ bool ModuleMeshes::Load(const char* path)
 		//Load root childs. Do not load the root node (unnecessary)
 		for (int i = 0; i < root->mNumChildren; i++)
 		{
-			LoadNode(root->mChildren[i], scene, NULL);
+			LoadNode(root->mChildren[i], scene, NULL, base_path);
 		}
 		
 		aiReleaseImport(scene);
@@ -102,7 +102,7 @@ uint ModuleMeshes::LoadTexture(const char* path)
 
 }
 
-void ModuleMeshes::LoadNode(aiNode* node,const aiScene* scene, GameObject* parent)
+void ModuleMeshes::LoadNode(aiNode* node,const aiScene* scene, GameObject* parent, const char* base_path)
 {
 	//Transformation ------------------------------------------------------------------------------------------------------------------
 	GameObject* go_root = App->go_manager->CreateGameObject(parent);
@@ -224,7 +224,13 @@ void ModuleMeshes::LoadNode(aiNode* node,const aiScene* scene, GameObject* paren
 				ComponentMaterial* c_material = (ComponentMaterial*)game_object->AddComponent(C_MATERIAL);
 				
 				string texture_name;
-				MaterialImporter::Import("texture", path.data, texture_name);
+
+				string complete_path = base_path;
+				complete_path += path.data;
+				
+				complete_path.erase(0, 1);
+
+				MaterialImporter::Import("texture", complete_path.data(), texture_name);
 				c_material->texture_id = LoadTexture(texture_name.data());
 
 				LOG("Texture id %i Load: %s", c_material->texture_id, texture_name.data());
@@ -236,6 +242,6 @@ void ModuleMeshes::LoadNode(aiNode* node,const aiScene* scene, GameObject* paren
 
 	for (int i = 0; i < node->mNumChildren; i++)
 	{
-		LoadNode(node->mChildren[i], scene, go_root);
+		LoadNode(node->mChildren[i], scene, go_root, base_path);
 	}
 }

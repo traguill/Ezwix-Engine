@@ -16,6 +16,7 @@ bool MaterialImporter::Import(const char* file, const char * path, std::string &
 	ilGenImages(1, &id);
 	ilBindImage(id);
 	ilLoadImage(path);
+	
 
 	ILuint size;
 	ILubyte *data;

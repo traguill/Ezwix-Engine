@@ -38,7 +38,8 @@ public:
 	unsigned int Save(const char* file, const void* buffer, unsigned int size) const;
 	bool SaveUnique(const char* file, const void* buffer, unsigned int size, const char* path, const char* extension,std::string& output_name);
 
-	bool GetEnumerateFiles(const char* dir, std::vector<const char*>& buffer);
+	bool GetEnumerateFiles(const char* dir, std::vector<std::string>& buffer);
+	void GetFilesAndDirectories(const char* dir, std::vector<string>& folders, std::vector<string>& files);
 
 private:
 

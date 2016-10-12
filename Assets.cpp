@@ -8,9 +8,7 @@ Assets::Assets()
 }
 
 Assets::~Assets()
-{
-	files.clear();
-}
+{}
 
 void Assets::Draw()
 {
@@ -19,22 +17,87 @@ void Assets::Draw()
 
 	ImGui::Begin("Assets", &active);
 
-	std::vector<const char*>::const_iterator it = files.begin();
-
-	while (it != files.end())
+	ImGui::Text(current_dir->path.data());
+	//Print folders
+	std::vector<Directory>::iterator dir = current_dir->directories.begin();
+	for (dir; dir != current_dir->directories.end(); dir++)
 	{
-		const char* file = *it; //For some reason imgui::text does not accept the *it directly
-		ImGui::Text(file);
-		++it;
+		ImGui::Image((ImTextureID)folder_id, ImVec2(20, 20));
+		ImGui::SameLine();
+		
+		if (ImGui::Selectable((*dir).name.data()))
+		{
+			current_dir = &(*dir);
+			break;
+		}
 	}
 
+	//Print files
+	std::vector<string>::iterator file = current_dir->files.begin();
+	for (file; file != current_dir->files.end(); file++)
+	{
+		ImGui::Image((ImTextureID)file_id, ImVec2(20, 20));
+		ImGui::SameLine();
+
+		if (ImGui::Selectable((*file).data()))
+		{
+			if (IsMeshExtension((*file).data()))
+			{
+				file_selected = current_dir->path + (*file);
+				ImGui::OpenPopup("FileOptions");
+			}			
+		}
+	}
+
+	if (ImGui::BeginPopup("FileOptions"))
+	{
+		if (ImGui::Selectable("Load to scene"))
+		{
+			App->meshes->Load((file_selected).c_str(), current_dir->path.data());
+		}
+		ImGui::EndPopup();
+	}
+	
 	ImGui::End();
 }
 
 void Assets::Init()
 {
-	if (App->file_system->GetEnumerateFiles("Assets", files))
+	root.path = ASSETS_FOLDER;
+	root.name = "Assets";
+	FillDirectoriesRecursive(root);
+
+	folder_id = App->meshes->LoadTexture("Resources/folder.png");
+	file_id = App->meshes->LoadTexture("Resources/file.png");
+}
+
+void Assets::FillDirectoriesRecursive(Directory& root_dir)
+{
+	std::vector<string> folders;
+	App->file_system->GetFilesAndDirectories(root_dir.path.data(), folders, root_dir.files);
+
+	for (std::vector<string>::iterator it = folders.begin(); it != folders.end(); it++)
 	{
-		LOG("Files found in Assets");
+		Directory dir;
+		dir.path = root_dir.path + *it + "/";
+		dir.name = (*it);
+		FillDirectoriesRecursive(dir);
+		root_dir.directories.push_back(dir);
 	}
+}
+
+bool Assets::IsMeshExtension(std::string fn)
+{
+	string extension = fn.substr(fn.find_last_of(".") + 1);
+
+	//TODO: improve this approach
+	char* mesh_ext[] = { "fbx", "FBX", "obj", "OBJ" };
+
+	for (int i = 0; i < 4; i++)
+	{
+		if (extension.compare(mesh_ext[i]) == 0)
+			return true;
+	}
+
+	return false;
 }
