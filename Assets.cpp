@@ -8,7 +8,9 @@ Assets::Assets()
 }
 
 Assets::~Assets()
-{}
+{
+	CleanUp();
+}
 
 void Assets::Draw()
 {
@@ -18,16 +20,28 @@ void Assets::Draw()
 	ImGui::Begin("Assets", &active);
 
 	ImGui::Text(current_dir->path.data());
+
+	//Back folder
+	if (current_dir->parent != nullptr)
+	{
+		ImGui::Image((ImTextureID)folder_id, ImVec2(15, 15));
+		ImGui::SameLine();
+
+		if (ImGui::Selectable("../"))
+			current_dir = current_dir->parent;	
+	}
+	
+
 	//Print folders
-	std::vector<Directory>::iterator dir = current_dir->directories.begin();
+	std::vector<Directory*>::iterator dir = current_dir->directories.begin();
 	for (dir; dir != current_dir->directories.end(); dir++)
 	{
-		ImGui::Image((ImTextureID)folder_id, ImVec2(20, 20));
+		ImGui::Image((ImTextureID)folder_id, ImVec2(15, 15));
 		ImGui::SameLine();
 		
-		if (ImGui::Selectable((*dir).name.data()))
+		if (ImGui::Selectable((*dir)->name.data()))
 		{
-			current_dir = &(*dir);
+			current_dir = (*dir);
 			break;
 		}
 	}
@@ -36,7 +50,7 @@ void Assets::Draw()
 	std::vector<string>::iterator file = current_dir->files.begin();
 	for (file; file != current_dir->files.end(); file++)
 	{
-		ImGui::Image((ImTextureID)file_id, ImVec2(20, 20));
+		ImGui::Image((ImTextureID)file_id, ImVec2(15, 15));
 		ImGui::SameLine();
 
 		if (ImGui::Selectable((*file).data()))
@@ -63,26 +77,30 @@ void Assets::Draw()
 
 void Assets::Init()
 {
-	root.path = ASSETS_FOLDER;
-	root.name = "Assets";
+	root = new Directory();
+	root->path = ASSETS_FOLDER;
+	root->name = "Assets";
 	FillDirectoriesRecursive(root);
+
+	current_dir = root;
 
 	folder_id = App->meshes->LoadTexture("Resources/folder.png");
 	file_id = App->meshes->LoadTexture("Resources/file.png");
 }
 
-void Assets::FillDirectoriesRecursive(Directory& root_dir)
+void Assets::FillDirectoriesRecursive(Directory* root_dir)
 {
 	std::vector<string> folders;
-	App->file_system->GetFilesAndDirectories(root_dir.path.data(), folders, root_dir.files);
+	App->file_system->GetFilesAndDirectories(root_dir->path.data(), folders, root_dir->files);
 
 	for (std::vector<string>::iterator it = folders.begin(); it != folders.end(); it++)
 	{
-		Directory dir;
-		dir.path = root_dir.path + *it + "/";
-		dir.name = (*it);
+		Directory* dir = new Directory();
+		dir->path = root_dir->path + *it + "/";
+		dir->name = (*it);
+		dir->parent = root_dir;
 		FillDirectoriesRecursive(dir);
-		root_dir.directories.push_back(dir);
+		root_dir->directories.push_back(dir);
 	}
 }
 
@@ -100,4 +118,21 @@ bool Assets::IsMeshExtension(std::string fn)
 	}
 
 	return false;
+}
+
+void Assets::CleanUp()
+{
+	DeleteDirectoriesRecursive(root);
+}
+
+void Assets::DeleteDirectoriesRecursive(Directory* root_dir)
+{
+	std::vector<Directory*>::iterator dir = root_dir->directories.begin();
+
+	for (dir; dir != root_dir->directories.end(); dir++)
+	{
+		DeleteDirectoriesRecursive((*dir));
+	}
+
+	delete root_dir;
 }

@@ -9,8 +9,9 @@ struct Directory
 {
 	std::string name;
 	std::string path; //Path from Assets to the current directory
-	std::vector<Directory> directories;
+	std::vector<Directory*> directories;
 	std::vector<string> files;
+	Directory* parent = nullptr;
 };
 
 class Assets : public Window
@@ -24,14 +25,16 @@ public:
 private:
 
 	void Init();
-	void FillDirectoriesRecursive(Directory& root_dir);
+	void CleanUp();
+	void FillDirectoriesRecursive(Directory* root_dir);
+	void DeleteDirectoriesRecursive(Directory* root_dir);
 
 	bool IsMeshExtension(std::string file_name);
 
 private:
-	Directory root; //Assets directory
+	Directory* root = nullptr; //Assets directory
 
-	Directory* current_dir = &root;
+	Directory* current_dir = root;
 	std::string file_selected;
 	//Icons
 	uint folder_id;
