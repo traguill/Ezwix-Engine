@@ -90,8 +90,6 @@ update_status Editor::EditorWindows()
 		ImGui::EndMainMenuBar();
 	}
 
-	ImGui::ShowTestWindow();
-
 	//Windows ----------------------------------------------------------------------------------------------------
 	vector<Window*>::iterator win = windows.begin();
 	while (win != windows.end())
