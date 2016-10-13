@@ -78,7 +78,7 @@ bool ModuleRenderer3D::Init()
 		glClearDepth(1.0f);
 		
 		//Initialize clear color
-		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		glClearColor(0.17f, 0.17f, 0.17f, 1.0f);
 
 		//Check for error
 		error = glGetError();
@@ -192,7 +192,6 @@ void ModuleRenderer3D::OnResize(int width, int height, float fovy)
 
 void ModuleRenderer3D::Draw(Mesh mesh, float4x4 matrix, uint texture_id)
 {
-	glColor4f(1, 1, 1, 1);
 	glPushMatrix();
 	glMultMatrixf(*matrix.v);
 

@@ -48,7 +48,23 @@ void ComponentMesh::OnInspector()
 
 		if (mesh)
 		{
-			ImGui::Text("Number vertices %d", mesh->num_vertices);
+			ImGui::Text("Number of vertices %d", mesh->num_vertices);
+			ImGui::Text("Number of indices %d", mesh->num_indices);
+
+			if (mesh->uvs != nullptr)
+				ImGui::Text("Has UVs: yes");
+			else
+				ImGui::Text("Has UVs: no");
+
+			if (mesh->normals != nullptr)
+				ImGui::Text("Has Normals: yes");
+			else
+				ImGui::Text("Has Normals: no");
+
+			if (mesh->colors != nullptr)
+				ImGui::Text("Has Colors: yes");
+			else
+				ImGui::Text("Has Colors: no");
 		}
 		else
 		{

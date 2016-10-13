@@ -84,7 +84,7 @@ void ModuleGOManager::DisplayGameObjectsChilds(const std::vector<GameObject*>* c
 		uint flags = 0;
 		if ((*object) == selected_GO)
 			flags = ImGuiTreeNodeFlags_Selected;
-
+		
 		if ((*object)->ChildCount() > 0)
 		{
 			if (ImGui::TreeNodeEx((*object)->name.data(), flags))

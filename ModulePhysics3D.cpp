@@ -23,13 +23,13 @@ ModulePhysics3D::ModulePhysics3D(Application* app, bool start_enabled) : Module(
 	dispatcher = new btCollisionDispatcher(collision_conf);
 	broad_phase = new btDbvtBroadphase();
 	solver = new btSequentialImpulseConstraintSolver();
-	debug_draw = new DebugDrawer();
+	//debug_draw = new DebugDrawer(); DEBUG DISABLED
 }
 
 // Destructor
 ModulePhysics3D::~ModulePhysics3D()
 {
-	delete debug_draw;
+	//delete debug_draw;
 	delete solver;
 	delete broad_phase;
 	delete dispatcher;
@@ -51,7 +51,7 @@ bool ModulePhysics3D::Start()
 	LOG("Creating Physics environment");
 
 	world = new btDiscreteDynamicsWorld(dispatcher, broad_phase, solver, collision_conf);
-	world->setDebugDrawer(debug_draw);
+	//world->setDebugDrawer(debug_draw);
 	world->setGravity(GRAVITY);
 	vehicle_raycaster = new btDefaultVehicleRaycaster(world);
 
