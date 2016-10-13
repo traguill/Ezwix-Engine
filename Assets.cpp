@@ -19,10 +19,10 @@ void Assets::Draw()
 
 	ImGui::Begin("Assets", &active);
 
-	if (ImGui::IsMouseClicked(1))
-	{
-		ImGui::OpenPopup("AssetsOptions");
-	}
+	if(ImGui::IsMouseHoveringWindow())
+		if (ImGui::IsMouseClicked(1))
+			ImGui::OpenPopup("AssetsOptions");
+	
 
 	if (ImGui::BeginPopup("AssetsOptions"))
 	{
