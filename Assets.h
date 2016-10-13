@@ -32,6 +32,7 @@ private:
 	bool IsMeshExtension(std::string file_name);
 
 	void Refresh();
+	void OpenInExplorer(std::string* file = NULL)const;
 
 private:
 	Directory* root = nullptr; //Assets directory

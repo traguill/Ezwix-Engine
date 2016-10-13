@@ -14,7 +14,6 @@ ModuleFileSystem::ModuleFileSystem(Application* app, bool start_enabled) : Modul
 	SDL_free(base_path);
 
 	// By default we include executable's own directory
-	// without this we won't be able to find config.xml :-(
 	AddPath(".");
 }
 

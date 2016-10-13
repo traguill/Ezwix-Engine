@@ -30,6 +30,10 @@ void Assets::Draw()
 		{
 			Refresh();
 		}
+		if (ImGui::Selectable("Open in Explorer"))
+		{
+			OpenInExplorer();
+		}
 		ImGui::EndPopup();
 	}
 
@@ -82,6 +86,11 @@ void Assets::Draw()
 		if (ImGui::Selectable("Load to scene"))
 		{
 			App->meshes->Load((file_selected).c_str(), current_dir->path.data());
+		}
+
+		if (ImGui::Selectable("Open"))
+		{
+			OpenInExplorer(&file_selected);
 		}
 		ImGui::EndPopup();
 	}
@@ -159,4 +168,22 @@ void Assets::Refresh()
 {
 	DeleteDirectoriesRecursive(current_dir, true);
 	FillDirectoriesRecursive(current_dir);
+}
+
+void Assets::OpenInExplorer(std::string* file_name)const
+{
+	char* base_path = SDL_GetBasePath();
+	std::string base = base_path;
+	//Remove /Debug/ and replace it for/Game/
+#if _DEBUG
+	base.erase(base.length() - 7, base.length());
+	base.append("/Game/");
+#endif
+	
+	if (file_name)
+		base += *file_name;
+	else
+		base += current_dir->path;
+	ShellExecute(NULL, "open", base.data(), NULL, NULL, SW_SHOWNORMAL);
+	SDL_free(base_path);
 }
