@@ -19,6 +19,20 @@ void Assets::Draw()
 
 	ImGui::Begin("Assets", &active);
 
+	if (ImGui::IsMouseClicked(1))
+	{
+		ImGui::OpenPopup("AssetsOptions");
+	}
+
+	if (ImGui::BeginPopup("AssetsOptions"))
+	{
+		if (ImGui::Selectable("Refresh"))
+		{
+			Refresh();
+		}
+		ImGui::EndPopup();
+	}
+
 	ImGui::Text(current_dir->path.data());
 
 	//Back folder
@@ -125,7 +139,7 @@ void Assets::CleanUp()
 	DeleteDirectoriesRecursive(root);
 }
 
-void Assets::DeleteDirectoriesRecursive(Directory* root_dir)
+void Assets::DeleteDirectoriesRecursive(Directory* root_dir, bool keep_root)
 {
 	std::vector<Directory*>::iterator dir = root_dir->directories.begin();
 
@@ -134,5 +148,15 @@ void Assets::DeleteDirectoriesRecursive(Directory* root_dir)
 		DeleteDirectoriesRecursive((*dir));
 	}
 
-	delete root_dir;
+	root_dir->directories.clear();
+	root_dir->files.clear();
+
+	if(!keep_root)
+		delete root_dir;
+}
+
+void Assets::Refresh()
+{
+	DeleteDirectoriesRecursive(current_dir, true);
+	FillDirectoriesRecursive(current_dir);
 }

@@ -27,9 +27,11 @@ private:
 	void Init();
 	void CleanUp();
 	void FillDirectoriesRecursive(Directory* root_dir);
-	void DeleteDirectoriesRecursive(Directory* root_dir);
+	void DeleteDirectoriesRecursive(Directory* root_dir, bool keep_root = false);
 
 	bool IsMeshExtension(std::string file_name);
+
+	void Refresh();
 
 private:
 	Directory* root = nullptr; //Assets directory
