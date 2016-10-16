@@ -143,6 +143,8 @@ void ModuleGOManager::InspectorWindow()
 
 void ModuleGOManager::UpdateGameObjects(float dt, GameObject* object)
 {
+	PROFILE("ModuleGOManager::UpdateGameObjects");
+
 	if(root != object && object->IsActive() == true)
 		object->Update(dt);
 

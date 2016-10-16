@@ -159,10 +159,6 @@ void ModuleMeshes::LoadNode(aiNode* node,const aiScene* scene, GameObject* paren
 
 	
 		//Vertices ------------------------------------------------------------------------------------------------------
-		/*mesh->num_vertices = mesh_to_load->mNumVertices;
-		mesh->vertices = new float[mesh->num_vertices * 3];
-		memcpy(mesh->vertices, mesh_to_load->mVertices, sizeof(float)*mesh->num_vertices * 3);
-		LOG("Mesh Loaded with %d vertices", mesh->num_vertices);*/
 
 		//Load buffer to VRAM
 		glGenBuffers(1, (GLuint*)&(mesh->id_vertices));
@@ -170,22 +166,6 @@ void ModuleMeshes::LoadNode(aiNode* node,const aiScene* scene, GameObject* paren
 		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 3 * mesh->num_vertices, mesh->vertices, GL_STATIC_DRAW);
 
 		//Indices --------------------------------------------------------------------------------------------------------
-		/*if (mesh_to_load->HasFaces())
-		{
-			mesh->num_indices = mesh_to_load->mNumFaces * 3;
-			mesh->indices = new uint[mesh->num_indices];
-			for (uint f = 0; f < mesh_to_load->mNumFaces; f++)
-			{
-				if (mesh_to_load->mFaces[f].mNumIndices != 3)
-				{
-					LOG("WARNING: geometry with face != 3 indices is trying to be loaded");
-				}
-				else
-				{
-					memcpy(&mesh->indices[f * 3], mesh_to_load->mFaces[f].mIndices, 3 * sizeof(uint));
-				}
-			}
-		}*/
 
 		//Load indices buffer to VRAM
 		glGenBuffers(1, (GLuint*) &(mesh->id_indices));
@@ -193,19 +173,10 @@ void ModuleMeshes::LoadNode(aiNode* node,const aiScene* scene, GameObject* paren
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * mesh->num_indices, mesh->indices, GL_STATIC_DRAW);
 
 		//Load UVs -----------------------------------------------------------------------------------------------------------------------
-		/*if (mesh_to_load->HasTextureCoords(0))
-		{
-			mesh->num_uvs = mesh_to_load->mNumVertices; //Same size as vertices
-			mesh->uvs = new float[mesh->num_uvs * 2];
-			for (int uvs_item = 0; uvs_item < mesh->num_uvs; uvs_item++)
-			{
-				memcpy(&mesh->uvs[uvs_item * 2], &mesh_to_load->mTextureCoords[0][uvs_item].x, sizeof(float));
-				memcpy(&mesh->uvs[(uvs_item * 2) + 1], &mesh_to_load->mTextureCoords[0][uvs_item].y, sizeof(float));
-			}*/
 
-			glGenBuffers(1, (GLuint*)&(mesh->id_uvs));
-			glBindBuffer(GL_ARRAY_BUFFER, mesh->id_uvs);
-			glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 2 * mesh->num_uvs, mesh->uvs, GL_STATIC_DRAW);
+		glGenBuffers(1, (GLuint*)&(mesh->id_uvs));
+		glBindBuffer(GL_ARRAY_BUFFER, mesh->id_uvs);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 2 * mesh->num_uvs, mesh->uvs, GL_STATIC_DRAW);
 		
 
 		c_mesh->SetMesh(mesh);

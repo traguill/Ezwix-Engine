@@ -3,6 +3,7 @@
 
 #include <map>
 #include <vector>
+#include <deque>
 #include "Window.h"
 
 using namespace std;
@@ -11,8 +12,8 @@ using namespace std;
 
 struct ProfilerSample
 {
-	vector<double> total_ms;
-	vector<unsigned int> calls;
+	deque<double> total_ms;
+	deque<unsigned int> calls;
 	unsigned int id; //Position to insert new sample
 };
 
@@ -31,7 +32,7 @@ private:
 	map<const char*, ProfilerSample> samples;
 
 	//Window
-	int current_frame = MAX_TIME_ITEMS -1;
+	int current_frame = 0;
 	bool is_playing = false;
 };
 

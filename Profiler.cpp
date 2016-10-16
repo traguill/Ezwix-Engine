@@ -1,4 +1,5 @@
 #include "Profiler.h"
+#include "AutoProfile.h"
 
 Profiler::Profiler()
 {}
@@ -18,6 +19,7 @@ Profiler::~Profiler()
 
 void Profiler::StoreSample(const char* name, double time)
 {
+
 	if (!is_playing)
 		return;
 
@@ -27,17 +29,23 @@ void Profiler::StoreSample(const char* name, double time)
 	{
 		unsigned int id = (*it).second.id;
 
-		(*it).second.calls[id]++;
-		(*it).second.total_ms[id] += time;
+		if ((*it).second.calls.size() - 1 < id)
+		{
+			(*it).second.calls.push_back(1);
+			(*it).second.total_ms.push_back(time);
+		}
+		else
+		{
+			(*it).second.calls.back() += 1;
+			(*it).second.total_ms.back() += time;
+		}
 	}
 	else
 	{
 		ProfilerSample sample;
-		sample.calls.resize(MAX_TIME_ITEMS, 0);
-		sample.total_ms.resize(MAX_TIME_ITEMS, 0);
 		sample.id = 0;
-		sample.calls[0] = 1;
-		sample.total_ms[0] = time;
+		sample.calls.push_back(1);
+		sample.total_ms.push_back(time);
 		
 		samples.insert(pair<const char*, ProfilerSample>(name, sample));
 	}
@@ -46,6 +54,8 @@ void Profiler::StoreSample(const char* name, double time)
 //Called every frame
 void Profiler::Update()
 {
+	PROFILE("Profiler::Update");
+
 	if (!is_playing)
 		return;
 	
@@ -53,16 +63,10 @@ void Profiler::Update()
 
 	for (it; it != samples.end(); it++)
 	{
-		if ((*it).second.id == MAX_TIME_ITEMS - 1)
+		if ((*it).second.id == MAX_TIME_ITEMS - 1) //The queue is full
 		{
-			//Erase first and move to the left Reset last
-			for(int i = 1; i < MAX_TIME_ITEMS; i++)
-			{
-				(*it).second.calls[i-1] = (*it).second.calls[i];
-				(*it).second.total_ms[i - 1] = (*it).second.total_ms[i];
-			}
-			(*it).second.calls[MAX_TIME_ITEMS - 1] = 0;
-			(*it).second.total_ms[MAX_TIME_ITEMS - 1] = 0;
+			(*it).second.calls.pop_front();
+			(*it).second.total_ms.pop_front();
 		}
 		else
 		{
@@ -73,6 +77,8 @@ void Profiler::Update()
 
 void Profiler::Draw()
 {
+	PROFILE("Profiler::Draw");
+
 	if (!active)
 		return;
 
@@ -107,13 +113,27 @@ void Profiler::Draw()
 			ImGui::Text((*it).first);
 			ImGui::NextColumn();
 
-			ImGui::Text("%0.5f", (*it).second.total_ms[current_frame]);
+			double total_ms;
+			int calls;
+			float self_time;
+			if (current_frame > (*it).second.calls.size() - 1)
+			{
+				total_ms = 0;
+				calls = 0;
+				self_time = 0;
+			}
+			else
+			{
+				total_ms = (*it).second.total_ms.at(current_frame);
+				calls = (*it).second.calls.at(current_frame);
+				self_time = total_ms / calls;
+			}
+
+			ImGui::Text("%0.5f", total_ms);
 			ImGui::NextColumn();
 
-			ImGui::Text("%d", (*it).second.calls[current_frame]);
+			ImGui::Text("%d", calls);
 			ImGui::NextColumn();
-
-			float self_time = (*it).second.total_ms[current_frame] / (*it).second.calls[current_frame];
 
 			ImGui::Text("%0.5f", self_time);
 			ImGui::NextColumn();

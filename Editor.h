@@ -1,4 +1,6 @@
-#pragma once
+#ifndef __EDITOR_H__
+#define __EDITOR_H__
+
 #include "Module.h"
 #include "Globals.h"
 #include "MathGeoLib\include\MathGeoLib.h"
@@ -40,3 +42,5 @@ private:
 	HardwareInfo* hardware_win = nullptr;
 	Assets* assets = nullptr;
 };
+
+#endif

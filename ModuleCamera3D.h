@@ -1,4 +1,6 @@
-#pragma once
+#ifndef __MODULECAMERA3D_H__
+#define __MODULECAMERA3D_H__
+
 #include "Module.h"
 #include "Globals.h"
 #include "MathGeoLib\include\MathGeoLib.h"
@@ -58,3 +60,5 @@ private:
 
 	float4x4 ViewMatrix, ViewMatrixInverse;
 };
+
+#endif // !__MODULECAMERA3D_H__

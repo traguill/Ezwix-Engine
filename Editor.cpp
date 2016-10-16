@@ -98,6 +98,8 @@ update_status Editor::EditorWindows()
 		(*win)->Draw();
 		++win;
 	}
+
+	ImGui::ShowTestWindow();
 	
 	return ret;
 }

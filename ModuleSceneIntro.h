@@ -1,4 +1,6 @@
-#pragma once
+#ifndef __MODULESCENEINTRO_H__
+#define __MODULESCENEINTRO_H__
+
 #include "Module.h"
 #include "Globals.h"
 #include <list>
@@ -20,13 +22,5 @@ public:
 	update_status Update(float dt);
 	bool CleanUp();
 
-
-private:
-
-	//Testing
-	vector<Mesh> object;
-public:
-
-	GameObject* test_object = nullptr;
-	ComponentTransform* test_transform = nullptr;
 };
+#endif // !__MODULESCENEINTRO_H__

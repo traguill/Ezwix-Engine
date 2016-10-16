@@ -3,6 +3,7 @@
 #include "LinearAllocator.h"
 #include "Profiler.h"
 
+using namespace std;
 
 Application::Application()
 {
