@@ -86,6 +86,14 @@ void Profiler::Draw()
 
 	ImGui::Checkbox("Play", &is_playing);
 
+	if (sample_selected != nullptr)
+	{
+		vector<float> total_ms_lines;
+		SampleToArray(*sample_selected, total_ms_lines);
+
+		ImGui::PlotLines("Time", total_ms_lines.data(), MAX_TIME_ITEMS - 1, 0, NULL, 0.0f, 16.3f, ImVec2(500, 50));
+	}
+
 	ImGui::SliderInt("Frames", &current_frame, 0, MAX_TIME_ITEMS -1);
 
 	if (ImGui::IsItemHovered())
@@ -110,7 +118,10 @@ void Profiler::Draw()
 	{
 		if (filter.PassFilter((*it).first))
 		{
-			ImGui::Text((*it).first);
+			bool selected = (&(*it).second == sample_selected) ? true : false;
+			if (ImGui::Selectable((*it).first, selected))
+				sample_selected = &(*it).second;
+			
 			ImGui::NextColumn();
 
 			double total_ms;
@@ -143,4 +154,18 @@ void Profiler::Draw()
 	}
 
 	ImGui::End();
+}
+
+
+void Profiler::SampleToArray(const ProfilerSample& p_sample, vector<float>& arr)const
+{
+	arr.resize(MAX_TIME_ITEMS);
+	int ps_size = p_sample.total_ms.size() - 1;
+	for (int i = 0; i < MAX_TIME_ITEMS; i++)
+	{
+		if (i <= ps_size)
+			arr[i] = p_sample.total_ms[i];
+		else
+			arr[i] = 0;
+	}
 }

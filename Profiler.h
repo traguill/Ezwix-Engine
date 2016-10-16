@@ -29,11 +29,16 @@ public:
 	void StoreSample(const char* name, double time);
 
 private:
+	//Fills an array of floats with the total_ms of the sample.
+	void SampleToArray(const ProfilerSample &p_sample, vector<float>& arr)const;
+
+private:
 	map<const char*, ProfilerSample> samples;
 
 	//Window
 	int current_frame = 0;
 	bool is_playing = false;
+	ProfilerSample* sample_selected = nullptr;
 };
 
 extern Profiler g_Profiler;
