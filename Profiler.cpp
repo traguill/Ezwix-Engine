@@ -84,8 +84,10 @@ void Profiler::Draw()
 
 	ImGui::Begin("Profiler", &active);
 
+	//Play button
 	ImGui::Checkbox("Play", &is_playing);
 
+	//Graph
 	if (sample_selected != nullptr)
 	{
 		vector<float> total_ms_lines;
@@ -94,23 +96,31 @@ void Profiler::Draw()
 		ImGui::PlotLines("Time", total_ms_lines.data(), MAX_TIME_ITEMS - 1, 0, NULL, 0.0f, 16.3f, ImVec2(500, 50));
 	}
 
+	//Frame selector
 	ImGui::SliderInt("Frames", &current_frame, 0, MAX_TIME_ITEMS -1);
 
 	if (ImGui::IsItemHovered())
 		ImGui::SetTooltip("0 is 600 frames back and 600 is the actual frame.");
 
+	//Search bar
 	ImGui::Separator();
 	static ImGuiTextFilter filter;
 	filter.Draw("Search");
 	ImGui::Separator();
 
+	//Table
 	ImGui::Columns(4, "Profiler_table");
 
-	ImGui::Text("Name"); ImGui::NextColumn();
-	ImGui::Text("Total time(ms)"); ImGui::NextColumn();
-	ImGui::Text("Calls"); ImGui::NextColumn();
-	ImGui::Text("Self Time"); ImGui::NextColumn();
+	//Columns
+	DisplayTableColumns("Name", NAME);
+	DisplayTableColumns("Total time(ms)", TOTAL_MS);
+	DisplayTableColumns("Calls", CALLS);
+	DisplayTableColumns("Self Time", SELF_MS);
+
 	ImGui::Separator();
+
+	//Sort by type
+	void SortSamples();
 
 	map<const char*, ProfilerSample>::iterator it = samples.begin();
 
@@ -168,4 +178,13 @@ void Profiler::SampleToArray(const ProfilerSample& p_sample, vector<float>& arr)
 		else
 			arr[i] = 0;
 	}
+}
+
+void Profiler::DisplayTableColumns(const char * name, ProfilerSortType type)
+{
+	bool column_selected = (sort_type == type) ? true : false;
+	if (ImGui::Selectable(name, column_selected))
+		sort_type = type;
+
+	ImGui::NextColumn();
 }
