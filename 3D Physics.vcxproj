@@ -83,6 +83,7 @@
     <ClInclude Include="ComponentMesh.h" />
     <ClInclude Include="ComponentTransform.h" />
     <ClInclude Include="Console.h" />
+    <ClInclude Include="DebugDraw.h" />
     <ClInclude Include="Editor.h" />
     <ClInclude Include="FPSGraph.h" />
     <ClInclude Include="GameObject.h" />
@@ -196,6 +197,7 @@
     <ClCompile Include="ComponentMesh.cpp" />
     <ClCompile Include="ComponentTransform.cpp" />
     <ClCompile Include="Console.cpp" />
+    <ClCompile Include="DebugDraw.cpp" />
     <ClCompile Include="Editor.cpp" />
     <ClCompile Include="FPSGraph.cpp" />
     <ClCompile Include="GameObject.cpp" />

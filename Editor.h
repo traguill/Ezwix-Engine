@@ -8,6 +8,8 @@
 #include <list>
 #include <vector>
 
+#include "DebugDraw.h"
+
 class FPSGraph;
 class WindowOptions;
 class HardwareInfo;
@@ -41,6 +43,9 @@ private:
 	WindowOptions* winoptions_win = nullptr;
 	HardwareInfo* hardware_win = nullptr;
 	Assets* assets = nullptr;
+
+	//TODO: remove this and do a better implementation
+	DebugDraw debug_draw;
 };
 
 #endif

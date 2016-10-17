@@ -393,6 +393,9 @@
     <ClInclude Include="MeshImporter.h">
       <Filter>Sources\Importer</Filter>
     </ClInclude>
+    <ClInclude Include="DebugDraw.h">
+      <Filter>Sources\Helpers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -634,6 +637,9 @@
     </ClCompile>
     <ClCompile Include="MeshImporter.cpp">
       <Filter>Sources\Importer</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugDraw.cpp">
+      <Filter>Sources\Helpers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
