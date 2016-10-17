@@ -30,8 +30,9 @@ DebugDraw::~DebugDraw()
 bool DebugDraw::Start()
 {
 	//Create the base primitives
-
+	CreateBaseLine();
 	CreateBaseCube();
+	CreateBaseCross();
 
 	return true;
 }
@@ -84,7 +85,33 @@ bool DebugDraw::CleanUp()
 	return true;
 }
 
+void DebugDraw::CreateBaseLine()
+{
+	// 1
+	// | /
+	// 0 ---
 
+	GLfloat vertices[]
+	{
+		0.0f, 0.0f, 0.0f,
+		0.0f, 1.0f, 0.0f
+	};
+
+	GLuint indices[]
+	{
+		0, 1
+	};
+
+	num_indices_line = 2;
+
+	glGenBuffers(1, (GLuint*)&id_vertices_line);
+	glBindBuffer(GL_ARRAY_BUFFER, id_vertices_line);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 3 * 2, vertices, GL_STATIC_DRAW);
+
+	glGenBuffers(1, (GLuint*)&id_indices_line);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_indices_line);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * 2, indices, GL_STATIC_DRAW);
+}
 
 void DebugDraw::CreateBaseCube()
 {
@@ -122,27 +149,97 @@ void DebugDraw::CreateBaseCube()
 		2, 6
 	};
 
+	num_indices_cube = 24;
+
 	glGenBuffers(1, (GLuint*)&id_vertices_cube);
 	glBindBuffer(GL_ARRAY_BUFFER, id_vertices_cube);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 3 * 8, vertices, GL_STATIC_DRAW);
 
 	glGenBuffers(1, (GLuint*)&id_indices_cube);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_indices_cube);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * 24, indices, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * num_indices_cube, indices, GL_STATIC_DRAW);
+}
+
+void DebugDraw::CreateBaseCross()
+{
+	// 7  1  5		13    11
+	//  \ | /		 \ | /
+	// 2--8-9--3  	-----
+	//  / | \		 / | \
+	// 4  0  6		10    12
+
+	GLfloat vertices[] =
+	{
+		 0.0f, -0.5f,  0.0f, //0
+		 0.0f,  0.5f,  0.0f, //1
+		-0.5f,  0.0f,  0.0f, //2
+		 0.5f,  0.0f,  0.0f, //3
+		-0.4f, -0.4f,  0.4f, //4
+		 0.4f,  0.4f, -0.4f, //5
+		 0.4f, -0.4f,  0.4f, //6
+		-0.4f,  0.4f, -0.4f, //7
+		 0.0f,  0.0f,  0.5f, //8
+		 0.0f,  0.0f, -0.5f, //9
+		-0.4f, -0.4f, -0.4f, //10
+		 0.4f,  0.4f,  0.4f, //11
+		 0.4f, -0.4f, -0.4f, //12
+		-0.4f,  0.4f,  0.4f //13
+	};
+
+	GLuint indices[] = 
+	{
+		0,1,2,3,4,5,6,7,8,9,10,11,12,13
+	};
+
+	num_indices_cross = 14;
+
+	glGenBuffers(1, (GLuint*)&id_vertices_cross);
+	glBindBuffer(GL_ARRAY_BUFFER, id_vertices_cross);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 3 * 14, vertices, GL_STATIC_DRAW);
+
+	glGenBuffers(1, (GLuint*)&id_indices_cross);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_indices_cross);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * num_indices_cross, indices, GL_STATIC_DRAW);
+
+}
+
+void DebugDraw::AddCross(const float3 & point, math::float3 color, float size, float line_width, float duration, bool depth_enabled)
+{
+	DebugPrimitive* d_prim = new DebugPrimitive();
+
+	FillCommonPrimitiveValues(d_prim, color, line_width, duration, depth_enabled, id_vertices_cross, id_indices_cross, num_indices_cross);
+
+	float scale = (size <= 0) ? 1.0f : size;
+
+	d_prim->global_matrix = d_prim->global_matrix.FromTRS(point, math::Quat::identity, scale * math::vec::one);
+
+	draw_list.push_back(d_prim);
+}
+
+void DebugDraw::AddLine(const float3 & from_position, const float3 & to_position, math::float3 color, float line_width, float duration, bool depth_enabled)
+{
+	DebugPrimitive* d_prim = new DebugPrimitive();
+
+	FillCommonPrimitiveValues(d_prim, color, line_width, duration, depth_enabled, id_vertices_line, id_indices_line, num_indices_line);
+
+	math::vec vec1 = math::float3(0, 1, 0);
+	math::vec vec2 = to_position - from_position;
+
+	float length = vec2.Length();
+
+	math::Quat rot = rot.RotateFromTo(vec1, vec2);
+
+	d_prim->global_matrix = d_prim->global_matrix.FromTRS(from_position, rot, length * (float3(1,1,1) + vec2));
+
+	draw_list.push_back(d_prim);
+
 }
 
 void DebugDraw::AddAABB(const math::AABB& aabb, math::float3 color, float line_width, float duration, bool depth_enabled)
 {
 	DebugPrimitive* d_prim = new DebugPrimitive();
 
-	d_prim->vertices_id = id_vertices_cube;
-	d_prim->indices_id = id_indices_cube;
-	d_prim->num_indices = 24;
-
-	d_prim->color = color;
-	d_prim->line_width = line_width;
-	d_prim->life = duration;
-	d_prim->depth_enabled = depth_enabled;
+	FillCommonPrimitiveValues(d_prim, color, line_width, duration, depth_enabled, id_vertices_cube, id_indices_cube, num_indices_cube);
 
 	d_prim->global_matrix = d_prim->global_matrix.FromTRS(aabb.CenterPoint(), math::Quat::identity, aabb.Size());
 
@@ -153,14 +250,7 @@ void DebugDraw::AddAABB(const math::float3& min_point,const math::float3& max_po
 {
 	DebugPrimitive* d_prim = new DebugPrimitive();
 
-	d_prim->vertices_id = id_vertices_cube;
-	d_prim->indices_id = id_indices_cube;
-	d_prim->num_indices = 24;
-
-	d_prim->color = color;
-	d_prim->line_width = line_width;
-	d_prim->life = duration;
-	d_prim->depth_enabled = depth_enabled;
+	FillCommonPrimitiveValues(d_prim, color, line_width, duration, depth_enabled, id_vertices_cube, id_indices_cube, num_indices_cube);
 
 	math::AABB aabb;
 	aabb.minPoint = min_point;
@@ -210,4 +300,15 @@ std::list<DebugPrimitive*>::iterator DebugDraw::RemovePrimitive(std::list<DebugP
 	draw_list.erase(it);
 
 	return next;
+}
+
+void DebugDraw::FillCommonPrimitiveValues(DebugPrimitive* primitive, float3 color, float line_width, float duration, bool depth_enabled, unsigned int vertices_id, unsigned int indices_id, unsigned int num_indices)
+{
+	primitive->color = color;
+	primitive->line_width = line_width;
+	primitive->life = duration;
+	primitive->depth_enabled = depth_enabled;
+	primitive->vertices_id = vertices_id;
+	primitive->indices_id = indices_id;
+	primitive->num_indices = num_indices;
 }

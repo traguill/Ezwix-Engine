@@ -35,7 +35,7 @@ bool Editor::Start()
 	windows.push_back(hardware_win = new HardwareInfo());
 	windows.push_back(assets = new Assets());
 
-	g_Debug->AddAABB(float3(0, 0, 0), float3(1, 2, 5), g_Debug->orange, 2, 5);
+	
 
 	return ret;
 }
@@ -53,10 +53,9 @@ update_status Editor::Update(float dt)
 
 	update_status ret = UPDATE_CONTINUE;
 	
-	g_Debug->AddAABB(float3(0, 0, 0), float3(3, 8, 5), g_Debug->pink, 2, 5);
-
 	ret = EditorWindows(); //Update the windows of the editor
-
+	//g_Debug->AddLine(float3(3, 5, 8), float3(1, 4, 0), g_Debug->red, 3);
+	g_Debug->AddCross(float3(0, 5, 0), g_Debug->red, 1);
 	
 	//Draw Grid
 	Plane_P grid(0,1,0,0);
