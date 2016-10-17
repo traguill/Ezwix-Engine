@@ -16,7 +16,7 @@
 #include "ModuleMeshes.h"
 #include "ModuleFileSystem.h"
 #include "ModuleGOManager.h"
-
+#include "DebugDraw.h"
 #include "AutoProfile.h"
 
 using namespace std; 

@@ -8,7 +8,7 @@
 #include "Console.h"
 #include "Assets.h"
 #include "Profiler.h"
-
+#include "DebugDraw.h"
 
 Editor::Editor(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -35,9 +35,7 @@ bool Editor::Start()
 	windows.push_back(hardware_win = new HardwareInfo());
 	windows.push_back(assets = new Assets());
 
-	debug_draw.Init();
-
-	debug_draw.AddCube(float3(0, 5, 0), float3(2, 1, 1), float3(1, 0, 0), 3.0f);
+	g_Debug->AddAABB(float3(0, 0, 0), float3(1, 2, 5), float3(1, 0, 0), 2);
 
 	return ret;
 }
@@ -64,8 +62,6 @@ update_status Editor::Update(float dt)
 	grid.axis = true;
 	grid.Render();
 	
-	debug_draw.Draw();
-
 	return ret;	
 }
 

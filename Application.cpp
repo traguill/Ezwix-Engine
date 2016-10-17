@@ -19,8 +19,9 @@ Application::Application()
 	file_system = new ModuleFileSystem(this);
 	go_manager = new ModuleGOManager(this);
 
+	//Globals
+	g_Debug = new DebugDraw(this);
 
-	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order
 	// They will CleanUp() in reverse order
 
@@ -29,6 +30,7 @@ Application::Application()
 	AddModule(window);
 	AddModule(camera);
 	AddModule(input);
+	AddModule(g_Debug);
 	AddModule(meshes);
 	AddModule(audio);
 	AddModule(physics);

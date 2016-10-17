@@ -1,3 +1,4 @@
+#include "Application.h"
 #include "DebugDraw.h"
 
 #include "Glew\include\glew.h"
@@ -9,11 +10,37 @@
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
 #pragma comment (lib, "Glew/libx86/glew32.lib") 
 
-DebugDraw::DebugDraw()
+DebugDraw::DebugDraw(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 }
 
 DebugDraw::~DebugDraw()
+{
+	
+}
+
+bool DebugDraw::Start()
+{
+	//Create the base primitives
+
+	CreateBaseCube();
+
+	return true;
+}
+
+update_status DebugDraw::PreUpdate(float dt)
+{
+
+	return UPDATE_CONTINUE;
+}
+
+update_status DebugDraw::PostUpdate(float dt)
+{
+	Draw();
+	return UPDATE_CONTINUE;
+}
+
+bool DebugDraw::CleanUp()
 {
 	std::list<DebugPrimitive*>::iterator d_primitive = draw_list.begin();
 
@@ -24,26 +51,26 @@ DebugDraw::~DebugDraw()
 	}
 
 	draw_list.clear();
+
+	return true;
 }
 
-void DebugDraw::Init()
+void DebugDraw::CreateBaseCube()
 {
-	//Create the base primitives
-
 	//  6------- 5
 	// /       / |
 	// 2------1  4
 	// |      | /
 	// 3----- 0
 
-	GLfloat vertices[] = 
+	GLfloat vertices[] =
 	{
-		 0.5f, -0.5f,  0.5f, //0
-		 0.5f,  0.5f,  0.5f, //1
-	    -0.5f,  0.5f,  0.5f, //2
+		0.5f, -0.5f,  0.5f, //0
+		0.5f,  0.5f,  0.5f, //1
+		-0.5f,  0.5f,  0.5f, //2
 		-0.5f, -0.5f,  0.5f, //3
-		 0.5f, -0.5f, -0.5f, //4
-		 0.5f,  0.5f, -0.5f, //5
+		0.5f, -0.5f, -0.5f, //4
+		0.5f,  0.5f, -0.5f, //5
 		-0.5f,  0.5f, -0.5f, //6
 		-0.5f, -0.5f, -0.5f, //7
 	};
@@ -54,12 +81,12 @@ void DebugDraw::Init()
 		0, 1,
 		1, 2,
 		2, 3,
-		7, 4, 
+		7, 4,
 		4, 5,
 		5, 6,
 		6, 7,
 		0, 4,
-		1, 5, 
+		1, 5,
 		3, 7,
 		2, 6
 	};
@@ -71,10 +98,9 @@ void DebugDraw::Init()
 	glGenBuffers(1, (GLuint*)&id_indices_cube);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_indices_cube);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * 24, indices, GL_STATIC_DRAW);
-
 }
 
-void DebugDraw::AddCube(math::float3 center, math::float3 size, math::float3 color, float line_width, float duration, bool depth_enabled)
+void DebugDraw::AddAABB(const math::AABB& aabb, math::float3 color, float line_width, float duration, bool depth_enabled)
 {
 	DebugPrimitive* d_prim = new DebugPrimitive();
 
@@ -87,7 +113,29 @@ void DebugDraw::AddCube(math::float3 center, math::float3 size, math::float3 col
 	d_prim->life = duration;
 	d_prim->depth_enabled = depth_enabled;
 
-	d_prim->global_matrix = d_prim->global_matrix.FromTRS(center, math::Quat::identity, size);
+	d_prim->global_matrix = d_prim->global_matrix.FromTRS(aabb.CenterPoint(), math::Quat::identity, aabb.Size());
+
+	draw_list.push_back(d_prim);
+}
+
+void DebugDraw::AddAABB(const math::float3& min_point,const math::float3& max_point, math::float3 color, float line_width, float duration, bool depth_enabled)
+{
+	DebugPrimitive* d_prim = new DebugPrimitive();
+
+	d_prim->vertices_id = id_vertices_cube;
+	d_prim->indices_id = id_indices_cube;
+	d_prim->num_indices = 24;
+
+	d_prim->color = color;
+	d_prim->line_width = line_width;
+	d_prim->life = duration;
+	d_prim->depth_enabled = depth_enabled;
+
+	math::AABB aabb;
+	aabb.minPoint = min_point;
+	aabb.maxPoint = max_point;
+	
+	d_prim->global_matrix = d_prim->global_matrix.FromTRS(aabb.CenterPoint(), math::Quat::identity, aabb.Size());
 
 	draw_list.push_back(d_prim);
 }

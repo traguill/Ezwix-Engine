@@ -18,7 +18,7 @@ enum main_states
 
 Application* App = nullptr;
 Console* console = nullptr;
-
+DebugDraw* g_Debug = nullptr;
 Profiler g_Profiler;
 
 int main(int argc, char ** argv)

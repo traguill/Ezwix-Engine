@@ -3,9 +3,9 @@
 
 #include "MathGeoLib\include\MathGeoLib.h"
 #include <list>
+#include "Module.h"
 
-
-struct DebugPrimitive
+struct DebugPrimitive 
 {
 	math::float3 color;
 	float line_width;
@@ -17,17 +17,26 @@ struct DebugPrimitive
 	unsigned int num_indices;
 };
 
-class DebugDraw
+class DebugDraw : public Module
 {
 public:
-	DebugDraw();
+	DebugDraw(Application* app, bool start_enabled = true);
 	~DebugDraw();
 
-	void Init();
+	bool CleanUp();
 
+	bool Start();
+
+	update_status PreUpdate(float dt);
+	update_status PostUpdate(float dt);
+
+	void AddAABB(const math::AABB& aabb, math::float3 color, float line_width = 1.0f, float duration = 0.0f, bool depth_enabled = true);
+	void AddAABB(const math::float3& min_point,const math::float3& max_point, math::float3 color, float line_width = 1.0f, float duration = 0.0f, bool depth_enabled = true);
+
+private:
 	void Draw();
 
-	void AddCube(math::float3 center, math::float3 size, math::float3 color, float line_width = 1.0f, float duration = 0.0f, bool depth_enabled = true);
+	void CreateBaseCube();
 
 private:
 	std::list<DebugPrimitive*> draw_list;
@@ -39,5 +48,6 @@ private:
 	
 };
 
+extern DebugDraw* g_Debug;
 
 #endif // !__DEBUGDRAW_H__
