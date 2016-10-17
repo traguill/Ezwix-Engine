@@ -35,7 +35,7 @@ bool Editor::Start()
 	windows.push_back(hardware_win = new HardwareInfo());
 	windows.push_back(assets = new Assets());
 
-	g_Debug->AddAABB(float3(0, 0, 0), float3(1, 2, 5), float3(1, 0, 0), 2, 5);
+	g_Debug->AddAABB(float3(0, 0, 0), float3(1, 2, 5), g_Debug->orange, 2, 5);
 
 	return ret;
 }
@@ -53,7 +53,7 @@ update_status Editor::Update(float dt)
 
 	update_status ret = UPDATE_CONTINUE;
 	
-	g_Debug->AddAABB(float3(0, 0, 0), float3(3, 8, 5), float3(1, 1, 0), 2, 5);
+	g_Debug->AddAABB(float3(0, 0, 0), float3(3, 8, 5), g_Debug->pink, 2, 5);
 
 	ret = EditorWindows(); //Update the windows of the editor
 

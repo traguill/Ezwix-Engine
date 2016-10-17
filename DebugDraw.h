@@ -40,6 +40,17 @@ private:
 
 	void CreateBaseCube();
 
+public:
+	//Some colors to paint the primitives
+	math::float3 red = float3(1, 0, 0);
+	math::float3 blue = float3(0, 0, 1);
+	math::float3 green = float3(0, 1, 0);
+	math::float3 white = float3(0, 0, 0);
+	math::float3 black = float3(1, 1, 1);
+	math::float3 yellow = float3(1, 1, 0);
+	math::float3 orange = float3(1, 0.5f, 0);
+	math::float3 pink = float3(1, 0, 0.9f);
+
 private:
 	std::list<DebugPrimitive*> draw_list;
 

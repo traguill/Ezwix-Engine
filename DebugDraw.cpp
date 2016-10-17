@@ -12,6 +12,14 @@
 
 DebugDraw::DebugDraw(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
+	red = float3(1, 0, 0);
+	blue;
+	green;
+	white;
+	black;
+	yellow;
+	orange;
+	pink;
 }
 
 DebugDraw::~DebugDraw()
