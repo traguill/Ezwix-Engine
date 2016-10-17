@@ -35,6 +35,8 @@ public:
 
 private:
 	void Draw();
+	//Removes the primitive from the list and returns the next element
+	std::list<DebugPrimitive*>::iterator RemovePrimitive(std::list<DebugPrimitive*>::iterator& it);
 
 	void CreateBaseCube();
 

@@ -30,6 +30,27 @@ bool DebugDraw::Start()
 
 update_status DebugDraw::PreUpdate(float dt)
 {
+	//Update timers
+	std::list<DebugPrimitive*>::iterator d_primitive = draw_list.begin();
+
+	while (d_primitive != draw_list.end())
+	{
+		//One frame duration
+		if ((*d_primitive)->life == 0)
+		{
+			d_primitive = RemovePrimitive(d_primitive);
+			continue;
+		}
+
+		(*d_primitive)->life -= dt;
+
+		if ((*d_primitive)->life <= 0.0f)
+		{
+			d_primitive = RemovePrimitive(d_primitive);
+			continue;
+		}
+		d_primitive++;
+	}
 
 	return UPDATE_CONTINUE;
 }
@@ -54,6 +75,8 @@ bool DebugDraw::CleanUp()
 
 	return true;
 }
+
+
 
 void DebugDraw::CreateBaseCube()
 {
@@ -169,4 +192,14 @@ void DebugDraw::Draw()
 	}
 	glColor3f(0, 0, 0); //Reset color. Necessary?
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+}
+
+std::list<DebugPrimitive*>::iterator DebugDraw::RemovePrimitive(std::list<DebugPrimitive*>::iterator & it)
+{
+	std::list<DebugPrimitive*>::iterator next = std::next(it);
+
+	delete *it;
+	draw_list.erase(it);
+
+	return next;
 }
