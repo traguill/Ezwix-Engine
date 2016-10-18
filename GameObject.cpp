@@ -4,7 +4,7 @@
 #include "ComponentTransform.h"
 #include "ComponentMesh.h"
 #include "ComponentMaterial.h"
-
+#include "ComponentCamera.h"
 GameObject::GameObject()
 {
 	name.resize(30);
@@ -132,6 +132,8 @@ Component* GameObject::AddComponent(ComponentType type)
 	case C_MATERIAL:
 		item = new ComponentMaterial(type, this);
 		break;
+	case C_CAMERA:
+		item = new ComponentCamera(type, this);
 	default:
 		break;
 	}

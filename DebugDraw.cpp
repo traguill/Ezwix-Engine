@@ -6,9 +6,9 @@
 #include <gl/GL.h>
 #include <gl/GLU.h>
 
-#pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
-#pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
-#pragma comment (lib, "Glew/libx86/glew32.lib") 
+//#pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
+//#pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
+//#pragma comment (lib, "Glew/libx86/glew32.lib") 
 
 DebugDraw::DebugDraw(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -33,6 +33,7 @@ bool DebugDraw::Start()
 	CreateBaseLine();
 	CreateBaseCube();
 	CreateBaseCross();
+	CreateBaseRect();
 
 	return true;
 }
@@ -203,6 +204,38 @@ void DebugDraw::CreateBaseCross()
 
 }
 
+void DebugDraw::CreateBaseRect()
+{
+	//                           Y
+	// 3 -- 2                    |
+	// |    |  Y is the normal    -->X
+	// 0----1                   /
+	//                          Z
+
+	GLfloat vertices[] =
+	{
+		-0.5f, 0.0f,  0.5f,
+		 0.5f, 0.0f,  0.5f,
+		 0.5f, 0.0f, -0.5f,
+		-0.5f, 0.0f, -0.5f
+	};
+
+	GLuint indices[] =
+	{
+		0, 1, 1, 2, 2, 3, 3, 0
+	};
+
+	num_indices_rect = 8;
+
+	glGenBuffers(1, (GLuint*)&id_vertices_rect);
+	glBindBuffer(GL_ARRAY_BUFFER, id_vertices_rect);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 3 * 4, vertices, GL_STATIC_DRAW);
+
+	glGenBuffers(1, (GLuint*)&id_indices_rect);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_indices_rect);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * num_indices_rect, indices, GL_STATIC_DRAW);
+}
+
 void DebugDraw::AddCross(const float3 & point, math::float3 color, float size, float line_width, float duration, bool depth_enabled)
 {
 	DebugPrimitive* d_prim = new DebugPrimitive();
@@ -261,6 +294,24 @@ void DebugDraw::AddAABB(const math::float3& min_point,const math::float3& max_po
 	draw_list.push_back(d_prim);
 }
 
+void DebugDraw::AddRect(const math::float3 & center_point, const math::float3& normal, const math::float2 size, math::float3 color, float line_width, float duration, bool depth_enabled)
+{
+	DebugPrimitive* d_prim = new DebugPrimitive();
+
+	FillCommonPrimitiveValues(d_prim, color, line_width, duration, depth_enabled, id_vertices_rect, id_indices_rect, num_indices_rect);
+
+	math::float3 origin = math::float3(0, 1, 0);
+	origin.Normalize();
+	math::float3 normal_vec = normal.Normalized();
+
+	math::Quat rotation;
+	rotation = rotation.RotateFromTo(origin, normal_vec);
+
+	d_prim->global_matrix = d_prim->global_matrix.FromTRS(center_point, rotation, math::float3(size.x, 1, size.y));
+
+	draw_list.push_back(d_prim);
+}
+
 void DebugDraw::Draw()
 {
 	std::list<DebugPrimitive*>::iterator item = draw_list.begin();
@@ -288,7 +339,7 @@ void DebugDraw::Draw()
 
 		glPopMatrix();
 	}
-	glColor3f(0, 0, 0); //Reset color. Necessary?
+	glColor3f(1, 1, 1); //Reset color. 
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
 

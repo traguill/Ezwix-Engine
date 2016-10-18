@@ -12,7 +12,7 @@ public:
 	ModuleGOManager(Application* app, bool start_enabled = true);
 	~ModuleGOManager();
 
-	bool Start(); //Testing
+	bool Start(); 
 	update_status Update(float dt);
 
 	GameObject* CreateGameObject(GameObject* parent);

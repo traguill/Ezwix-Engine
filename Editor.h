@@ -34,6 +34,7 @@ private:
 	void WindowsMenu();
 
 private:
+
 	vector<Window*> windows;
 
 	//Windows

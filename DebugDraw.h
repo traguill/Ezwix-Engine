@@ -34,6 +34,7 @@ public:
 	void AddLine(const math::float3& from_position, const math::float3& to_position, math::float3 color, float line_width = 1.0f, float duration = 0.0f, bool depth_enabled = true);
 	void AddAABB(const math::AABB& aabb, math::float3 color, float line_width = 1.0f, float duration = 0.0f, bool depth_enabled = true);
 	void AddAABB(const math::float3& min_point,const math::float3& max_point, math::float3 color, float line_width = 1.0f, float duration = 0.0f, bool depth_enabled = true);
+	void AddRect(const math::float3& center_point, const math::float3& normal, const math::float2 size, math::float3 color, float line_width = 1.0f, float duration = 0.0f, bool depth_enabled = true);
 
 private:
 	void Draw();
@@ -45,6 +46,7 @@ private:
 	void CreateBaseLine();
 	void CreateBaseCube();
 	void CreateBaseCross();
+	void CreateBaseRect();
 
 public:
 	//Some colors to paint the primitives
@@ -76,6 +78,11 @@ private:
 	unsigned int id_vertices_cross;
 	unsigned int id_indices_cross;
 	unsigned int num_indices_cross;
+
+	//Rect
+	unsigned int id_vertices_rect;
+	unsigned int id_indices_rect;
+	unsigned int num_indices_rect;
 };
 
 extern DebugDraw* g_Debug;

@@ -2,6 +2,7 @@
 #define __COMPONENTMESH_H__
 
 #include "Component.h"
+#include "MathGeoLib\include\MathGeoLib.h"
 
 struct Mesh;
 
@@ -16,9 +17,11 @@ public:
 	void OnInspector();
 
 	bool SetMesh(Mesh* mesh);
+	void RecalculateBoundingBox();
 
 private:
 	Mesh* mesh = nullptr;
+	math::AABB bounding_box;
 };
 
 

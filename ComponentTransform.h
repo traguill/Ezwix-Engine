@@ -26,6 +26,7 @@ public:
 
 	// Returns the final transformation matrix. Not the local one!
 	math::float4x4 GetTransformMatrix();
+	math::float4x4 GetGlobalMatrix();
 
 private:
 

@@ -8,6 +8,7 @@
 
 ComponentMesh::ComponentMesh(ComponentType type, GameObject* game_object) : Component(type, game_object)
 {
+	bounding_box.SetNegativeInfinity();
 }
 
 ComponentMesh::~ComponentMesh()
@@ -31,8 +32,8 @@ void ComponentMesh::Update(float dt)
 	if (material)
 		texture_id = material->texture_id;
 
-
 	App->renderer3D->Draw(*mesh, trans->GetTransformMatrix(), texture_id);	
+	g_Debug->AddAABB(bounding_box, g_Debug->yellow, 2);
 }
 
 void ComponentMesh::OnInspector()
@@ -80,8 +81,20 @@ bool ComponentMesh::SetMesh(Mesh * mesh)
 	if (mesh)
 	{
 		this->mesh = mesh;
+
+		bounding_box.Enclose((float3*)mesh->vertices, mesh->num_vertices);
+		RecalculateBoundingBox();
 		ret = true;
 	}
 		
 	return ret;
+}
+
+void ComponentMesh::RecalculateBoundingBox()
+{
+	ComponentTransform* trans = (ComponentTransform*)GetGameObject()->GetComponent(C_TRANSFORM);
+	assert(trans);
+
+	math::OBB ob = bounding_box.Transform(trans->GetGlobalMatrix());
+	bounding_box = ob.MinimalEnclosingAABB();
 }

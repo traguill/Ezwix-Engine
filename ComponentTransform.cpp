@@ -2,7 +2,7 @@
 #include "GameObject.h"
 #include "Globals.h"
 #include "imgui\imgui.h"
-
+#include "ComponentMesh.h"
 
 ComponentTransform::ComponentTransform(ComponentType type, GameObject* game_object) : Component(type, game_object)
 {
@@ -128,6 +128,11 @@ math::float4x4 ComponentTransform::GetTransformMatrix()
 	return final_transform_matrix.Transposed();
 }
 
+math::float4x4 ComponentTransform::GetGlobalMatrix()
+{
+	return final_transform_matrix;
+}
+
 void ComponentTransform::CalculateFinalTransform()
 {
 	GameObject* game_object = GetGameObject();
@@ -154,6 +159,12 @@ void ComponentTransform::CalculateFinalTransform()
 		{
 			final_transform_matrix = transform_matrix;
 		}	
+		//Calculate AABB if there is a component mesh
+		ComponentMesh* mesh = (ComponentMesh*)game_object->GetComponent(C_MESH);
+		if (mesh != NULL)
+		{
+			mesh->RecalculateBoundingBox();
+		}
 	}
 	else
 	{	

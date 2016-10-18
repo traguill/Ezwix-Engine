@@ -20,6 +20,12 @@ ModuleGOManager::~ModuleGOManager()
 
 bool ModuleGOManager::Start()
 {
+	//Create camera GO by default
+
+	GameObject* cam = CreateGameObject(NULL);
+	cam->name = "Main Camera";
+	cam->AddComponent(C_TRANSFORM);
+	cam->AddComponent(C_CAMERA);
 
 	return true;
 }
