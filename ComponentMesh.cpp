@@ -75,6 +75,11 @@ void ComponentMesh::OnInspector()
 	}
 }
 
+void ComponentMesh::OnTransformModified()
+{
+	RecalculateBoundingBox();
+}
+
 bool ComponentMesh::SetMesh(Mesh * mesh)
 {
 	bool ret = false;

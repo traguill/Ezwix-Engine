@@ -35,3 +35,6 @@ void Component::Update(float dt)
 {
 }
 
+void Component::OnTransformModified()
+{}
+

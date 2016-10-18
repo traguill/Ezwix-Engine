@@ -54,8 +54,6 @@ update_status Editor::Update(float dt)
 	update_status ret = UPDATE_CONTINUE;
 	
 	ret = EditorWindows(); //Update the windows of the editor
-
-	g_Debug->AddRect(float3(0, 5, 0), float3(0, 0, 1), float2(2, 3), g_Debug->red);
 	
 	//Draw Grid
 	Plane_P grid(0,1,0,0);

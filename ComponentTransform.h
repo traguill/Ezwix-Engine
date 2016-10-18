@@ -41,6 +41,8 @@ private:
 
 	math::float4x4 transform_matrix = math::float4x4::identity;
 	math::float4x4 final_transform_matrix = math::float4x4::identity;
+
+	bool transform_modified = false;
 };
 
 #endif // !__COMPONENT_TRANSFORM_H__

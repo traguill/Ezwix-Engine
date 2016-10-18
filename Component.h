@@ -27,6 +27,8 @@ public:
 	ComponentType GetType()const;
 	GameObject* GetGameObject()const;
 
+	virtual void OnTransformModified();
+
 private:
 	bool active = true;
 	ComponentType type;

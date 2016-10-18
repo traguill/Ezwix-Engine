@@ -30,6 +30,8 @@ public:
 	const std::vector<Component*>* GetComponents();
 	void* GetComponent(ComponentType type);
 
+	void TransformModified();
+
 public:
 	std::string name;
 

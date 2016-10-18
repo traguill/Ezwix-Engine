@@ -14,7 +14,15 @@ ComponentTransform::~ComponentTransform()
 }
 
 void ComponentTransform::Update(float dt)
-{}
+{
+	if (transform_modified)
+	{
+		transform_matrix = transform_matrix.FromTRS(position, rotation, scale);
+		CalculateFinalTransform();
+
+		transform_modified = false;
+	}
+}
 
 void ComponentTransform::OnInspector()
 {
@@ -65,9 +73,7 @@ void ComponentTransform::SetPosition(math::float3 pos)
 {
 	position = pos;
 
-	transform_matrix = transform_matrix.FromTRS(position, rotation, scale);
-
-	CalculateFinalTransform();
+	transform_modified = true;
 }
 
 void ComponentTransform::SetRotation(math::float3 rot_euler)
@@ -78,29 +84,21 @@ void ComponentTransform::SetRotation(math::float3 rot_euler)
 
 	rotation = rotation.FromEulerXYZ(rot_deg.z, rot_deg.y, rot_deg.x);
 
-	transform_matrix = transform_matrix.FromTRS(position, rotation, scale);
-
-	CalculateFinalTransform();
+	transform_modified = true;
 }
 
 void ComponentTransform::SetRotation(math::Quat rot)
 {
 	rotation = rot;
 
-	transform_matrix = transform_matrix.FromTRS(position, rotation, scale);
-
-	rotation_euler = RadToDeg(rotation.ToEulerXYZ());
-
-	CalculateFinalTransform();
+	transform_modified = true;
 }
 
 void ComponentTransform::SetScale(math::float3 scale)
 {
 	this->scale = scale;
 
-	transform_matrix = transform_matrix.FromTRS(position, rotation, this->scale);
-
-	CalculateFinalTransform();
+	transform_modified = true;
 }
 
 math::float3 ComponentTransform::GetPosition()
@@ -165,6 +163,8 @@ void ComponentTransform::CalculateFinalTransform()
 		{
 			mesh->RecalculateBoundingBox();
 		}
+
+		game_object->TransformModified();
 	}
 	else
 	{	

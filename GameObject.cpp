@@ -171,3 +171,13 @@ void* GameObject::GetComponent(ComponentType type)
 
 	return NULL;
 }
+
+void GameObject::TransformModified()
+{
+	std::vector<Component*>::iterator component = components.begin();
+
+	for (component; component != components.end(); component++)
+	{
+		(*component)->OnTransformModified();
+	}
+}

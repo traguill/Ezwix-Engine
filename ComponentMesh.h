@@ -15,6 +15,7 @@ public:
 	void Update(float dt);
 
 	void OnInspector();
+	void OnTransformModified();
 
 	bool SetMesh(Mesh* mesh);
 	void RecalculateBoundingBox();
