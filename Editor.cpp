@@ -35,8 +35,6 @@ bool Editor::Start()
 	windows.push_back(hardware_win = new HardwareInfo());
 	windows.push_back(assets = new Assets());
 
-	
-
 	return ret;
 }
 
