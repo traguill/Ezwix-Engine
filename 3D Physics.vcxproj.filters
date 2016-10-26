@@ -294,9 +294,6 @@
     <ClInclude Include="MathGeoLib\include\Geometry\Polyhedron.h">
       <Filter>Resources\MathGeoLib\Include</Filter>
     </ClInclude>
-    <ClInclude Include="MathGeoLib\include\Geometry\QuadTree.h">
-      <Filter>Resources\MathGeoLib\Include</Filter>
-    </ClInclude>
     <ClInclude Include="MathGeoLib\include\Geometry\Ray.h">
       <Filter>Resources\MathGeoLib\Include</Filter>
     </ClInclude>
@@ -398,6 +395,9 @@
     </ClInclude>
     <ClInclude Include="ComponentCamera.h">
       <Filter>Sources\GameObjects\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Quadtree.h">
+      <Filter>Sources\Tools</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -659,9 +659,6 @@
       <Filter>Resources\MathGeoLib\Include</Filter>
     </None>
     <None Include="MathGeoLib\include\Geometry\KDTree.inl">
-      <Filter>Resources\MathGeoLib\Include</Filter>
-    </None>
-    <None Include="MathGeoLib\include\Geometry\QuadTree.inl">
       <Filter>Resources\MathGeoLib\Include</Filter>
     </None>
     <None Include="MathGeoLib\include\Geometry\TriangleMesh_IntersectRay_AVX.inl">

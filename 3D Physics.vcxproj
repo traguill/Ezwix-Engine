@@ -119,7 +119,6 @@
     <ClInclude Include="MathGeoLib\include\Geometry\Plane.h" />
     <ClInclude Include="MathGeoLib\include\Geometry\Polygon.h" />
     <ClInclude Include="MathGeoLib\include\Geometry\Polyhedron.h" />
-    <ClInclude Include="MathGeoLib\include\Geometry\QuadTree.h" />
     <ClInclude Include="MathGeoLib\include\Geometry\Ray.h" />
     <ClInclude Include="MathGeoLib\include\Geometry\Sphere.h" />
     <ClInclude Include="MathGeoLib\include\Geometry\Triangle.h" />
@@ -182,6 +181,7 @@
     <ClInclude Include="PoolAllocator.h" />
     <ClInclude Include="Primitive.h" />
     <ClInclude Include="Profiler.h" />
+    <ClInclude Include="Quadtree.h" />
     <ClInclude Include="Random.h" />
     <ClInclude Include="StackAllocator.h" />
     <ClInclude Include="Timer.h" />
@@ -275,7 +275,6 @@
   <ItemGroup>
     <None Include="ListIterator.snippet" />
     <None Include="MathGeoLib\include\Geometry\KDTree.inl" />
-    <None Include="MathGeoLib\include\Geometry\QuadTree.inl" />
     <None Include="MathGeoLib\include\Geometry\TriangleMesh_IntersectRay_AVX.inl" />
     <None Include="MathGeoLib\include\Geometry\TriangleMesh_IntersectRay_CPP.inl" />
     <None Include="MathGeoLib\include\Geometry\TriangleMesh_IntersectRay_SSE.inl" />
