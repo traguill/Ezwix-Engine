@@ -8,6 +8,7 @@
 
 ComponentMesh::ComponentMesh(ComponentType type, GameObject* game_object) : Component(type, game_object)
 {
+	aabb.SetNegativeInfinity();
 	bounding_box.SetNegativeInfinity();
 }
 
@@ -87,7 +88,7 @@ bool ComponentMesh::SetMesh(Mesh * mesh)
 	{
 		this->mesh = mesh;
 
-		bounding_box.Enclose((float3*)mesh->vertices, mesh->num_vertices);
+		aabb.Enclose((float3*)mesh->vertices, mesh->num_vertices);
 		RecalculateBoundingBox();
 		ret = true;
 	}
@@ -100,6 +101,6 @@ void ComponentMesh::RecalculateBoundingBox()
 	ComponentTransform* trans = (ComponentTransform*)GetGameObject()->GetComponent(C_TRANSFORM);
 	assert(trans);
 
-	math::OBB ob = bounding_box.Transform(trans->GetGlobalMatrix());
+	math::OBB ob = aabb.Transform(trans->GetGlobalMatrix());
 	bounding_box = ob.MinimalEnclosingAABB();
 }

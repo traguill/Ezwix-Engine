@@ -22,7 +22,8 @@ public:
 
 private:
 	Mesh* mesh = nullptr;
-	math::AABB bounding_box;
+	math::AABB aabb; //Local one
+	math::AABB bounding_box; //In the world position
 };
 
 

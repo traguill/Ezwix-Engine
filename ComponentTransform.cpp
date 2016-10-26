@@ -157,12 +157,6 @@ void ComponentTransform::CalculateFinalTransform()
 		{
 			final_transform_matrix = transform_matrix;
 		}	
-		//Calculate AABB if there is a component mesh
-		ComponentMesh* mesh = (ComponentMesh*)game_object->GetComponent(C_MESH);
-		if (mesh != NULL)
-		{
-			mesh->RecalculateBoundingBox();
-		}
 
 		game_object->TransformModified();
 	}
