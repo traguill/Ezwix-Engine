@@ -182,7 +182,6 @@
     <ClInclude Include="PoolAllocator.h" />
     <ClInclude Include="Primitive.h" />
     <ClInclude Include="Profiler.h" />
-    <ClInclude Include="Quadtree.h" />
     <ClInclude Include="Random.h" />
     <ClInclude Include="StackAllocator.h" />
     <ClInclude Include="Timer.h" />
@@ -267,7 +266,6 @@
     <ClCompile Include="PoolAllocator.cpp" />
     <ClCompile Include="Primitive.cpp" />
     <ClCompile Include="Profiler.cpp" />
-    <ClCompile Include="Quadtree.cpp" />
     <ClCompile Include="Random.cpp" />
     <ClCompile Include="StackAllocator.cpp" />
     <ClCompile Include="Timer.cpp" />
