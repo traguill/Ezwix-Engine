@@ -6,6 +6,8 @@
 #include "ComponentTransform.h"
 #include "ComponentMaterial.h"
 
+#include "ComponentCamera.h"
+
 ComponentMesh::ComponentMesh(ComponentType type, GameObject* game_object) : Component(type, game_object)
 {
 	aabb.SetNegativeInfinity();
@@ -22,6 +24,10 @@ void ComponentMesh::Update(float dt)
 {
 	//Component must be active to update
 	if (!IsActive())
+		return;
+
+	//Testing culling
+	if (((ComponentCamera*)App->go_manager->cam->GetComponent(C_CAMERA))->IsVisible(bounding_box) == false)
 		return;
 
 	ComponentTransform* trans = (ComponentTransform*)GetGameObject()->GetComponent(C_TRANSFORM);

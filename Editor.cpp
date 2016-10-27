@@ -52,6 +52,10 @@ update_status Editor::Update(float dt)
 	PROFILE("Editor::Update()");
 
 	update_status ret = UPDATE_CONTINUE;
+
+	g_Debug->AddLine(float3(3, 0, 0), float3(3, -5, 0), g_Debug->red, 4.0f);
+	g_Debug->AddLine(float3(-3, 1, 0), float3(-3, 3, 4), g_Debug->yellow, 4.0f);
+	
 	
 	ret = EditorWindows(); //Update the windows of the editor
 	

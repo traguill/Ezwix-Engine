@@ -260,9 +260,15 @@ void DebugDraw::AddLine(const float3 & from_position, const float3 & to_position
 
 	float length = vec2.Length();
 
-	math::Quat rot = rot.RotateFromTo(vec1, vec2);
+	math::Quat rot = rot.RotateFromTo(vec1.Normalized(), vec2.Normalized());
 
-	d_prim->global_matrix = d_prim->global_matrix.FromTRS(from_position, rot, length * (float3(1,1,1) + vec2));
+	if (rot.Equals(math::Quat(1, 0, 0, 0))) //Same direction
+		if (vec2.y > 0)
+			rot = math::Quat::identity; //Facing Up
+		else
+			rot = math::Quat::RotateX(math::pi); //Facing Down
+
+	d_prim->global_matrix = d_prim->global_matrix.FromTRS(from_position, rot, math::float3(1, length, 1));
 
 	draw_list.push_back(d_prim);
 
@@ -294,6 +300,7 @@ void DebugDraw::AddAABB(const math::float3& min_point,const math::float3& max_po
 	draw_list.push_back(d_prim);
 }
 
+//WRONG!!! Needs X rotation too
 void DebugDraw::AddRect(const math::float3 & center_point, const math::float3& normal, const math::float2 size, math::float3 color, float line_width, float duration, bool depth_enabled)
 {
 	DebugPrimitive* d_prim = new DebugPrimitive();

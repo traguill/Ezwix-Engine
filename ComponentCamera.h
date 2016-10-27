@@ -19,6 +19,8 @@ public:
 	void SetFarPlane(float value);
 	void SetFOV(float value);
 
+	bool IsVisible(const math::AABB& box)const;
+
 private:
 	float near_plane = 0.3f;
 	float far_plane = 1000.0f;

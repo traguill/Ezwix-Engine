@@ -27,13 +27,13 @@ ComponentCamera::~ComponentCamera()
 
 void ComponentCamera::Update(float dt)
 {
-	//Draw Frustrum
+	//Draw Frustrum (TODO: This doesn't work, fix it).
 	float planes_dist = 5.0f; //Note: the far plane position is faked to apreciate the depth of the camera. A better implementation would be to use the near-far relation to modify this value.
-	float3 near_pos = frustum.Pos() + frustum.Front() * frustum.NearPlaneDistance();
-	g_Debug->AddRect(near_pos, frustum.Front(), float2(frustum.NearPlaneWidth(), frustum.NearPlaneHeight()), g_Debug->blue);
+	float3 near_pos = frustum.Pos() + frustum.Front().Normalized() * frustum.NearPlaneDistance();
+	g_Debug->AddRect(near_pos, frustum.NearPlane().normal, float2(frustum.NearPlaneWidth(), frustum.NearPlaneHeight()), g_Debug->blue);
 
-	float3 far_pos = frustum.Pos() + frustum.Front() * planes_dist;
-	g_Debug->AddRect(far_pos, frustum.Front(), float2(frustum.NearPlaneWidth()*planes_dist, frustum.NearPlaneHeight()*planes_dist), g_Debug->blue);
+	float3 far_pos = frustum.Pos() + frustum.Front().Normalized() * planes_dist;
+	g_Debug->AddRect(far_pos, frustum.NearPlane().normal, float2(frustum.NearPlaneWidth()*planes_dist, frustum.NearPlaneHeight()*planes_dist), g_Debug->blue);
 
 }
 
@@ -103,4 +103,32 @@ void ComponentCamera::SetFOV(float value)
 	fov = value;
 
 	frustum.SetVerticalFovAndAspectRatio(DegToRad(fov), aspect_ratio);
+}
+
+bool ComponentCamera::IsVisible(const math::AABB & box)const
+{
+	bool ret = true;
+	math::vec corners[8];
+	box.GetCornerPoints(corners);
+
+	math::Plane planes[6];
+	frustum.GetPlanes(planes);
+
+	for (int p = 0; p < 6; p++)
+	{
+		int count = 0;
+		for (int i = 0; i < 8; i++)
+		{
+			if (planes[p].IsOnPositiveSide(corners[i]) == false)
+				count++;
+		}
+
+		if (count == 8)
+		{
+			ret = false;
+			break;
+		}
+	}
+
+	return ret;
 }

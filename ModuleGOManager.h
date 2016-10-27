@@ -30,6 +30,8 @@ private:
 	GameObject* root = nullptr;
 
 	GameObject* selected_GO = nullptr;
+public:
+	GameObject* cam; //Testing
 
 };
 
