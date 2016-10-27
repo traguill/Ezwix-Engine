@@ -100,6 +100,15 @@ void ComponentCamera::SetFOV(float value)
 	frustum.SetVerticalFovAndAspectRatio(DegToRad(fov), aspect_ratio);
 }
 
+void ComponentCamera::LookAt(const math::float3 & point)
+{
+	math::float3 look_direction = point - frustum.Pos();
+	math::float3x3 matrix = math::float3x3::LookAt(frustum.Front(), look_direction, frustum.Up(), math::float3::unitY);
+
+	frustum.SetFront(matrix.MulDir(frustum.Front()).Normalized());
+	frustum.SetFront(matrix.MulDir(frustum.Up()).Normalized());
+}
+
 bool ComponentCamera::IsVisible(const math::AABB & box)const
 {
 	bool ret = true;

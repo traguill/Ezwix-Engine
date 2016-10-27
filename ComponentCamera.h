@@ -18,6 +18,7 @@ public:
 	void SetNearPlane(float value);
 	void SetFarPlane(float value);
 	void SetFOV(float value);
+	void LookAt(const math::float3& point);
 
 	bool IsVisible(const math::AABB& box)const;
 

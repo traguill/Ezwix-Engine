@@ -341,10 +341,10 @@ void DebugDraw::AddFrustum(const math::Frustum & frustum, float fake_far_dst, ma
 	//Calculate fake far corners
 	math::vec far_vec4, far_vec5, far_vec6, far_vec7;
 
-	far_vec4 = (corners[4] - corners[0]).Normalized() * (fake_far_dst + frustum.NearPlaneDistance());
-	far_vec5 = (corners[5] - corners[1]).Normalized() * (fake_far_dst + frustum.NearPlaneDistance());
-	far_vec6 = (corners[6] - corners[2]).Normalized() * (fake_far_dst + frustum.NearPlaneDistance());
-	far_vec7 = (corners[7] - corners[3]).Normalized() * (fake_far_dst + frustum.NearPlaneDistance());
+	far_vec4 = (corners[4] - corners[0]).Normalized() * (fake_far_dst) + frustum.Pos();
+	far_vec5 = (corners[5] - corners[1]).Normalized() * (fake_far_dst) + frustum.Pos();
+	far_vec6 = (corners[6] - corners[2]).Normalized() * (fake_far_dst) + frustum.Pos();
+	far_vec7 = (corners[7] - corners[3]).Normalized() * (fake_far_dst) + frustum.Pos();
 
 	//Far face
 	AddLine(far_vec4, far_vec5, color, line_width, duration, depth_enabled);
