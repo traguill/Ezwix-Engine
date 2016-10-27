@@ -27,7 +27,7 @@ ComponentCamera::~ComponentCamera()
 
 void ComponentCamera::Update(float dt)
 {
-	g_Debug->AddFrustum(frustum, 5.0f, g_Debug->blue, 2.0f);
+	g_Debug->AddFrustum(frustum, 30.0f, g_Debug->blue, 2.0f);
 }
 
 void ComponentCamera::OnInspector()
@@ -123,7 +123,7 @@ bool ComponentCamera::IsVisible(const math::AABB & box)const
 		int count = 0;
 		for (int i = 0; i < 8; i++)
 		{
-			if (planes[p].IsOnPositiveSide(corners[i]) == false)
+			if (planes[p].IsOnPositiveSide(corners[i]))
 				count++;
 		}
 
