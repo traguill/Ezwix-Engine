@@ -35,6 +35,7 @@ public:
 	void AddAABB(const math::AABB& aabb, math::float3 color, float line_width = 1.0f, float duration = 0.0f, bool depth_enabled = true);
 	void AddAABB(const math::float3& min_point,const math::float3& max_point, math::float3 color, float line_width = 1.0f, float duration = 0.0f, bool depth_enabled = true);
 	void AddRect(const math::float3& center_point, const math::float3& normal, const math::float2 size, math::float3 color, float line_width = 1.0f, float duration = 0.0f, bool depth_enabled = true);
+	void AddFrustum(const math::Frustum& frustum, float fake_far_dst, math::float3 color, float line_width = 1.0f, float duration = 0.0f, bool depth_enabled = true);
 
 private:
 	void Draw();

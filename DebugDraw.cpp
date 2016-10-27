@@ -319,6 +319,47 @@ void DebugDraw::AddRect(const math::float3 & center_point, const math::float3& n
 	draw_list.push_back(d_prim);
 }
 
+void DebugDraw::AddFrustum(const math::Frustum & frustum, float fake_far_dst, math::float3 color, float line_width, float duration, bool depth_enabled)
+{
+	/*          6------7
+		2----3  |      |
+		|    |  |      |
+		0----1  4------5
+
+		near       far
+	*/
+
+	math::vec corners[8];
+	frustum.GetCornerPoints(corners);
+
+	//Near face
+	AddLine(corners[0], corners[1], color, line_width, duration, depth_enabled);
+	AddLine(corners[1], corners[3], color, line_width, duration, depth_enabled);
+	AddLine(corners[3], corners[2], color, line_width, duration, depth_enabled);
+	AddLine(corners[2], corners[0], color, line_width, duration, depth_enabled);
+
+	//Calculate fake far corners
+	math::vec far_vec4, far_vec5, far_vec6, far_vec7;
+
+	far_vec4 = (corners[4] - corners[0]).Normalized() * (fake_far_dst + frustum.NearPlaneDistance());
+	far_vec5 = (corners[5] - corners[1]).Normalized() * (fake_far_dst + frustum.NearPlaneDistance());
+	far_vec6 = (corners[6] - corners[2]).Normalized() * (fake_far_dst + frustum.NearPlaneDistance());
+	far_vec7 = (corners[7] - corners[3]).Normalized() * (fake_far_dst + frustum.NearPlaneDistance());
+
+	//Far face
+	AddLine(far_vec4, far_vec5, color, line_width, duration, depth_enabled);
+	AddLine(far_vec5, far_vec7, color, line_width, duration, depth_enabled);
+	AddLine(far_vec7, far_vec6, color, line_width, duration, depth_enabled);
+	AddLine(far_vec6, far_vec4, color, line_width, duration, depth_enabled);
+
+	//Planes connections
+	AddLine(corners[0], far_vec4, color, line_width, duration, depth_enabled);
+	AddLine(corners[1], far_vec5, color, line_width, duration, depth_enabled);
+	AddLine(corners[3], far_vec7, color, line_width, duration, depth_enabled);
+	AddLine(corners[2], far_vec6, color, line_width, duration, depth_enabled);
+	
+}
+
 void DebugDraw::Draw()
 {
 	std::list<DebugPrimitive*>::iterator item = draw_list.begin();

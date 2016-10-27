@@ -27,14 +27,7 @@ ComponentCamera::~ComponentCamera()
 
 void ComponentCamera::Update(float dt)
 {
-	//Draw Frustrum (TODO: This doesn't work, fix it).
-	float planes_dist = 5.0f; //Note: the far plane position is faked to apreciate the depth of the camera. A better implementation would be to use the near-far relation to modify this value.
-	float3 near_pos = frustum.Pos() + frustum.Front().Normalized() * frustum.NearPlaneDistance();
-	g_Debug->AddRect(near_pos, frustum.NearPlane().normal, float2(frustum.NearPlaneWidth(), frustum.NearPlaneHeight()), g_Debug->blue);
-
-	float3 far_pos = frustum.Pos() + frustum.Front().Normalized() * planes_dist;
-	g_Debug->AddRect(far_pos, frustum.NearPlane().normal, float2(frustum.NearPlaneWidth()*planes_dist, frustum.NearPlaneHeight()*planes_dist), g_Debug->blue);
-
+	g_Debug->AddFrustum(frustum, 5.0f, g_Debug->blue, 2.0f);
 }
 
 void ComponentCamera::OnInspector()
@@ -65,6 +58,8 @@ void ComponentCamera::OnInspector()
 
 void ComponentCamera::OnTransformModified()
 {
+	//TODO: movement transform doesn't work. Fix it!
+
 	GameObject* game_object = GetGameObject();
 
 	if (game_object)
