@@ -22,6 +22,8 @@ public:
 
 	bool IsVisible(const math::AABB& box)const;
 
+	math::float4x4 GetViewMatrix()const;
+
 private:
 	float near_plane = 0.3f;
 	float far_plane = 1000.0f;

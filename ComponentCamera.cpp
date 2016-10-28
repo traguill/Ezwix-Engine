@@ -58,8 +58,6 @@ void ComponentCamera::OnInspector()
 
 void ComponentCamera::OnTransformModified()
 {
-	//TODO: movement transform doesn't work. Fix it!
-
 	GameObject* game_object = GetGameObject();
 
 	if (game_object)
@@ -135,4 +133,10 @@ bool ComponentCamera::IsVisible(const math::AABB & box)const
 	}
 
 	return ret;
+}
+
+math::float4x4 ComponentCamera::GetViewMatrix() const
+{
+	math::float4x4 matrix = frustum.ViewMatrix();
+	return matrix.Transposed();
 }

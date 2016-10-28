@@ -4,22 +4,10 @@
 #include "Module.h"
 #include "Globals.h"
 #include "MathGeoLib\include\MathGeoLib.h"
-#include <list>
-#include "p2Point.h"
 
-#define PIXELS_PER_METER 50.0f // if touched change METER_PER_PIXEL too
-#define METER_PER_PIXEL 0.02f // this is 1 / PIXELS_PER_METER !
-
-#define METERS_TO_PIXELS(m) ((int) floor(PIXELS_PER_METER * m))
-#define PIXEL_TO_METERS(p)  ((float) METER_PER_PIXEL * p)
-
-enum Direction
-{
-	GO_RIGHT,
-	GO_LEFT,
-	GO_UP,
-	GO_DOWN
-};
+class GameObject;
+class ComponentCamera;
+class ComponentTransform;
 
 class ModuleCamera3D : public Module
 {
@@ -31,34 +19,15 @@ public:
 	update_status Update(float dt);
 	bool CleanUp();
 
-	void Look(const vec &Position, const vec &Reference, bool RotateAroundReference = false);
-	void LookAt(const vec &Spot);
-	void Move(const vec &Movement);
-	void Move(Direction d, float speed);
-	float* GetViewMatrix();
-
-	void Rotate(float x, float y);
-
-
-	//Transform a 3D point to a point of the screen
-	void WorldToScreen(vec point, int& x, int& y); 
-
-	//Transform a 2D point into a screenPoint
-	vec ScreenToWorld(int x, int y);
-
-	vec Raycast();
+	math::float3 GetPosition() const;
+	math::float4x4 GetViewMatrix() const;
 
 private:
 
-	void CalculateViewMatrix();
+	GameObject* go_cam = nullptr;
+	ComponentTransform* cam_transform = nullptr;
+	ComponentCamera* editor_cam = nullptr;
 
-public:
-	
-	vec X, Y, Z, Position, Reference;
-
-private:
-
-	float4x4 ViewMatrix, ViewMatrixInverse;
 };
 
 #endif // !__MODULECAMERA3D_H__

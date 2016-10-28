@@ -26,10 +26,6 @@ void ComponentMesh::Update(float dt)
 	if (!IsActive())
 		return;
 
-	//Testing culling
-	if (((ComponentCamera*)App->go_manager->cam->GetComponent(C_CAMERA))->IsVisible(bounding_box) == false)
-		return;
-
 	ComponentTransform* trans = (ComponentTransform*)GetGameObject()->GetComponent(C_TRANSFORM);
 	assert(trans);
 	
@@ -40,7 +36,6 @@ void ComponentMesh::Update(float dt)
 		texture_id = material->texture_id;
 
 	App->renderer3D->Draw(*mesh, trans->GetTransformMatrix(), texture_id);	
-	g_Debug->AddAABB(bounding_box, g_Debug->yellow, 2);
 }
 
 void ComponentMesh::OnInspector()

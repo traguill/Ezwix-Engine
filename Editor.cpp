@@ -24,10 +24,6 @@ bool Editor::Start()
 
 	LOG("Start Editor");
 
-	//Set Camera Position
-	App->camera->Move(vec(10.0f, 6.0f, 30.0f));
-	App->camera->LookAt(vec(0, 0, 0));
-
 	//Create Windows
 	windows.push_back(&g_Profiler);
 	windows.push_back(fps_graph_win = new FPSGraph());

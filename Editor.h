@@ -42,7 +42,6 @@ private:
 	WindowOptions* winoptions_win = nullptr;
 	HardwareInfo* hardware_win = nullptr;
 	Assets* assets = nullptr;
-
 };
 
 #endif
