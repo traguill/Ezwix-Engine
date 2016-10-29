@@ -24,8 +24,10 @@ public:
 	bool CleanUp();
 
 	void OnResize(int width, int height, float fovy);
-
+	void SetPerspective(const math::float4x4& perspective);
 	void Draw(Mesh mesh, float4x4 matrix, uint texture_id);
+
+	void SetClearColor(const math::float3& color);
 
 public:
 

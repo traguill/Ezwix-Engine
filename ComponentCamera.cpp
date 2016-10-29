@@ -12,7 +12,7 @@ ComponentCamera::ComponentCamera(ComponentType type, GameObject* game_object) : 
 	float horizontal_fov = 2.0f*atanf(tanf(vertical_fov / 2.0f) * aspect_ratio);
 
 	frustum.SetPerspective(horizontal_fov, vertical_fov);
-
+	frustum.SetKind(FrustumProjectiveSpace::FrustumSpaceGL, FrustumHandedness::FrustumRightHanded);
 	frustum.SetPos(float3::zero);
 	frustum.SetFront(float3::unitZ);
 	frustum.SetUp(float3::unitY);
@@ -37,7 +37,7 @@ void ComponentCamera::OnInspector()
 		//Near plane
 		ImGui::Text("Near Plane: ");
 		float near_value = near_plane;
-		if (ImGui::SliderFloat("##near_p", &near_value, 0, 2000))
+		if (ImGui::SliderFloat("##near_p", &near_value, 0, 1, "%.3f", 0.05f))
 			SetNearPlane(near_value);
 
 		//Far plane
@@ -53,6 +53,9 @@ void ComponentCamera::OnInspector()
 			SetFOV(fov_value);
 
 		ImGui::Text("Aspect ratio: "); ImGui::SameLine(); ImGui::TextColored(ImVec4(0, 0, 1, 1), "%d:%d", ratio_x, ratio_y);
+
+		float3 col;
+		ImGui::ColorEdit3("pICK COLOR", col.ptr());
 	}
 }
 
@@ -75,11 +78,40 @@ void ComponentCamera::OnTransformModified()
 
 }
 
+float ComponentCamera::GetNearPlane() const
+{
+	return near_plane;
+}
+
+float ComponentCamera::GetFarPlane() const
+{
+	return far_plane;
+}
+
+float ComponentCamera::GetFOV() const
+{
+	return fov;
+}
+
+math::float4x4 ComponentCamera::GetProjectionMatrix() const
+{
+	math::float4x4 matrix = frustum.ProjectionMatrix();
+	matrix.Transpose();
+	return matrix;
+}
+
+math::float3 ComponentCamera::GetBackgroundColor() const
+{
+	return color;
+}
+
 void ComponentCamera::SetNearPlane(float value)
 {
 	if (value < far_plane && value > 0.0f)
 		near_plane = value;
 	frustum.SetViewPlaneDistances(near_plane, far_plane);
+
+	properties_modified = true;
 }
 
 void ComponentCamera::SetFarPlane(float value)
@@ -88,6 +120,8 @@ void ComponentCamera::SetFarPlane(float value)
 		far_plane = value;
 
 	frustum.SetViewPlaneDistances(near_plane, far_plane);
+
+	properties_modified = true;
 }
 
 void ComponentCamera::SetFOV(float value)
@@ -96,6 +130,8 @@ void ComponentCamera::SetFOV(float value)
 	fov = value;
 
 	frustum.SetVerticalFovAndAspectRatio(DegToRad(fov), aspect_ratio);
+
+	properties_modified = true;
 }
 
 void ComponentCamera::LookAt(const math::float3 & point)
@@ -105,6 +141,11 @@ void ComponentCamera::LookAt(const math::float3 & point)
 
 	frustum.SetFront(matrix.MulDir(frustum.Front()).Normalized());
 	frustum.SetFront(matrix.MulDir(frustum.Up()).Normalized());
+}
+
+void ComponentCamera::SetBackgroundColor(const math::float3 color)
+{
+	this->color = color;
 }
 
 bool ComponentCamera::IsVisible(const math::AABB & box)const

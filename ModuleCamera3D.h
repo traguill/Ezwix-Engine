@@ -22,11 +22,27 @@ public:
 	math::float3 GetPosition() const;
 	math::float4x4 GetViewMatrix() const;
 
+	float GetNearPlane()const;
+	float GetFarPlane()const;
+	float GetFOV()const;
+
+	void SetNearPlane(const float& near_plane);
+	void SetFarPlane(const float& far_plane);
+	void SetFOV(const float& fov);
+	void SetBackgroundColor(const math::float3& color);
+
+	math::float3 GetBackgroundColor()const;
+
 private:
 
+	void EditorCameraMovement(float dt);
+
+private:
 	GameObject* go_cam = nullptr;
 	ComponentTransform* cam_transform = nullptr;
 	ComponentCamera* editor_cam = nullptr;
+
+	ComponentCamera* current_camera = nullptr;
 
 };
 

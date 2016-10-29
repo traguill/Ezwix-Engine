@@ -190,6 +190,18 @@ void ModuleRenderer3D::OnResize(int width, int height, float fovy)
 	glLoadIdentity();
 }
 
+void ModuleRenderer3D::SetPerspective(const math::float4x4 & perspective)
+{
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+
+	ProjectionMatrix = perspective;
+	glLoadMatrixf(*ProjectionMatrix.v);
+
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+}
+
 void ModuleRenderer3D::Draw(Mesh mesh, float4x4 matrix, uint texture_id)
 {
 	glPushMatrix();
@@ -216,4 +228,9 @@ void ModuleRenderer3D::Draw(Mesh mesh, float4x4 matrix, uint texture_id)
 	glDisableClientState(GL_VERTEX_ARRAY);
 
 	glPopMatrix();
+}
+
+void ModuleRenderer3D::SetClearColor(const math::float3 & color)
+{
+	glClearColor(color.x, color.y, color.z, 1.0f);
 }

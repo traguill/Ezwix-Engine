@@ -10,6 +10,8 @@ ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(ap
 	go_cam = new GameObject();
 	cam_transform = (ComponentTransform*)go_cam->AddComponent(C_TRANSFORM);
 	editor_cam = (ComponentCamera*)go_cam->AddComponent(C_CAMERA);
+
+	current_camera = editor_cam;
 }
 
 ModuleCamera3D::~ModuleCamera3D()
@@ -34,6 +36,73 @@ bool ModuleCamera3D::CleanUp()
 
 update_status ModuleCamera3D::Update(float dt)
 {
+	if(current_camera == editor_cam)
+		EditorCameraMovement(dt);
+
+	//If the current camera properties has been modified update the projection matrix.
+	if (current_camera->properties_modified)
+	{
+		App->renderer3D->SetPerspective(current_camera->GetProjectionMatrix());
+		current_camera->properties_modified = false;
+	}
+
+	return UPDATE_CONTINUE;
+}
+
+math::float3 ModuleCamera3D::GetPosition() const
+{
+	return cam_transform->GetPosition();
+}
+
+math::float4x4 ModuleCamera3D::GetViewMatrix() const
+{
+	return editor_cam->GetViewMatrix();
+}
+
+float ModuleCamera3D::GetNearPlane() const
+{
+	return editor_cam->GetNearPlane();
+}
+
+float ModuleCamera3D::GetFarPlane() const
+{
+	return editor_cam->GetFarPlane();
+}
+
+float ModuleCamera3D::GetFOV() const
+{
+	return editor_cam->GetFOV();
+}
+
+void ModuleCamera3D::SetNearPlane(const float & near_plane)
+{
+	editor_cam->SetNearPlane(near_plane);
+}
+
+void ModuleCamera3D::SetFarPlane(const float & far_plane)
+{
+	editor_cam->SetFarPlane(far_plane);
+}
+
+void ModuleCamera3D::SetFOV(const float & fov)
+{
+	editor_cam->SetFOV(fov);
+}
+
+void ModuleCamera3D::SetBackgroundColor(const math::float3 & color)
+{
+	current_camera->SetBackgroundColor(color);
+	App->renderer3D->SetClearColor(color);
+}
+
+math::float3 ModuleCamera3D::GetBackgroundColor() const
+{
+	return current_camera->GetBackgroundColor();
+}
+
+void ModuleCamera3D::EditorCameraMovement(float dt)
+{
+
 	math::float3 position = cam_transform->GetPosition();
 	float speed = 8.0f * dt;
 
@@ -47,15 +116,15 @@ update_status ModuleCamera3D::Update(float dt)
 	math::float3 new_pos = math::float3::zero;
 
 	//Arrows movement
-	if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT) new_pos -= world_z * speed;
-	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT) new_pos += world_z * speed;
-	if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT) new_pos -= world_x * speed;
-	if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT) new_pos += world_x * speed;
+	if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT) new_pos += world_z * speed;
+	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT) new_pos -= world_z * speed;
+	if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT) new_pos += world_x * speed;
+	if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT) new_pos -= world_x * speed;
 
 	//Middle mouse button movement
 	if (App->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KEY_REPEAT)
 	{
-		int dx = -App->input->GetMouseXMotion();
+		int dx = App->input->GetMouseXMotion();
 		int dy = App->input->GetMouseYMotion();
 
 		new_pos += world_x * speed * dx;
@@ -65,8 +134,8 @@ update_status ModuleCamera3D::Update(float dt)
 	//Mouse wheel zoom
 	float wheel_speed = 200 * dt;
 
-	if (App->input->GetMouseZ() > 0) new_pos -= world_z * speed * wheel_speed;
-	if (App->input->GetMouseZ() < 0) new_pos += world_z * speed * wheel_speed;
+	if (App->input->GetMouseZ() > 0) new_pos += world_z * speed * wheel_speed;
+	if (App->input->GetMouseZ() < 0) new_pos -= world_z * speed * wheel_speed;
 
 
 	if (new_pos.x != 0 || new_pos.y != 0 || new_pos.z != 0)
@@ -93,18 +162,6 @@ update_status ModuleCamera3D::Update(float dt)
 
 	//Update Transform component manually
 	cam_transform->Update(dt);
-
-	return UPDATE_CONTINUE;
-}
-
-math::float3 ModuleCamera3D::GetPosition() const
-{
-	return cam_transform->GetPosition();
-}
-
-math::float4x4 ModuleCamera3D::GetViewMatrix() const
-{
-	return editor_cam->GetViewMatrix();
 }
 
 

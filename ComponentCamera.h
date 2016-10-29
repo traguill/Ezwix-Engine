@@ -15,14 +15,24 @@ public:
 	void OnInspector();
 	void OnTransformModified();
 
+	float GetNearPlane()const;
+	float GetFarPlane()const;
+	float GetFOV()const;
+	math::float4x4 GetProjectionMatrix()const;
+	math::float3 GetBackgroundColor()const;
+
 	void SetNearPlane(float value);
 	void SetFarPlane(float value);
 	void SetFOV(float value);
 	void LookAt(const math::float3& point);
-
+	void SetBackgroundColor(const math::float3 color);
 	bool IsVisible(const math::AABB& box)const;
 
 	math::float4x4 GetViewMatrix()const;
+
+public:
+
+	bool properties_modified = false;
 
 private:
 	float near_plane = 0.3f;
@@ -33,6 +43,5 @@ private:
 	float aspect_ratio = 1.25f;
 	math::Frustum frustum;
 	math::float3 color; 
-
 };
 #endif // !__COMPONENT_MATERIAL_H__

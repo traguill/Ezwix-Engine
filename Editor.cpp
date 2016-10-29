@@ -9,6 +9,7 @@
 #include "Assets.h"
 #include "Profiler.h"
 #include "DebugDraw.h"
+#include "CameraWindow.h"
 
 Editor::Editor(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -30,7 +31,7 @@ bool Editor::Start()
 	windows.push_back(winoptions_win = new WindowOptions());
 	windows.push_back(hardware_win = new HardwareInfo());
 	windows.push_back(assets = new Assets());
-
+	windows.push_back(camera_win = new CameraWindow());
 	
 
 	return ret;
@@ -55,7 +56,7 @@ update_status Editor::Update(float dt)
 	Plane_P grid(0,1,0,0);
 	grid.axis = true;
 	grid.Render();
-	
+
 	return ret;	
 }
 
@@ -68,6 +69,11 @@ update_status Editor::EditorWindows()
 	{
 		if (ImGui::BeginMenu("File"))
 		{
+			ImGui::EndMenu();
+		}
+		if (ImGui::BeginMenu("Edit"))
+		{
+			EditMenu();
 			ImGui::EndMenu();
 		}
 		if (ImGui::BeginMenu("Windows"))
@@ -162,5 +168,13 @@ void Editor::WindowsMenu()
 	if (ImGui::MenuItem("Assets"))
 	{
 		assets->SetActive(true);
+	}
+}
+
+void Editor::EditMenu()
+{
+	if (ImGui::MenuItem("Camera"))
+	{
+		camera_win->SetActive(true);
 	}
 }

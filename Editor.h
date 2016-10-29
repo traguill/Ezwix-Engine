@@ -13,6 +13,7 @@ class WindowOptions;
 class HardwareInfo;
 class Console;
 class Assets;
+class CameraWindow;
 
 class Editor : public Module
 {
@@ -32,6 +33,7 @@ private:
 	//Menus
 	void HelpMenu();
 	void WindowsMenu();
+	void EditMenu();
 
 private:
 
@@ -42,6 +44,7 @@ private:
 	WindowOptions* winoptions_win = nullptr;
 	HardwareInfo* hardware_win = nullptr;
 	Assets* assets = nullptr;
+	CameraWindow* camera_win = nullptr;
 };
 
 #endif

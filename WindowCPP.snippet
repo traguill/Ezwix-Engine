@@ -21,7 +21,12 @@
         
         void Name::Draw()
         {
-        
+            if (!active)
+		          return;
+
+	          ImGui::Begin("Name", &active);
+            
+            ImGui::End();
         }
         
   ]]>
