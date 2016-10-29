@@ -26,6 +26,26 @@ GameObject::~GameObject()
 	}
 
 	components.clear();
+	components_to_remove.clear();
+}
+
+void GameObject::PreUpdate()
+{
+	//Remove all components that need to be removed. Secure way.
+	for (std::vector<Component*>::iterator component = components_to_remove.begin(); component != components_to_remove.end(); ++component)
+	{
+		for (std::vector<Component*>::iterator comp_remove = components.begin(); comp_remove != components.end(); ++comp_remove) //Remove the component from the components list
+		{
+			if ((*comp_remove) == (*component))
+			{
+				components.erase(comp_remove);
+				break;
+			}
+		}
+		delete (*component);
+	}
+
+	components_to_remove.clear();
 }
 
 void GameObject::Update(float dt)
@@ -124,16 +144,20 @@ Component* GameObject::AddComponent(ComponentType type)
 	switch (type)
 	{
 	case C_TRANSFORM:
-		item = new ComponentTransform(type, this);
+		if(GetComponent(type) == nullptr) //Only one transform compoenent for gameobject
+			item = new ComponentTransform(type, this);
 		break;
 	case C_MESH:
-		item = new ComponentMesh(type, this);
+		if(GetComponent(C_TRANSFORM))
+			item = new ComponentMesh(type, this);
 		break;
 	case C_MATERIAL:
-		item = new ComponentMaterial(type, this);
+		if (GetComponent(C_TRANSFORM) && GetComponent(C_MESH))
+			item = new ComponentMaterial(type, this);
 		break;
 	case C_CAMERA:
-		item = new ComponentCamera(type, this);
+		if (GetComponent(C_TRANSFORM))
+			item = new ComponentCamera(type, this);
 	default:
 		break;
 	}
@@ -170,6 +194,22 @@ void* GameObject::GetComponent(ComponentType type)
 	}
 
 	return NULL;
+}
+
+void GameObject::RemoveComponent(Component * component)
+{
+	//Search if the component exists inside the GameObject
+
+	std::vector<Component*>::iterator it = components.begin();
+
+	for (it; it != components.end(); ++it)
+	{
+		if ((*it) == component)
+		{
+			components_to_remove.push_back(component);
+			break;
+		}
+	}
 }
 
 void GameObject::TransformModified()

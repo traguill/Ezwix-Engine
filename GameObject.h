@@ -14,6 +14,7 @@ public:
 	GameObject(GameObject* parent);
 	~GameObject();
 
+	void PreUpdate();
 	void Update(float dt);
 
 	bool AddChild(GameObject* child);
@@ -29,6 +30,7 @@ public:
 	Component* AddComponent(ComponentType type);
 	const std::vector<Component*>* GetComponents();
 	void* GetComponent(ComponentType type);
+	void RemoveComponent(Component* component);
 
 	void TransformModified();
 
@@ -42,6 +44,8 @@ private:
 	bool active = true;
 
 	std::vector<Component*> components;
+
+	std::vector<Component*> components_to_remove;
 };
 
 #endif // !__GAMEOBJECT_H__

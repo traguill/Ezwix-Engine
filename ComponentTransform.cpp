@@ -133,6 +133,11 @@ math::float4x4 ComponentTransform::GetGlobalMatrix()const
 	return final_transform_matrix;
 }
 
+void ComponentTransform::Remove()
+{
+	LOG("Component Transform from GO(%s) can't be removed.",GetGameObject()->name);
+}
+
 void ComponentTransform::CalculateFinalTransform()
 {
 	GameObject* game_object = GetGameObject();

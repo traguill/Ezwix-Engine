@@ -13,6 +13,7 @@ public:
 	~ModuleGOManager();
 
 	bool Start(); 
+	update_status PreUpdate(float dt);
 	update_status Update(float dt);
 
 	GameObject* CreateGameObject(GameObject* parent);
@@ -26,6 +27,7 @@ private:
 	void InspectorWindow();
 
 	void UpdateGameObjects(float dt, GameObject* obj);
+	void PreUpdateGameObjects(GameObject* obj);
 private:
 	GameObject* root = nullptr;
 

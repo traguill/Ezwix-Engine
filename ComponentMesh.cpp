@@ -35,7 +35,8 @@ void ComponentMesh::Update(float dt)
 	if (material)
 		texture_id = material->texture_id;
 
-	App->renderer3D->Draw(*mesh, trans->GetTransformMatrix(), texture_id);	
+	if(mesh)
+		App->renderer3D->Draw(*mesh, trans->GetTransformMatrix(), texture_id);	
 }
 
 void ComponentMesh::OnInspector()
@@ -73,6 +74,11 @@ void ComponentMesh::OnInspector()
 		{
 			ImGui::TextColored(ImVec4(1, 0, 0, 1), "WARNING");
 			ImGui::SameLine(); ImGui::Text("No mesh was loaded.");
+		}
+
+		if (ImGui::Button("###mesh_rem Remove"))
+		{
+			Remove();
 		}
 	}
 }

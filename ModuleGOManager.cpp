@@ -24,6 +24,14 @@ bool ModuleGOManager::Start()
 	return true;
 }
 
+update_status ModuleGOManager::PreUpdate(float dt)
+{
+	if (root)
+		PreUpdateGameObjects(root);
+
+	return UPDATE_CONTINUE;
+}
+
 update_status ModuleGOManager::Update(float dt)
 {
 	//Update GameObjects
@@ -73,6 +81,33 @@ void ModuleGOManager::HierarchyWindow()
 	ImGui::Begin("Hierarchy");
 
 	DisplayGameObjectsChilds(root->GetChilds());
+
+	if (ImGui::IsMouseHoveringWindow())
+		if (ImGui::IsMouseClicked(1))
+			ImGui::OpenPopup("HierarchyOptions");
+
+	if (ImGui::BeginPopup("HierarchyOptions"))
+	{
+		if (ImGui::Selectable("Create Empty GameObject"))
+		{
+			selected_GO = CreateGameObject(NULL);
+		}
+
+		if (ImGui::Selectable("Create Empty Child"))
+		{
+			selected_GO = CreateGameObject(selected_GO);
+		}
+
+		if (ImGui::Selectable("Remove selected GameObject"))
+		{
+			if (selected_GO != nullptr)
+			{
+				RemoveGameObject(selected_GO);
+				selected_GO = nullptr;
+			}
+		}
+		ImGui::EndPopup();
+	}
 
 	ImGui::End();
 }
@@ -135,6 +170,36 @@ void ModuleGOManager::InspectorWindow()
 		{
 			(*component)->OnInspector();
 		}
+
+		//Options
+		if (ImGui::IsMouseHoveringWindow())
+			if (ImGui::IsMouseClicked(1))
+				ImGui::OpenPopup("InspectorOptions");
+
+		if (ImGui::BeginPopup("InspectorOptions"))
+		{
+			if (ImGui::Selectable("Add Transform"))
+			{
+				selected_GO->AddComponent(C_TRANSFORM);
+			}
+
+			if (ImGui::Selectable("Add Mesh"))
+			{
+				selected_GO->AddComponent(C_MESH);
+			}
+
+			if (ImGui::Selectable("Add Material"))
+			{
+				selected_GO->AddComponent(C_MATERIAL);
+			}
+
+			if (ImGui::Selectable("Add Camera"))
+			{
+				selected_GO->AddComponent(C_CAMERA);
+			}
+
+			ImGui::EndPopup();
+		}
 	}
 
 	ImGui::End();
@@ -155,4 +220,16 @@ void ModuleGOManager::UpdateGameObjects(float dt, GameObject* object)
 	}
 	
 
+}
+
+void ModuleGOManager::PreUpdateGameObjects(GameObject * obj)
+{
+	if (root != obj && obj->IsActive() == true)
+		obj->PreUpdate();
+
+	std::vector<GameObject*>::const_iterator child = obj->GetChilds()->begin();
+	for (child; child != obj->GetChilds()->end(); ++child)
+	{
+		PreUpdateGameObjects((*child));
+	}
 }

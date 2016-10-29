@@ -54,8 +54,17 @@ void ComponentCamera::OnInspector()
 
 		ImGui::Text("Aspect ratio: "); ImGui::SameLine(); ImGui::TextColored(ImVec4(0, 0, 1, 1), "%d:%d", ratio_x, ratio_y);
 
-		float3 col;
-		ImGui::ColorEdit3("pICK COLOR", col.ptr());
+		ImGui::Text("Background color: "); ImGui::SameLine();
+		float3 color = App->camera->GetBackgroundColor();
+		if (ImGui::ColorEdit3("", color.ptr()))
+		{
+			this->color = color;
+		}
+
+		if (ImGui::Button("###cam_rem Remove"))
+		{
+			Remove();
+		}
 	}
 }
 

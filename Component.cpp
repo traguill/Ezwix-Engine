@@ -38,3 +38,8 @@ void Component::Update(float dt)
 void Component::OnTransformModified()
 {}
 
+void Component::Remove()
+{
+	game_object->RemoveComponent(this);
+}
+

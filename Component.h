@@ -29,6 +29,8 @@ public:
 
 	virtual void OnTransformModified();
 
+	virtual void Remove();
+
 private:
 	bool active = true;
 	ComponentType type;
