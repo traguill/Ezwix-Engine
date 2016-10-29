@@ -19,14 +19,16 @@ public:
 	void SetRotation(math::Quat rot);
 	void SetScale(math::float3 scale);
 
-	math::float3 GetPosition();
-	math::float3 GetRotationEuler();
-	math::Quat GetRotation();
-	math::float3 GetScale();
+	math::float3 GetPosition()const;
+	math::float3 GetRotationEuler()const;
+	math::Quat GetRotation()const;
+	math::float3 GetScale()const;
+
+	void Rotate(const math::Quat& quaternion);
 
 	// Returns the final transformation matrix. Not the local one!
-	math::float4x4 GetTransformMatrix();
-	math::float4x4 GetGlobalMatrix();
+	math::float4x4 GetTransformMatrix()const;
+	math::float4x4 GetGlobalMatrix()const;
 
 private:
 

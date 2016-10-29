@@ -91,6 +91,8 @@ void ComponentTransform::SetRotation(math::Quat rot)
 {
 	rotation = rot;
 
+	rotation_euler = RadToDeg(rotation.ToEulerXYZ());
+
 	transform_modified = true;
 }
 
@@ -101,32 +103,32 @@ void ComponentTransform::SetScale(math::float3 scale)
 	transform_modified = true;
 }
 
-math::float3 ComponentTransform::GetPosition()
+math::float3 ComponentTransform::GetPosition() const
 {
 	return position;
 }
 
-math::float3 ComponentTransform::GetRotationEuler()
+math::float3 ComponentTransform::GetRotationEuler() const
 {
 	return rotation_euler;
 }
 
-math::Quat ComponentTransform::GetRotation()
+math::Quat ComponentTransform::GetRotation() const
 {
 	return rotation;
 }
 
-math::float3 ComponentTransform::GetScale()
+math::float3 ComponentTransform::GetScale()const
 {
 	return scale;
 }
 
-math::float4x4 ComponentTransform::GetTransformMatrix()
+math::float4x4 ComponentTransform::GetTransformMatrix()const
 {
 	return final_transform_matrix.Transposed();
 }
 
-math::float4x4 ComponentTransform::GetGlobalMatrix()
+math::float4x4 ComponentTransform::GetGlobalMatrix()const
 {
 	return final_transform_matrix;
 }
@@ -164,4 +166,10 @@ void ComponentTransform::CalculateFinalTransform()
 	{	
 		LOG("Error: Component created but not attached to any gameobject");
 	}
+}
+
+void ComponentTransform::Rotate(const math::Quat & quaternion)
+{
+	rotation = quaternion * rotation;
+	transform_modified = true;
 }
