@@ -117,14 +117,38 @@ void ModuleMeshes::LoadNode(aiNode* node,const aiScene* scene, GameObject* paren
 
 	math::float3 pos;
 	pos.x = translation.x; pos.y = translation.y; pos.z = translation.z;
-	c_transform->SetPosition(pos);
-
+	
 	math::Quat rot;
 	rot.x = rotation.x; rot.y = rotation.y; rot.z = rotation.z; rot.w = rotation.w;
-	c_transform->SetRotation(rot);
 
 	math::float3 scale;
 	scale.x = scaling.x; scale.y = scaling.y; scale.z = scaling.z;
+	
+	//Don't load fbx dummies as gameobjects. 
+	static const char* dummies[5] = 
+	{
+		"$AssimpFbx$_PreRotation", 
+		"$AssimpFbx$_Rotation", 
+		"$AssimpFbx$_PostRotation",
+		"$AssimpFbx$_Scaling", 
+		"$AssimpFbx$_Translation" 
+	};
+
+	for (int i = 0; i < 5; ++i)
+	{
+		if (((string)(node->mName.C_Str())).find(dummies[i]) != string::npos && node->mNumChildren == 1)
+		{
+			node = node->mChildren[0];
+			node->mTransformation.Decompose(scaling, rotation, translation);
+			pos += float3(translation.x, translation.y, translation.z);
+			scale = float3(scale.x * scaling.x, scale.y * scaling.y, scale.z * scaling.z);
+			rot = rot * Quat(rotation.x, rotation.y, rotation.z, rotation.w);
+			i = -1; 
+		}
+	}
+
+	c_transform->SetPosition(pos);
+	c_transform->SetRotation(rot);
 	c_transform->SetScale(scale);
 
 	for (int i = 0; i < node->mNumMeshes; i++)

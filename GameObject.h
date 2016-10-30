@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <string>
+#include "MathGeoLib\include\MathGeoLib.h"
 
 class Component;
 enum ComponentType;
@@ -32,6 +33,8 @@ public:
 	void* GetComponent(ComponentType type);
 	void RemoveComponent(Component* component);
 
+	float4x4 GetGlobalMatrix()const;
+
 	void TransformModified();
 
 public:
@@ -44,8 +47,9 @@ private:
 	bool active = true;
 
 	std::vector<Component*> components;
-
 	std::vector<Component*> components_to_remove;
+
+	float4x4* global_matrix = nullptr;
 };
 
 #endif // !__GAMEOBJECT_H__

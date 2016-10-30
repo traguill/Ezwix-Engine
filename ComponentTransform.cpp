@@ -4,9 +4,10 @@
 #include "imgui\imgui.h"
 #include "ComponentMesh.h"
 
-ComponentTransform::ComponentTransform(ComponentType type, GameObject* game_object) : Component(type, game_object)
+ComponentTransform::ComponentTransform(ComponentType type, GameObject* game_object, math::float4x4** global_matrix) : Component(type, game_object)
 {
 	CalculateFinalTransform();
+	*global_matrix = &final_transform_matrix;
 }
 
 ComponentTransform::~ComponentTransform()

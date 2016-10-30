@@ -51,42 +51,42 @@ update_status ModuleCamera3D::Update(float dt)
 
 math::float3 ModuleCamera3D::GetPosition() const
 {
-	return cam_transform->GetPosition();
+	return current_camera->GetGameObject()->GetGlobalMatrix().TranslatePart();
 }
 
 math::float4x4 ModuleCamera3D::GetViewMatrix() const
 {
-	return editor_cam->GetViewMatrix();
+	return current_camera->GetViewMatrix();
 }
 
 float ModuleCamera3D::GetNearPlane() const
 {
-	return editor_cam->GetNearPlane();
+	return current_camera->GetNearPlane();
 }
 
 float ModuleCamera3D::GetFarPlane() const
 {
-	return editor_cam->GetFarPlane();
+	return current_camera->GetFarPlane();
 }
 
 float ModuleCamera3D::GetFOV() const
 {
-	return editor_cam->GetFOV();
+	return current_camera->GetFOV();
 }
 
 void ModuleCamera3D::SetNearPlane(const float & near_plane)
 {
-	editor_cam->SetNearPlane(near_plane);
+	current_camera->SetNearPlane(near_plane);
 }
 
 void ModuleCamera3D::SetFarPlane(const float & far_plane)
 {
-	editor_cam->SetFarPlane(far_plane);
+	current_camera->SetFarPlane(far_plane);
 }
 
 void ModuleCamera3D::SetFOV(const float & fov)
 {
-	editor_cam->SetFOV(fov);
+	current_camera->SetFOV(fov);
 }
 
 void ModuleCamera3D::SetBackgroundColor(const math::float3 & color)

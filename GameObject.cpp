@@ -19,6 +19,7 @@ GameObject::GameObject(GameObject* parent) : parent(parent)
 
 GameObject::~GameObject()
 {
+	global_matrix = nullptr;
 	for (std::vector<Component*>::iterator component = components.begin(); component != components.end(); ++component)
 	{
 		delete (*component);
@@ -145,7 +146,7 @@ Component* GameObject::AddComponent(ComponentType type)
 	{
 	case C_TRANSFORM:
 		if(GetComponent(type) == nullptr) //Only one transform compoenent for gameobject
-			item = new ComponentTransform(type, this);
+			item = new ComponentTransform(type, this, &global_matrix);
 		break;
 	case C_MESH:
 		if(GetComponent(C_TRANSFORM))
@@ -212,8 +213,15 @@ void GameObject::RemoveComponent(Component * component)
 	}
 }
 
+float4x4 GameObject::GetGlobalMatrix() const
+{
+	return *global_matrix;
+}
+
 void GameObject::TransformModified()
 {
+	if (global_matrix == nullptr)
+		return;
 	std::vector<Component*>::iterator component = components.begin();
 
 	for (component; component != components.end(); component++)
