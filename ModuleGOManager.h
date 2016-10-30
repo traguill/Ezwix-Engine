@@ -5,6 +5,7 @@
 #include <vector>
 
 class GameObject;
+class ComponentCamera;
 
 class ModuleGOManager : public Module
 {
@@ -18,6 +19,8 @@ public:
 
 	GameObject* CreateGameObject(GameObject* parent);
 	bool RemoveGameObject(GameObject* object);
+
+	void GetAllCameras(std::vector<ComponentCamera*>& list, GameObject* from = nullptr) const;
 
 private:
 

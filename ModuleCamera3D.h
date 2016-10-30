@@ -32,6 +32,9 @@ public:
 	void SetBackgroundColor(const math::float3& color);
 
 	math::float3 GetBackgroundColor()const;
+	ComponentCamera* GetCurrentCamera()const;
+	void ChangeCurrentCamera(ComponentCamera* camera);
+	ComponentCamera* GetEditorCamera() const;
 
 private:
 

@@ -3,6 +3,7 @@
 #include "Component.h"
 #include "GameObject.h"
 #include "Imgui\imgui.h"
+#include "ComponentCamera.h"
 
 ModuleGOManager::ModuleGOManager(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -74,6 +75,19 @@ bool ModuleGOManager::RemoveGameObject(GameObject* object)
 	}
 
 	return ret;
+}
+
+void ModuleGOManager::GetAllCameras(std::vector<ComponentCamera*>& list, GameObject* from) const
+{
+	GameObject* go = (from) ? from : root;
+	
+	ComponentCamera* cam = (ComponentCamera*)go->GetComponent(C_CAMERA);
+	if (cam)
+		list.push_back(cam);
+	
+	const vector<GameObject*>* childs = go->GetChilds();
+	for (vector<GameObject*>::const_iterator child = childs->begin(); child != childs->end(); ++child)
+		GetAllCameras(list, (*child));
 }
 
 void ModuleGOManager::HierarchyWindow()

@@ -1,6 +1,9 @@
 #include "Application.h"
 #include "CameraWindow.h"
 #include "ModuleCamera3D.h"
+#include "ComponentCamera.h"
+#include "GameObject.h"
+#include "ModuleGOManager.h"
 
 CameraWindow::CameraWindow()
 {}
@@ -38,6 +41,30 @@ void CameraWindow::Draw()
 	if (ImGui::ColorEdit3("", color.ptr()))
 	{
 		App->camera->SetBackgroundColor(color);
+	}
+
+	ImGui::Text("Current camera: ");
+	ImGui::SameLine();
+
+	if (ImGui::BeginMenu(App->camera->GetCurrentCamera()->GetGameObject()->name.data()))
+	{
+		vector<ComponentCamera*> cameras;
+		App->go_manager->GetAllCameras(cameras);
+
+		ComponentCamera* cam_editor = App->camera->GetEditorCamera();
+		//Camera editor as option too
+		if (ImGui::MenuItem(cam_editor->GetGameObject()->name.data()))
+		{
+			App->camera->ChangeCurrentCamera(cam_editor);
+		}
+
+		for (vector<ComponentCamera*>::iterator cam_it = cameras.begin(); cam_it != cameras.end(); cam_it++)
+			if (ImGui::MenuItem((*cam_it)->GetGameObject()->name.data()))
+			{
+				App->camera->ChangeCurrentCamera((*cam_it));
+			}
+
+		ImGui::EndMenu();
 	}
 
 	ImGui::End();

@@ -8,6 +8,7 @@
 ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 	go_cam = new GameObject();
+	go_cam->name = "Editor Camera";
 	cam_transform = (ComponentTransform*)go_cam->AddComponent(C_TRANSFORM);
 	editor_cam = (ComponentCamera*)go_cam->AddComponent(C_CAMERA);
 
@@ -98,6 +99,26 @@ void ModuleCamera3D::SetBackgroundColor(const math::float3 & color)
 math::float3 ModuleCamera3D::GetBackgroundColor() const
 {
 	return current_camera->GetBackgroundColor();
+}
+
+ComponentCamera * ModuleCamera3D::GetCurrentCamera() const
+{
+	return current_camera;
+}
+
+void ModuleCamera3D::ChangeCurrentCamera(ComponentCamera * camera)
+{
+	if (camera != nullptr)
+	{
+		current_camera = camera;
+		App->renderer3D->SetPerspective(current_camera->GetProjectionMatrix());
+		App->renderer3D->SetClearColor(current_camera->GetBackgroundColor());
+	}
+}
+
+ComponentCamera * ModuleCamera3D::GetEditorCamera() const
+{
+	return editor_cam;
 }
 
 void ModuleCamera3D::EditorCameraMovement(float dt)
