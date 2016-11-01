@@ -5,6 +5,9 @@
 #include "ComponentMesh.h"
 #include "ComponentMaterial.h"
 #include "ComponentCamera.h"
+#include "ModuleMeshes.h"
+
+
 GameObject::GameObject()
 {
 	name.resize(30);
@@ -32,6 +35,10 @@ GameObject::~GameObject()
 
 void GameObject::PreUpdate()
 {
+	//Reset elements to draw
+	mesh_to_draw = nullptr;
+	texture_to_draw = 0;
+
 	//Remove all components that need to be removed. Secure way.
 	for (std::vector<Component*>::iterator component = components_to_remove.begin(); component != components_to_remove.end(); ++component)
 	{

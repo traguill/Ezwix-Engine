@@ -5,12 +5,14 @@
 #include "Globals.h"
 #include "MathGeoLib\include\MathGeoLib.h"
 #include "Light.h"
+#include <vector>
 
 #define MAX_LIGHTS 8
 
 using namespace math;
 
 class Mesh;
+class GameObject;
 
 class ModuleRenderer3D : public Module
 {
@@ -25,9 +27,13 @@ public:
 
 	void OnResize(int width, int height, float fovy);
 	void SetPerspective(const math::float4x4& perspective);
-	void Draw(Mesh mesh, float4x4 matrix, uint texture_id);
+	void AddToDraw(GameObject* obj);
 
-	void SetClearColor(const math::float3& color);
+	void SetClearColor(const math::float3& color)const;
+
+private:
+
+	void Draw(GameObject* obj)const;
 
 public:
 
@@ -35,6 +41,10 @@ public:
 	SDL_GLContext context;
 	float3x3 NormalMatrix;
 	float4x4 ModelMatrix, ViewMatrix, ProjectionMatrix;
+
+private:
+
+	vector<GameObject*> objects_to_draw;
 
 };
 

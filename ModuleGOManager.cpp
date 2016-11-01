@@ -27,6 +27,12 @@ bool ModuleGOManager::Start()
 
 update_status ModuleGOManager::PreUpdate(float dt)
 {
+	//Remove all GameObjects that needs to be erased
+	for (vector<GameObject*>::iterator go = go_to_remove.begin(); go != go_to_remove.end(); ++go)
+		delete (*go);
+
+	go_to_remove.clear();
+
 	if (root)
 		PreUpdateGameObjects(root);
 
@@ -69,7 +75,7 @@ bool ModuleGOManager::RemoveGameObject(GameObject* object)
 		object->GetParent()->RemoveChild(object);
 		object->RemoveAllChilds();
 		
-		delete object;
+		go_to_remove.push_back(object);
 
 		ret = true;
 	}

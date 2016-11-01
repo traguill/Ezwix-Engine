@@ -4,6 +4,7 @@
 #include "Glew\include\glew.h"
 #include "SDL\include\SDL_opengl.h"
 #include "ModuleMeshes.h"
+#include "GameObject.h"
 #include <gl/GL.h>
 #include <gl/GLU.h>
 
@@ -137,7 +138,7 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 	for(uint i = 0; i < MAX_LIGHTS; ++i)
 		lights[i].Render();
 
-
+	objects_to_draw.clear();
 
 	return UPDATE_CONTINUE;
 }
@@ -145,6 +146,9 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 // PostUpdate present buffer to screen
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
+	for (vector<GameObject*>::iterator obj = objects_to_draw.begin(); obj != objects_to_draw.end(); ++obj)
+		Draw((*obj));
+
 	ImGui::Render();
 	SDL_GL_SwapWindow(App->window->window);
 	return UPDATE_CONTINUE;
@@ -202,25 +206,31 @@ void ModuleRenderer3D::SetPerspective(const math::float4x4 & perspective)
 	glLoadIdentity();
 }
 
-void ModuleRenderer3D::Draw(Mesh mesh, float4x4 matrix, uint texture_id)
+void ModuleRenderer3D::AddToDraw(GameObject* obj)
+{
+	if (obj)
+		objects_to_draw.push_back(obj);
+}
+
+void ModuleRenderer3D::Draw(GameObject* obj) const
 {
 	glPushMatrix();
-	glMultMatrixf(*matrix.v);
+	glMultMatrixf(*(obj->GetGlobalMatrix().Transposed()).v);
 
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 	glEnable(GL_TEXTURE_2D);
 
-	glBindBuffer(GL_ARRAY_BUFFER, mesh.id_vertices);
+	glBindBuffer(GL_ARRAY_BUFFER, obj->mesh_to_draw->id_vertices);
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
 
-	glBindBuffer(GL_ARRAY_BUFFER, mesh.id_uvs);
+	glBindBuffer(GL_ARRAY_BUFFER, obj->mesh_to_draw->id_uvs);
 	glTexCoordPointer(2, GL_FLOAT, 0, NULL);
 
-	glBindTexture(GL_TEXTURE_2D, texture_id);
+	glBindTexture(GL_TEXTURE_2D, obj->texture_to_draw);
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.id_indices);
-	glDrawElements(GL_TRIANGLES, mesh.num_indices, GL_UNSIGNED_INT, NULL);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, obj->mesh_to_draw->id_indices);
+	glDrawElements(GL_TRIANGLES, obj->mesh_to_draw->num_indices, GL_UNSIGNED_INT, NULL);
 	
 	
 	glDisable(GL_TEXTURE_2D);
@@ -230,7 +240,7 @@ void ModuleRenderer3D::Draw(Mesh mesh, float4x4 matrix, uint texture_id)
 	glPopMatrix();
 }
 
-void ModuleRenderer3D::SetClearColor(const math::float3 & color)
+void ModuleRenderer3D::SetClearColor(const math::float3 & color) const
 {
 	glClearColor(color.x, color.y, color.z, 1.0f);
 }

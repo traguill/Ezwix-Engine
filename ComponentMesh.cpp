@@ -25,18 +25,16 @@ void ComponentMesh::Update(float dt)
 	//Component must be active to update
 	if (!IsActive())
 		return;
+	if (mesh)
+	{
+		GameObject* go = GetGameObject();
+		ComponentMaterial* material = (ComponentMaterial*)GetGameObject()->GetComponent(C_MATERIAL);
+		if (material)
+			go->texture_to_draw = material->texture_id;
+		go->mesh_to_draw = mesh;
 
-	ComponentTransform* trans = (ComponentTransform*)GetGameObject()->GetComponent(C_TRANSFORM);
-	assert(trans);
-	
-	ComponentMaterial* material = (ComponentMaterial*)GetGameObject()->GetComponent(C_MATERIAL);
-	uint texture_id = 0;
-
-	if (material)
-		texture_id = material->texture_id;
-
-	if(mesh)
-		App->renderer3D->Draw(*mesh, trans->GetTransformMatrix(), texture_id);	
+		App->renderer3D->AddToDraw(GetGameObject());
+	}
 }
 
 void ComponentMesh::OnInspector()

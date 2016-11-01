@@ -7,6 +7,7 @@
 
 class Component;
 enum ComponentType;
+struct Mesh;
 
 class GameObject
 {
@@ -19,7 +20,7 @@ public:
 	void Update(float dt);
 
 	bool AddChild(GameObject* child);
-	bool RemoveChild(GameObject* child);
+	bool RemoveChild(GameObject* child); //Breaks the link with the parent but does not delete the child.
 	void RemoveAllChilds();
 	GameObject* GetParent();
 	const std::vector<GameObject*>* GetChilds();
@@ -39,6 +40,8 @@ public:
 
 public:
 	std::string name;
+	Mesh* mesh_to_draw = nullptr; //Pointer to the mesh to draw in one frame
+	unsigned int texture_to_draw = 0; //Texture to draw in one frame
 
 private:
 	GameObject* parent = NULL;

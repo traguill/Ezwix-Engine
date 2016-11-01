@@ -36,6 +36,8 @@ private:
 
 	GameObject* selected_GO = nullptr;
 
+	vector<GameObject*> go_to_remove;
+
 };
 
 #endif // !__MODULE_GO_MANAGER_H__
