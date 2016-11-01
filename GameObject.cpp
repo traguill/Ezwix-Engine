@@ -38,6 +38,7 @@ void GameObject::PreUpdate()
 	//Reset elements to draw
 	mesh_to_draw = nullptr;
 	texture_to_draw = 0;
+	bounding_box = nullptr;
 
 	//Remove all components that need to be removed. Secure way.
 	for (std::vector<Component*>::iterator component = components_to_remove.begin(); component != components_to_remove.end(); ++component)

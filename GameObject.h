@@ -41,6 +41,7 @@ public:
 public:
 	std::string name;
 	Mesh* mesh_to_draw = nullptr; //Pointer to the mesh to draw in one frame
+	AABB* bounding_box = nullptr;
 	unsigned int texture_to_draw = 0; //Texture to draw in one frame
 
 private:

@@ -1,6 +1,7 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleRenderer3D.h"
+#include "ComponentCamera.h"
 #include "Glew\include\glew.h"
 #include "SDL\include\SDL_opengl.h"
 #include "ModuleMeshes.h"
@@ -209,7 +210,11 @@ void ModuleRenderer3D::SetPerspective(const math::float4x4 & perspective)
 void ModuleRenderer3D::AddToDraw(GameObject* obj)
 {
 	if (obj)
-		objects_to_draw.push_back(obj);
+	{
+		//Furstum culling
+		if(App->camera->GetCurrentCamera()->IsVisible(*obj->bounding_box))
+			objects_to_draw.push_back(obj);
+	}
 }
 
 void ModuleRenderer3D::Draw(GameObject* obj) const

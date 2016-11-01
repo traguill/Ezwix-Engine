@@ -43,5 +43,6 @@ private:
 	float aspect_ratio = 1.25f;
 	math::Frustum frustum;
 	math::float3 color; 
+
 };
 #endif // !__COMPONENT_MATERIAL_H__

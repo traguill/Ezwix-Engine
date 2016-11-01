@@ -32,6 +32,7 @@ void ComponentMesh::Update(float dt)
 		if (material)
 			go->texture_to_draw = material->texture_id;
 		go->mesh_to_draw = mesh;
+		go->bounding_box = &bounding_box;
 
 		App->renderer3D->AddToDraw(GetGameObject());
 	}
