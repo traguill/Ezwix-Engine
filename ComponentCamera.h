@@ -18,12 +18,17 @@ public:
 	float GetNearPlane()const;
 	float GetFarPlane()const;
 	float GetFOV()const;
+	math::float3 GetFront()const;
+	math::float3 GetUp()const;
 	math::float4x4 GetProjectionMatrix()const;
 	math::float3 GetBackgroundColor()const;
+	math::float3 GetWorldRight()const;
 
 	void SetNearPlane(float value);
 	void SetFarPlane(float value);
 	void SetFOV(float value);
+	void SetFront(const math::float3& value);
+	void SetUp(const math::float3& value);
 	void LookAt(const math::float3& point);
 	void SetBackgroundColor(const math::float3 color);
 	bool IsVisible(const math::AABB& box)const;

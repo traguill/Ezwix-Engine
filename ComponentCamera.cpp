@@ -102,6 +102,16 @@ float ComponentCamera::GetFOV() const
 	return fov;
 }
 
+math::float3 ComponentCamera::GetFront() const
+{
+	return frustum.Front();
+}
+
+math::float3 ComponentCamera::GetUp() const
+{
+	return frustum.Up();
+}
+
 math::float4x4 ComponentCamera::GetProjectionMatrix() const
 {
 	math::float4x4 matrix = frustum.ProjectionMatrix();
@@ -112,6 +122,11 @@ math::float4x4 ComponentCamera::GetProjectionMatrix() const
 math::float3 ComponentCamera::GetBackgroundColor() const
 {
 	return color;
+}
+
+math::float3 ComponentCamera::GetWorldRight() const
+{
+	return frustum.WorldRight();
 }
 
 void ComponentCamera::SetNearPlane(float value)
@@ -141,6 +156,16 @@ void ComponentCamera::SetFOV(float value)
 	frustum.SetVerticalFovAndAspectRatio(DegToRad(fov), aspect_ratio);
 
 	properties_modified = true;
+}
+
+void ComponentCamera::SetFront(const math::float3& value)
+{
+	frustum.SetFront(value);
+}
+
+void ComponentCamera::SetUp(const math::float3& value)
+{
+	frustum.SetUp(value);
 }
 
 void ComponentCamera::LookAt(const math::float3 & point)

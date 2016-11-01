@@ -167,18 +167,31 @@ void ModuleCamera3D::EditorCameraMovement(float dt)
 
 	if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)
 	{
+		float sensivity = 0.025f;
+
 		int dx = -App->input->GetMouseXMotion();
 		int dy = -App->input->GetMouseYMotion();
 
-		math::Quat horizontal_rotation;
-		horizontal_rotation.SetFromAxisAngle(world_y.Normalized(), DegToRad(dx * speed));
-		cam_transform->Rotate(horizontal_rotation);
+		if (dx != 0)
+		{
+			float delta_x = (float)dx * sensivity;
+			Quat quaternion = Quat::RotateAxisAngle(vec(0.0f, 1.0f, 0.0f), delta_x);
+			editor_cam->SetFront(quaternion.Mul(editor_cam->GetFront()).Normalized());
+			editor_cam->SetUp(quaternion.Mul(editor_cam->GetUp()).Normalized());
+		}
 
-		cam_transform->Update(dt); //Needs to update to apply first rotation. Needs to get WorldX updated.
+		if (dy != 0)
+		{
+			float delta_y = (float)dy * sensivity;
+			Quat quaternion2 = Quat::RotateAxisAngle(editor_cam->GetWorldRight(), delta_y);
+			float3 up = quaternion2.Mul(editor_cam->GetUp()).Normalized();
 
-		math::Quat vertical_rotation;
-		vertical_rotation.SetFromAxisAngle(cam_transform->GetGlobalMatrix().WorldX().Normalized(), DegToRad(dy * speed));
-		cam_transform->Rotate(vertical_rotation);
+			if (up.y > 0.0f)
+			{
+				editor_cam->SetUp(up);
+				editor_cam->SetFront(quaternion2.Mul(editor_cam->GetFront()).Normalized());
+			}
+		}
 	}
 
 	//Update Transform component manually
