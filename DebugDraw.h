@@ -20,7 +20,7 @@ struct DebugPrimitive
 class DebugDraw : public Module
 {
 public:
-	DebugDraw(Application* app, bool start_enabled = true);
+	DebugDraw(const char* name, bool start_enabled = true);
 	~DebugDraw();
 
 	bool CleanUp();

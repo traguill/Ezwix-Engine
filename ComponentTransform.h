@@ -14,10 +14,10 @@ public:
 
 	void OnInspector();
 
-	void SetPosition(math::float3 pos);
-	void SetRotation(math::float3 rot_euler);
-	void SetRotation(math::Quat rot);
-	void SetScale(math::float3 scale);
+	void SetPosition(const math::float3& pos);
+	void SetRotation(const math::float3 &rot_euler);
+	void SetRotation(const math::Quat& rot);
+	void SetScale(const math::float3& scale);
 
 	math::float3 GetPosition()const;
 	math::float3 GetRotationEuler()const;

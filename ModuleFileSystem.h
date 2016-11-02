@@ -11,12 +11,12 @@ class ModuleFileSystem : public Module
 {
 public:
 
-	ModuleFileSystem(Application* app, bool start_enabled = true);
+	ModuleFileSystem(const char* name, bool start_enabled = true);
 
 	// Destructor
 	virtual ~ModuleFileSystem();
 
-	bool Init();
+	bool Init(Data& config);
 
 
 	// Called before quitting

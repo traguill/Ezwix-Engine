@@ -10,7 +10,7 @@ class ComponentCamera;
 class ModuleGOManager : public Module
 {
 public:
-	ModuleGOManager(Application* app, bool start_enabled = true);
+	ModuleGOManager(const char* name, bool start_enabled = true);
 	~ModuleGOManager();
 
 	bool Start(); 

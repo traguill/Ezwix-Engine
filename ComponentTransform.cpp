@@ -29,7 +29,6 @@ void ComponentTransform::OnInspector()
 {
 	if (ImGui::CollapsingHeader("Transform"))
 	{
-
 		ImVec4 white = ImVec4(1, 1, 1, 1);
 	
 		//Position
@@ -70,14 +69,14 @@ void ComponentTransform::OnInspector()
 	}
 }
 
-void ComponentTransform::SetPosition(math::float3 pos)
+void ComponentTransform::SetPosition(const math::float3& pos)
 {
 	position = pos;
 
 	transform_modified = true;
 }
 
-void ComponentTransform::SetRotation(math::float3 rot_euler)
+void ComponentTransform::SetRotation(const math::float3& rot_euler)
 {
 	rotation_euler = rot_euler;
 	
@@ -88,7 +87,7 @@ void ComponentTransform::SetRotation(math::float3 rot_euler)
 	transform_modified = true;
 }
 
-void ComponentTransform::SetRotation(math::Quat rot)
+void ComponentTransform::SetRotation(const math::Quat& rot)
 {
 	rotation = rot;
 
@@ -97,7 +96,7 @@ void ComponentTransform::SetRotation(math::Quat rot)
 	transform_modified = true;
 }
 
-void ComponentTransform::SetScale(math::float3 scale)
+void ComponentTransform::SetScale(const math::float3& scale)
 {
 	this->scale = scale;
 

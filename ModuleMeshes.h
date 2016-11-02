@@ -37,10 +37,10 @@ struct Mesh
 class ModuleMeshes : public Module
 {
 public:
-	ModuleMeshes(Application* app, bool start_enabled = true);
+	ModuleMeshes(const char* name, bool start_enabled = true);
 	~ModuleMeshes();
 
-	bool Init();
+	bool Init(Data& config);
 	bool CleanUp();
 
 	bool Load(const char* path, const char* base_path);

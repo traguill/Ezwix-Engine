@@ -58,10 +58,10 @@ class ModuleInput : public Module
 {
 public:
 	
-	ModuleInput(Application* app, bool start_enabled = true);
+	ModuleInput(const char* name, bool start_enabled = true);
 	~ModuleInput();
 
-	bool Init();
+	bool Init(Data& config);
 	update_status PreUpdate(float dt);
 	bool CleanUp();
 

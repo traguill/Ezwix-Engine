@@ -15,7 +15,7 @@ class ComponentTransform;
 class ModuleSceneIntro : public Module
 {
 public:
-	ModuleSceneIntro(Application* app, bool start_enabled = true);
+	ModuleSceneIntro(const char* name, bool start_enabled = true);
 	~ModuleSceneIntro();
 
 	bool Start();

@@ -6,7 +6,7 @@
 
 #pragma comment( lib, "PhysFS/libx86/physfs.lib" )
 
-ModuleFileSystem::ModuleFileSystem(Application* app, bool start_enabled) : Module(app, start_enabled)
+ModuleFileSystem::ModuleFileSystem(const char* name, bool start_enabled) : Module(name, start_enabled)
 {
 	// need to be created before Awake so other modules can use it
 	char* base_path = SDL_GetBasePath();
@@ -24,7 +24,7 @@ ModuleFileSystem::~ModuleFileSystem()
 }
 
 // Called before render is available
-bool ModuleFileSystem::Init()
+bool ModuleFileSystem::Init(Data& config)
 {
 	LOG("Loading File System");
 	bool ret = true;

@@ -13,7 +13,7 @@
 #include "MaterialImporter.h"
 #include "Quadtree.h"
 
-ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
+ModuleSceneIntro::ModuleSceneIntro(const char* name, bool start_enabled) : Module(name, start_enabled)
 {
 }
 

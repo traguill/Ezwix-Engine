@@ -2,25 +2,26 @@
 #include "PerfTimer.h"
 #include "LinearAllocator.h"
 #include "Profiler.h"
+#include "Data.h"
 
 using namespace std;
 
 Application::Application()
 {
-	window = new ModuleWindow(this);
-	input = new ModuleInput(this);
-	audio = new ModuleAudio(this, true);
-	scene_intro = new ModuleSceneIntro(this);
-	renderer3D = new ModuleRenderer3D(this);
-	camera = new ModuleCamera3D(this);
-	physics = new ModulePhysics3D(this);
-	meshes = new ModuleMeshes(this);
-	editor = new Editor(this);
-	file_system = new ModuleFileSystem(this);
-	go_manager = new ModuleGOManager(this);
+	window = new ModuleWindow("window");
+	input = new ModuleInput("input");
+	audio = new ModuleAudio("audio");
+	scene_intro = new ModuleSceneIntro("scene_intro");
+	renderer3D = new ModuleRenderer3D("renderer");
+	camera = new ModuleCamera3D("camera");
+	physics = new ModulePhysics3D("physics");
+	meshes = new ModuleMeshes("meshes");
+	editor = new Editor("editor");
+	file_system = new ModuleFileSystem("file_system");
+	go_manager = new ModuleGOManager("go_manager");
 
 	//Globals
-	g_Debug = new DebugDraw(this);
+	g_Debug = new DebugDraw("debug_draw");
 
 	// Modules will Init() Start() and Update in this order
 	// They will CleanUp() in reverse order
@@ -61,12 +62,19 @@ bool Application::Init()
 {
 	bool ret = true;
 
+	//Load Configuration
+	char* buffer;
+	if (App->file_system->Load("Configuration.json", &buffer) == 0)
+		LOG("Error while loading Configuration file");
+	Data config(buffer);
+	delete[] buffer;
+
 	// Call Init() in all modules
 	list<Module*>::iterator i = list_modules.begin();
 
 	while (i != list_modules.end() && ret == true)
 	{
-		ret = (*i)->Init();
+		ret = (*i)->Init(config);
 		++i;
 	}
 

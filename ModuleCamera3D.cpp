@@ -5,7 +5,7 @@
 #include "ComponentTransform.h"
 #include "GameObject.h"
 
-ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(app, start_enabled)
+ModuleCamera3D::ModuleCamera3D(const char* name, bool start_enabled) : Module(name, start_enabled)
 {
 	go_cam = new GameObject();
 	go_cam->name = "Editor Camera";

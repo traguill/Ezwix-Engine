@@ -11,13 +11,19 @@
 #include "DebugDraw.h"
 #include "CameraWindow.h"
 
-Editor::Editor(Application* app, bool start_enabled) : Module(app, start_enabled)
+Editor::Editor(const char* name, bool start_enabled) : Module(name, start_enabled)
 {
 	windows.push_back(console = new Console()); //Create console in the constructor to get ALL init logs from other modules.
 }
 
 Editor::~Editor()
 {}
+
+bool Editor::Init(Data & config)
+{
+	
+	return true;
+}
 
 bool Editor::Start()
 {

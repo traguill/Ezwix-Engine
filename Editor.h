@@ -18,8 +18,10 @@ class CameraWindow;
 class Editor : public Module
 {
 public:
-	Editor(Application* app, bool start_enabled = true);
+	Editor(const char* name, bool start_enabled = true);
 	~Editor();
+
+	bool Init(Data& config);
 
 	bool Start();
 	update_status Update(float dt);

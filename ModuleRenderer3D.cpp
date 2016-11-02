@@ -17,7 +17,7 @@
 #include "Imgui\imgui_impl_sdl_gl3.h"
 
 
-ModuleRenderer3D::ModuleRenderer3D(Application* app, bool start_enabled) : Module(app, start_enabled)
+ModuleRenderer3D::ModuleRenderer3D(const char* name, bool start_enabled) : Module(name, start_enabled)
 {
 }
 
@@ -26,7 +26,7 @@ ModuleRenderer3D::~ModuleRenderer3D()
 {}
 
 // Called before render is available
-bool ModuleRenderer3D::Init()
+bool ModuleRenderer3D::Init(Data& config)
 {
 	LOG("Creating 3D Renderer context");
 	bool ret = true;

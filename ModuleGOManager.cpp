@@ -5,7 +5,7 @@
 #include "Imgui\imgui.h"
 #include "ComponentCamera.h"
 
-ModuleGOManager::ModuleGOManager(Application* app, bool start_enabled) : Module(app, start_enabled)
+ModuleGOManager::ModuleGOManager(const char* name, bool start_enabled) : Module(name, start_enabled)
 {
 	root = new GameObject();
 	root->AddComponent(C_TRANSFORM);

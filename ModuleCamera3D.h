@@ -12,7 +12,7 @@ class ComponentTransform;
 class ModuleCamera3D : public Module
 {
 public:
-	ModuleCamera3D(Application* app, bool start_enabled = true);
+	ModuleCamera3D(const char* name, bool start_enabled = true);
 	~ModuleCamera3D();
 
 	bool Start();

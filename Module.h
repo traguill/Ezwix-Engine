@@ -1,24 +1,27 @@
 #ifndef __MODULE_H__
 #define __MODULE_H__
 
-class Application;
+#include "Data.h"
+#include <string>
+
 struct PhysBody3D;
+
+#define NAME_MODULE_LENGTH 32
 
 class Module
 {
 private :
 	bool enabled;
-
+	std::string name;
 public:
-	Application* App;
 
-	Module(Application* parent, bool start_enabled = true) : App(parent)
+	Module (const char* name, bool start_enabled = true) : name(name)
 	{}
 
 	virtual ~Module()
 	{}
 
-	virtual bool Init() 
+	virtual bool Init(Data& config) 
 	{
 		return true; 
 	}

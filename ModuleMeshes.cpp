@@ -27,13 +27,13 @@
 
 #include "MaterialImporter.h"
 
-ModuleMeshes::ModuleMeshes(Application* app, bool start_enabled) : Module(app, start_enabled)
+ModuleMeshes::ModuleMeshes(const char* name, bool start_enabled) : Module(name, start_enabled)
 {}
 
 ModuleMeshes::~ModuleMeshes()
 {}
 
-bool ModuleMeshes::Init()
+bool ModuleMeshes::Init(Data& config)
 {
 	aiLogStream stream;
 	stream = aiGetPredefinedLogStream(aiDefaultLogStream_DEBUGGER, nullptr);

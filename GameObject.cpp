@@ -112,7 +112,7 @@ void GameObject::RemoveAllChilds()
 	childs.clear();
 }
 
-GameObject* GameObject::GetParent()
+GameObject* GameObject::GetParent()const
 {
 	return parent;
 }
@@ -189,9 +189,9 @@ const std::vector<Component*>* GameObject::GetComponents()
 	return &components;
 }
 
-void* GameObject::GetComponent(ComponentType type)
+void* GameObject::GetComponent(ComponentType type)const
 {
-	std::vector<Component*>::iterator comp = components.begin();
+	std::vector<Component*>::const_iterator comp = components.begin();
 
 	while (comp != components.end())
 	{

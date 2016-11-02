@@ -10,10 +10,10 @@ class ModuleAudio : public Module
 {
 public:
 
-	ModuleAudio(Application* app, bool start_enabled = true);
+	ModuleAudio(const char* name, bool start_enabled = true);
 	~ModuleAudio();
 
-	bool Init();
+	bool Init(Data& config);
 	bool CleanUp();
 
 	// Play a music file

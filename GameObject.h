@@ -22,7 +22,7 @@ public:
 	bool AddChild(GameObject* child);
 	bool RemoveChild(GameObject* child); //Breaks the link with the parent but does not delete the child.
 	void RemoveAllChilds();
-	GameObject* GetParent();
+	GameObject* GetParent()const;
 	const std::vector<GameObject*>* GetChilds();
 	size_t ChildCount();
 
@@ -31,7 +31,7 @@ public:
 
 	Component* AddComponent(ComponentType type);
 	const std::vector<Component*>* GetComponents();
-	void* GetComponent(ComponentType type);
+	void* GetComponent(ComponentType type)const;
 	void RemoveComponent(Component* component);
 
 	float4x4 GetGlobalMatrix()const;

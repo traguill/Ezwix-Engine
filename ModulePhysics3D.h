@@ -18,10 +18,10 @@ struct VehicleInfo;
 class ModulePhysics3D : public Module
 {
 public:
-	ModulePhysics3D(Application* app, bool start_enabled = true);
+	ModulePhysics3D(const char* name, bool start_enabled = true);
 	~ModulePhysics3D();
 
-	bool Init();
+	bool Init(Data& config);
 	bool Start();
 	update_status PreUpdate(float dt);
 	update_status Update(float dt);

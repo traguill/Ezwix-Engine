@@ -55,6 +55,9 @@
     <Filter Include="Sources\Importer">
       <UniqueIdentifier>{e2fb58e6-2b9a-4417-8e5b-4f7f975682c4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resources\JSON">
+      <UniqueIdentifier>{ea4d3e54-410e-4344-8534-58f8c365a80a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -396,11 +399,17 @@
     <ClInclude Include="ComponentCamera.h">
       <Filter>Sources\GameObjects\Components</Filter>
     </ClInclude>
-    <ClInclude Include="Quadtree.h">
-      <Filter>Sources\Tools</Filter>
-    </ClInclude>
     <ClInclude Include="CameraWindow.h">
       <Filter>Sources\Editor\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="Quadtree.h">
+      <Filter>Sources\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="Data.h">
+      <Filter>Sources\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="JSON\parson.h">
+      <Filter>Resources\JSON</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -652,6 +661,12 @@
     </ClCompile>
     <ClCompile Include="CameraWindow.cpp">
       <Filter>Sources\Editor\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="Data.cpp">
+      <Filter>Sources\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="JSON\parson.c">
+      <Filter>Resources\JSON</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

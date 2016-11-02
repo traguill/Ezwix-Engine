@@ -85,6 +85,7 @@
     <ClInclude Include="ComponentMesh.h" />
     <ClInclude Include="ComponentTransform.h" />
     <ClInclude Include="Console.h" />
+    <ClInclude Include="Data.h" />
     <ClInclude Include="DebugDraw.h" />
     <ClInclude Include="Editor.h" />
     <ClInclude Include="FPSGraph.h" />
@@ -98,6 +99,7 @@
     <ClInclude Include="Imgui\stb_rect_pack.h" />
     <ClInclude Include="Imgui\stb_textedit.h" />
     <ClInclude Include="Imgui\stb_truetype.h" />
+    <ClInclude Include="JSON\parson.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="LinearAllocator.h" />
     <ClInclude Include="MaterialImporter.h" />
@@ -201,6 +203,7 @@
     <ClCompile Include="ComponentMesh.cpp" />
     <ClCompile Include="ComponentTransform.cpp" />
     <ClCompile Include="Console.cpp" />
+    <ClCompile Include="Data.cpp" />
     <ClCompile Include="DebugDraw.cpp" />
     <ClCompile Include="Editor.cpp" />
     <ClCompile Include="FPSGraph.cpp" />
@@ -210,6 +213,7 @@
     <ClCompile Include="Imgui\imgui_demo.cpp" />
     <ClCompile Include="Imgui\imgui_draw.cpp" />
     <ClCompile Include="Imgui\imgui_impl_sdl_gl3.cpp" />
+    <ClCompile Include="JSON\parson.c" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="LinearAllocator.cpp" />
     <ClCompile Include="log.cpp" />

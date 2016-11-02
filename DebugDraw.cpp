@@ -10,7 +10,7 @@
 //#pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
 //#pragma comment (lib, "Glew/libx86/glew32.lib") 
 
-DebugDraw::DebugDraw(Application* app, bool start_enabled) : Module(app, start_enabled)
+DebugDraw::DebugDraw(const char* name, bool start_enabled) : Module(name, start_enabled)
 {
 	red = float3(1, 0, 0);
 	blue;
