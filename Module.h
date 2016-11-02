@@ -53,6 +53,11 @@ public:
 
 	virtual void OnCollision(PhysBody3D* body1, PhysBody3D* body2)
 	{}
+
+	const char* GetName()const
+	{
+		return name.data();
+	}
 };
 
 #endif // !__MOUDLE_H__

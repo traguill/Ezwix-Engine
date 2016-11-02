@@ -74,7 +74,7 @@ bool Application::Init()
 
 	while (i != list_modules.end() && ret == true)
 	{
-		ret = (*i)->Init(config);
+		ret = (*i)->Init(config.GetJObject((*i)->GetName()));
 		++i;
 	}
 

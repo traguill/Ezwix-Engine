@@ -18,6 +18,8 @@ public:
 	ModuleSceneIntro(const char* name, bool start_enabled = true);
 	~ModuleSceneIntro();
 
+	bool Init(Data& config);
+
 	bool Start();
 	update_status Update(float dt);
 	bool CleanUp();

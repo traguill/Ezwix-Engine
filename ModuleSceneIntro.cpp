@@ -20,6 +20,12 @@ ModuleSceneIntro::ModuleSceneIntro(const char* name, bool start_enabled) : Modul
 ModuleSceneIntro::~ModuleSceneIntro()
 {}
 
+bool ModuleSceneIntro::Init(Data& config)
+{
+	LOG("Editor says %d and %s", config.GetInt("cam"), config.GetString("intro"));
+	return true;
+}
+
 // Load assets
 bool ModuleSceneIntro::Start()
 {

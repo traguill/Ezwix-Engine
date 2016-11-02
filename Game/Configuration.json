@@ -1,3 +1,10 @@
 {
-   "Config":"Good"
+  "editor":{
+    "cam": 4,
+    "intro": "Editor says"
+  },
+  "scene_intro": {
+      "cam": 5,
+      "intro":  "Scene intro says"
+    }
 }

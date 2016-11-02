@@ -10,13 +10,16 @@ class Data
 public:
 	Data();
 	Data(const char* filename);
+	Data(JSON_Object* root);
 	~Data();
 
+	Data GetJObject(const char* name)const;
 	const char* GetString(const char* name)const;
+	int GetInt(const char* name)const;
 
 private:
-	JSON_Value* root_value;
-	JSON_Object* root;
+	JSON_Value* root_value = nullptr;
+	JSON_Object* root = nullptr;
 
 };
 
