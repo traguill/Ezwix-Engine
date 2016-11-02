@@ -1,4 +1,10 @@
 #include "Random.h"
+#include <chrono>
+
+Random::Random()
+{
+	seed = std::chrono::system_clock::now().time_since_epoch().count();
+}
 
 float Random::RandomFloat()
 {
@@ -10,10 +16,16 @@ float Random::RandomFloat()
 	return seed * (1.0f / 4294967295.0f);
 }
 
+int Random::RandomInt()
+{
+	seed ^= (seed << 5);
+	seed ^= (seed >> 13);
+	seed ^= (seed << 6);
+	return seed;
+}
+
 int Random::RandomInt(int min, int max)
 {
-	
-
 	seed ^= (seed << 5);
 	seed ^= (seed >> 13);
 	seed ^= (seed << 6);

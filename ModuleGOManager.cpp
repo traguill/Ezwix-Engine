@@ -6,10 +6,7 @@
 #include "ComponentCamera.h"
 
 ModuleGOManager::ModuleGOManager(const char* name, bool start_enabled) : Module(name, start_enabled)
-{
-	root = new GameObject();
-	root->AddComponent(C_TRANSFORM);
-}
+{}
 
 ModuleGOManager::~ModuleGOManager()
 {
@@ -17,6 +14,13 @@ ModuleGOManager::~ModuleGOManager()
 		delete root;
 
 	selected_GO = nullptr;
+}
+
+bool ModuleGOManager::Init(Data & config)
+{
+	root = new GameObject();
+	root->AddComponent(C_TRANSFORM);
+	return true;
 }
 
 bool ModuleGOManager::Start()

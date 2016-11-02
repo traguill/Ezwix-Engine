@@ -1,9 +1,12 @@
+#include "Application.h"
 #include "Component.h"
 #include "GameObject.h"
 #include "Globals.h"
 
 Component::Component(ComponentType type, GameObject* game_object) : type (type), game_object(game_object)
-{}
+{
+	uuid = uuid = App->rnd->RandomInt();
+}
 
 Component::~Component()
 {}
@@ -19,6 +22,11 @@ ComponentType Component::GetType() const
 GameObject * Component::GetGameObject() const
 {
 	return game_object;
+}
+
+unsigned int Component::GetUUID() const
+{
+	return uuid;
 }
 
 bool Component::IsActive()

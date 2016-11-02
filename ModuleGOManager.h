@@ -13,6 +13,7 @@ public:
 	ModuleGOManager(const char* name, bool start_enabled = true);
 	~ModuleGOManager();
 
+	bool Init(Data& config);
 	bool Start(); 
 	update_status PreUpdate(float dt);
 	update_status Update(float dt);

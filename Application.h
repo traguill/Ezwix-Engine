@@ -18,6 +18,7 @@
 #include "ModuleGOManager.h"
 #include "DebugDraw.h"
 #include "AutoProfile.h"
+#include "Random.h"
 
 using namespace std; 
 
@@ -54,7 +55,7 @@ public:
 	ModuleFileSystem* file_system;
 	ModuleGOManager* go_manager;
 	Editor* editor;
-
+	Random* rnd = nullptr;
 private:
 
 	Timer	ms_timer;

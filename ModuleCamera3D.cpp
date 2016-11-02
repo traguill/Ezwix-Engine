@@ -7,16 +7,21 @@
 
 ModuleCamera3D::ModuleCamera3D(const char* name, bool start_enabled) : Module(name, start_enabled)
 {
+}
+
+ModuleCamera3D::~ModuleCamera3D()
+{}
+
+bool ModuleCamera3D::Init(Data & config)
+{
 	go_cam = new GameObject();
 	go_cam->name = "Editor Camera";
 	cam_transform = (ComponentTransform*)go_cam->AddComponent(C_TRANSFORM);
 	editor_cam = (ComponentCamera*)go_cam->AddComponent(C_CAMERA);
 
 	current_camera = editor_cam;
+	return true;
 }
-
-ModuleCamera3D::~ModuleCamera3D()
-{}
 
 bool ModuleCamera3D::Start()
 {

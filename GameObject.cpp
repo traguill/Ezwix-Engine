@@ -1,5 +1,5 @@
-#include "GameObject.h"
 #include "Application.h"
+#include "GameObject.h"
 #include "Component.h"
 #include "ComponentTransform.h"
 #include "ComponentMesh.h"
@@ -12,12 +12,14 @@ GameObject::GameObject()
 {
 	name.resize(30);
 	name = "Empty GameObject";
+	uuid = App->rnd->RandomInt();
 }
 
 GameObject::GameObject(GameObject* parent) : parent(parent)
 {
 	name.resize(30);
 	name = "Empty GameObject";
+	uuid = App->rnd->RandomInt();
 }
 
 GameObject::~GameObject()
@@ -224,6 +226,11 @@ void GameObject::RemoveComponent(Component * component)
 float4x4 GameObject::GetGlobalMatrix() const
 {
 	return *global_matrix;
+}
+
+unsigned int GameObject::GetUUID() const
+{
+	return uuid;
 }
 
 void GameObject::TransformModified()

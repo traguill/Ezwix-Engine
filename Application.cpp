@@ -8,6 +8,10 @@ using namespace std;
 
 Application::Application()
 {
+	//Random
+	rnd = new Random();
+
+	//Modules
 	window = new ModuleWindow("window");
 	input = new ModuleInput("input");
 	audio = new ModuleAudio("audio");
@@ -49,6 +53,8 @@ Application::Application()
 
 Application::~Application()
 {
+	delete rnd;
+
 	list<Module*>::reverse_iterator i = list_modules.rbegin();
 
 	while (i != list_modules.rend())

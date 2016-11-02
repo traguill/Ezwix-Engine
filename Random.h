@@ -4,7 +4,9 @@
 class Random
 {
 public:
+	Random();
 	float RandomFloat();
+	int RandomInt();
 	int RandomInt(int min, int max);
 
 	void SetSeed(unsigned int seed);

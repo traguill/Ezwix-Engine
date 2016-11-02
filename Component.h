@@ -26,6 +26,7 @@ public:
 
 	ComponentType GetType()const;
 	GameObject* GetGameObject()const;
+	unsigned int GetUUID()const;
 
 	virtual void OnTransformModified();
 
@@ -35,6 +36,7 @@ private:
 	bool active = true;
 	ComponentType type;
 	GameObject* game_object = nullptr;
+	unsigned int uuid = 0;
 
 };
 #endif // !__COMPONENT_H__

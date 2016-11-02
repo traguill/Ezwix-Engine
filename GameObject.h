@@ -35,6 +35,7 @@ public:
 	void RemoveComponent(Component* component);
 
 	float4x4 GetGlobalMatrix()const;
+	unsigned int GetUUID()const;
 
 	void TransformModified();
 
@@ -54,6 +55,8 @@ private:
 	std::vector<Component*> components_to_remove;
 
 	float4x4* global_matrix = nullptr;
+
+	unsigned int uuid = 0;
 };
 
 #endif // !__GAMEOBJECT_H__
