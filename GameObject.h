@@ -39,6 +39,8 @@ public:
 
 	void TransformModified();
 
+	void Save(Data& file) const;
+
 public:
 	std::string name;
 	Mesh* mesh_to_draw = nullptr; //Pointer to the mesh to draw in one frame

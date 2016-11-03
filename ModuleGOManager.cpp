@@ -100,6 +100,24 @@ void ModuleGOManager::GetAllCameras(std::vector<ComponentCamera*>& list, GameObj
 		GetAllCameras(list, (*child));
 }
 
+void ModuleGOManager::SaveScene()const
+{
+	//For now create a new file scene.json
+	Data root_node;
+	root_node.AppendArray("GameObjects");
+	
+	const vector<GameObject*>* childs = root->GetChilds();
+	for (vector<GameObject*>::const_iterator gameobjects = childs->begin(); gameobjects != childs->end(); ++gameobjects)
+		(*gameobjects)->Save(root_node);
+
+	char* buf;
+	size_t size = root_node.Serialize(&buf);
+
+	App->file_system->Save("test.json", buf, size);
+
+	delete[] buf;
+}
+
 void ModuleGOManager::HierarchyWindow()
 {
 	ImGui::Begin("Hierarchy");

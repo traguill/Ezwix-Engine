@@ -10,6 +10,7 @@ enum ComponentType
 };
 
 class GameObject;
+class Data;
 
 class Component
 {
@@ -29,10 +30,10 @@ public:
 	unsigned int GetUUID()const;
 
 	virtual void OnTransformModified();
-
+	virtual void Save(Data& file) const;
 	virtual void Remove();
 
-private:
+protected:
 	bool active = true;
 	ComponentType type;
 	GameObject* game_object = nullptr;

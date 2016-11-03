@@ -55,7 +55,7 @@ void ComponentCamera::OnInspector()
 		ImGui::Text("Aspect ratio: "); ImGui::SameLine(); ImGui::TextColored(ImVec4(0, 0, 1, 1), "%d:%d", ratio_x, ratio_y);
 
 		ImGui::Text("Background color: "); ImGui::SameLine();
-		float3 color = App->camera->GetBackgroundColor();
+		float3 color = this->color;
 		if (ImGui::ColorEdit3("", color.ptr()))
 		{
 			this->color = color;
@@ -214,4 +214,20 @@ math::float4x4 ComponentCamera::GetViewMatrix() const
 {
 	math::float4x4 matrix = frustum.ViewMatrix();
 	return matrix.Transposed();
+}
+
+void ComponentCamera::Save(Data & file)const
+{
+	Data data;
+	data.AppendInt("type", type);
+	data.AppendInt("UUID", uuid);
+	data.AppendBool("active", active);
+	
+	data.AppendFloat("near_plane", near_plane);
+	data.AppendFloat("far_plane", far_plane);
+	data.AppendFloat("fov", fov);
+	data.AppendFloat("aspect_ratio", aspect_ratio);
+	data.AppendFloat3("color", color.ptr());
+
+	file.AppendArrayValue(data);
 }

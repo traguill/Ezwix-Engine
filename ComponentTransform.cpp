@@ -3,6 +3,7 @@
 #include "Globals.h"
 #include "imgui\imgui.h"
 #include "ComponentMesh.h"
+#include "Data.h"
 
 ComponentTransform::ComponentTransform(ComponentType type, GameObject* game_object, math::float4x4** global_matrix) : Component(type, game_object)
 {
@@ -131,6 +132,17 @@ math::float4x4 ComponentTransform::GetTransformMatrix()const
 math::float4x4 ComponentTransform::GetGlobalMatrix()const
 {
 	return final_transform_matrix;
+}
+
+void ComponentTransform::Save(Data & file) const
+{
+	Data data;
+	data.AppendInt("type", type);
+	data.AppendInt("UUID", uuid);
+	data.AppendBool("active", active);
+	data.AppendMatrix("matrix", transform_matrix);
+
+	file.AppendArrayValue(data);
 }
 
 void ComponentTransform::Remove()

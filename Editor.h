@@ -37,6 +37,8 @@ private:
 	void WindowsMenu();
 	void EditMenu();
 
+	bool QuitWindow()const;
+
 private:
 
 	vector<Window*> windows;

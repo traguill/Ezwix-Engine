@@ -1,5 +1,6 @@
 #include "ComponentMaterial.h"
 #include "imgui\imgui.h"
+#include "Data.h"
 
 ComponentMaterial::ComponentMaterial(ComponentType type, GameObject* game_object) : Component(type, game_object)
 {}
@@ -18,8 +19,16 @@ void ComponentMaterial::OnInspector()
 		{
 			Remove();
 		}
-
 	}
+}
 
+void ComponentMaterial::Save(Data & file)const
+{
+	Data data;
+	data.AppendInt("type", type);
+	data.AppendInt("UUID", uuid);
+	data.AppendBool("active", active);
+	data.AppendString("path", file_path.data());
 
+	file.AppendArrayValue(data);
 }

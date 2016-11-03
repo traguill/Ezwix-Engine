@@ -35,6 +35,8 @@ public:
 
 	math::float4x4 GetViewMatrix()const;
 
+	void Save(Data& file)const;
+
 public:
 
 	bool properties_modified = false;

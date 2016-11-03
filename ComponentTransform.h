@@ -30,6 +30,7 @@ public:
 	math::float4x4 GetTransformMatrix()const;
 	math::float4x4 GetGlobalMatrix()const;
 
+	void Save(Data& file)const;
 	void Remove();
 
 private:

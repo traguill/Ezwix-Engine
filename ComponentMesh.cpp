@@ -110,3 +110,14 @@ void ComponentMesh::RecalculateBoundingBox()
 	math::OBB ob = aabb.Transform(trans->GetGlobalMatrix());
 	bounding_box = ob.MinimalEnclosingAABB();
 }
+
+void ComponentMesh::Save(Data & file)const
+{
+	Data data;
+	data.AppendInt("type", type);
+	data.AppendInt("UUID", uuid);
+	data.AppendBool("active", active);
+	data.AppendString("path", mesh->file_path.data());
+
+	file.AppendArrayValue(data);
+}

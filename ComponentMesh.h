@@ -20,6 +20,8 @@ public:
 	bool SetMesh(Mesh* mesh);
 	void RecalculateBoundingBox();
 
+	void Save(Data& file)const;
+
 private:
 	Mesh* mesh = nullptr;
 	math::AABB aabb; //Local one

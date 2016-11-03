@@ -64,9 +64,7 @@ bool MeshImporter::Import(const aiMesh * mesh_to_load, std::string & output)
 		mesh.colors = new float[mesh.num_vertices * 3];
 		memcpy(mesh.colors, mesh_to_load->mColors, sizeof(float) * mesh.num_vertices * 3);
 	}
-	
-	mesh.name = (mesh_to_load->mName.length != 0) ? mesh_to_load->mName.C_Str() : "mesh";
-	
+		
 	return Save(mesh, output);
 }
 
@@ -130,7 +128,7 @@ bool MeshImporter::Save(Mesh& mesh, std::string& output_file)
 	bytes = sizeof(float) * header[4] * 2;
 	memcpy(cursor, mesh.uvs, bytes);
 
-	ret = App->file_system->SaveUnique(mesh.name, data, size, LIBRARY_MESHES_FOLDER, "ezx", output_file);
+	ret = App->file_system->SaveUnique("mesh", data, size, LIBRARY_MESHES_FOLDER, "ezx", output_file);
 
 	delete[] data;
 	data = nullptr;
@@ -146,6 +144,8 @@ Mesh * MeshImporter::Load(const char * path)
 	if (App->file_system->Load(path, &buffer) != 0)
 	{
 		mesh = new Mesh();
+
+		mesh->file_path = path;
 
 		char* cursor = buffer;
 

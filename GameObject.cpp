@@ -244,3 +244,27 @@ void GameObject::TransformModified()
 		(*component)->OnTransformModified();
 	}
 }
+
+void GameObject::Save(Data & file) const
+{
+	Data data;
+
+	//GameObject data
+	data.AppendString("name", name.data());
+	data.AppendInt("UUID", uuid);
+	data.AppendInt("parent", parent->GetUUID());
+	data.AppendBool("active", active);
+	data.AppendArray("components");
+
+	//Components data
+	vector<Component*>::const_iterator component = components.begin();
+	for (component; component != components.end(); component++)
+	{
+		(*component)->Save(data);
+	}
+
+	file.AppendArrayValue(data);
+
+	for (vector<GameObject*>::const_iterator child = childs.begin(); child != childs.end(); ++child)
+		(*child)->Save(file);
+}

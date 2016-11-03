@@ -3,6 +3,7 @@
 
 #include "Module.h"
 #include <cstdint>
+#include <string>
 
 class aiNode;
 class aiScene;
@@ -30,8 +31,7 @@ struct Mesh
 	//Vertex colors
 	float* colors = nullptr;
 
-	const char* name = nullptr;
-
+	std::string file_path;
 };
 
 class ModuleMeshes : public Module

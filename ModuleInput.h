@@ -119,6 +119,16 @@ public:
 		return num_joysticks;
 	}
 
+	bool Quit() const
+	{
+		return wants_to_quit;
+	}
+
+	void ResetQuit()
+	{
+		wants_to_quit = false;
+	}
+
 
 private:
 	KEY_STATE* keyboard;
@@ -132,6 +142,8 @@ private:
 
 	int num_joysticks = 0;
 	vector<JOYSTICK*>	joysticks;
+
+	bool wants_to_quit = false;
 };
 
 #endif // !__MODULEINPUT_H__

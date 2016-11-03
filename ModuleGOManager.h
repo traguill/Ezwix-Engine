@@ -23,6 +23,8 @@ public:
 
 	void GetAllCameras(std::vector<ComponentCamera*>& list, GameObject* from = nullptr) const;
 
+	void SaveScene()const;
+
 private:
 
 	void HierarchyWindow();

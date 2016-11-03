@@ -227,7 +227,7 @@ void ModuleMeshes::LoadNode(aiNode* node,const aiScene* scene, GameObject* paren
 
 				MaterialImporter::Import("texture", complete_path.data(), texture_name);
 				c_material->texture_id = LoadTexture(texture_name.data());
-
+				c_material->file_path = texture_name;
 				LOG("Texture id %i Load: %s", c_material->texture_id, texture_name.data());
 			}
 			

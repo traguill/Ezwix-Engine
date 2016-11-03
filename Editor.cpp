@@ -63,6 +63,18 @@ update_status Editor::Update(float dt)
 	grid.axis = true;
 	grid.Render();
 
+	//Shortcut to save. TODO: Do a better implementation of the shortcuts
+	if (App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN)
+		App->go_manager->SaveScene();
+
+	//Handle Quit event
+	bool quit = false;
+	if (App->input->Quit())
+		quit = QuitWindow();
+
+	if (quit)
+		ret = UPDATE_STOP;
+
 	return ret;	
 }
 
@@ -183,4 +195,62 @@ void Editor::EditMenu()
 	{
 		camera_win->SetActive(true);
 	}
+}
+
+bool Editor::QuitWindow() const
+{
+	bool ret = false;
+
+	//Show confirmation window
+	const SDL_MessageBoxButtonData buttons[] = {
+		{ SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, 0, "Save" },
+		{ /*input*/								0,1, "Don't Save" },
+		{										0, 2, "Cancel" },
+	};
+	const SDL_MessageBoxColorScheme colorScheme = 
+	{
+		{ 
+		  /* [SDL_MESSAGEBOX_COLOR_BACKGROUND] */
+			{ 255,   0,   0 },
+			/* [SDL_MESSAGEBOX_COLOR_TEXT] */
+			{ 0, 255,   0 },
+			/* [SDL_MESSAGEBOX_COLOR_BUTTON_BORDER] */
+			{ 255, 255,   0 },
+			/* [SDL_MESSAGEBOX_COLOR_BUTTON_BACKGROUND] */
+			{ 0,   0, 255 },
+			/* [SDL_MESSAGEBOX_COLOR_BUTTON_SELECTED] */
+			{ 255,   0, 255 }
+		}
+	};
+	const SDL_MessageBoxData messageboxdata = {
+		SDL_MESSAGEBOX_INFORMATION, /* .flags */
+		App->window->window, /* .window */
+		"The Scene has been modified", /* .title */
+		"Do you want to save the changes you made in the scene? \n Your changes will be lost if you don't save them.", /* .message */
+		SDL_arraysize(buttons), /* .numbuttons */
+		buttons, /* .buttons */
+		&colorScheme /* .colorScheme */
+	};
+	int buttonid;
+
+	if (SDL_ShowMessageBox(&messageboxdata, &buttonid) < 0) 
+	{
+		LOG("Error displaying Quit Message Box");
+	}
+	
+	switch (buttonid)
+	{
+	case 0: //Save
+		App->go_manager->SaveScene();
+		ret = true;
+		break;
+	case 1: //Quit
+		ret = true;
+		break;
+	case 2: //Cancel
+		App->input->ResetQuit();
+		break;
+	}
+
+	return ret;
 }
