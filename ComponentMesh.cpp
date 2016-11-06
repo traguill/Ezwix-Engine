@@ -129,8 +129,8 @@ void ComponentMesh::Load(Data & conf)
 
 	const char* path = conf.GetString("path");
 	Mesh* mesh = MeshImporter::Load(path);
-	mesh->file_path = path;
-
+	if(mesh)
+		mesh->file_path = path;
 	SetMesh(mesh);
 
 	OnTransformModified();

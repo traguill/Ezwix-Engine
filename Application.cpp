@@ -69,9 +69,27 @@ bool Application::Init()
 	bool ret = true;
 
 	//Load Configuration
-	char* buffer;
+	char* buffer = nullptr;
 	if (App->file_system->Load("Configuration.json", &buffer) == 0)
+	{
 		LOG("Error while loading Configuration file");
+		//Create a new Configuration file
+		if (buffer)
+			delete[] buffer;
+
+		Data root_node;
+
+		list<Module*>::reverse_iterator i = list_modules.rbegin();
+
+		while (i != list_modules.rend())
+		{
+			root_node.AppendJObject((*i)->GetName());
+			++i;
+		}
+
+		size_t size = root_node.Serialize(&buffer);
+		App->file_system->Save("Configuration.json", buffer, size);
+	}
 	Data config(buffer);
 	delete[] buffer;
 
@@ -176,8 +194,29 @@ bool Application::CleanUp()
 		++i;
 	}
 
-
 	return ret;
+}
+
+void Application::SaveBeforeClosing()
+{
+	Data root_node;
+	char* buf;
+
+	list<Module*>::reverse_iterator i = list_modules.rbegin();
+
+	while (i != list_modules.rend())
+	{
+		(*i)->SaveBeforeClosing(root_node.AppendJObject((*i)->GetName()));
+		++i;
+	}
+
+	size_t size = root_node.Serialize(&buf);
+	uint success = App->file_system->Save("Configuration.json", buf, size);
+
+	if (success == 0)
+		LOG("Configuration could not be saved before closing");
+
+	delete[] buf;
 }
 
 void Application::AddModule(Module* mod)

@@ -3,6 +3,7 @@
 
 #include "Module.h"
 #include <vector>
+#include <string>
 
 class GameObject;
 class ComponentCamera;
@@ -17,6 +18,7 @@ public:
 	bool Start(); 
 	update_status PreUpdate(float dt);
 	update_status Update(float dt);
+	void SaveBeforeClosing(Data& data)const;
 
 	GameObject* CreateGameObject(GameObject* parent);
 	bool RemoveGameObject(GameObject* object);
@@ -24,7 +26,7 @@ public:
 	void GetAllCameras(std::vector<ComponentCamera*>& list, GameObject* from = nullptr) const;
 
 	void SaveScene()const;
-	void LoadScene(const char* file_path); //Removes the current scene
+	bool LoadScene(const char* file_path); //Removes the current scene
 
 	bool IsRoot(const GameObject* go)const;
 
@@ -48,8 +50,9 @@ private:
 	GameObject* root = nullptr;
 
 	GameObject* selected_GO = nullptr;
-
 	vector<GameObject*> go_to_remove;
+
+	string current_scene_path = "";
 
 };
 

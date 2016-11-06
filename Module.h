@@ -58,6 +58,9 @@ public:
 	{
 		return name.data();
 	}
+
+	virtual void SaveBeforeClosing(Data& data)const
+	{}
 };
 
 #endif // !__MOUDLE_H__

@@ -72,6 +72,9 @@ int main(int argc, char ** argv)
 			break;
 
 		case MAIN_FINISH:
+			LOG("---------------Application Save before closing --");
+			
+			App->SaveBeforeClosing();
 
 			LOG("-------------- Application CleanUp --------------");
 			if (App->CleanUp() == false)

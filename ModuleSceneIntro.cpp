@@ -9,9 +9,7 @@
 #include "ComponentMesh.h"
 #include "Random.h"
 
-//Tesing
-#include "MaterialImporter.h"
-#include "Quadtree.h"
+
 
 ModuleSceneIntro::ModuleSceneIntro(const char* name, bool start_enabled) : Module(name, start_enabled)
 {
@@ -31,8 +29,6 @@ bool ModuleSceneIntro::Start()
 	LOG("Loading Intro assets");
 	bool ret = true;
 	
-	Quadtree<float> t;
-	t.Create(math::AABB());
 
 	return ret;
 }

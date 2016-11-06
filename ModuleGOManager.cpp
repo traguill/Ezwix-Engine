@@ -18,14 +18,43 @@ ModuleGOManager::~ModuleGOManager()
 
 bool ModuleGOManager::Init(Data & config)
 {
-	root = new GameObject();
-	root->AddComponent(C_TRANSFORM);
-	root->name = "Root";
+	//Load last open scene
+	const char* path = config.GetString("current_scene_path");
+	bool scene_success = false;
+	if (path)
+	{
+		if (strcmp(path, "") != 0)
+		{
+			current_scene_path = path; //The scene is loaded at start because OpenGL needs to be init at ModuleRender
+			scene_success = true;
+		}
+	}
+
+	if (!scene_success)
+	{	//Empty scene
+		root = new GameObject();
+		root->AddComponent(C_TRANSFORM);
+		root->name = "Root";
+		current_scene_path = "";
+	}
+	
 	return true;
 }
 
 bool ModuleGOManager::Start()
 {
+	//Load last scene 
+	if (root == nullptr)
+	{
+		if (LoadScene(current_scene_path.data()) == false)
+		{
+			//Empty scene
+			root = new GameObject();
+			root->AddComponent(C_TRANSFORM);
+			root->name = "Root";
+			current_scene_path = "";
+		}
+	}
 
 	return true;
 }
@@ -55,6 +84,11 @@ update_status ModuleGOManager::Update(float dt)
 	InspectorWindow();
 
 	return UPDATE_CONTINUE;
+}
+
+void ModuleGOManager::SaveBeforeClosing(Data& data) const
+{
+	data.AppendString("current_scene_path", current_scene_path.data());
 }
 
 GameObject* ModuleGOManager::CreateGameObject(GameObject* parent)
@@ -156,17 +190,19 @@ void ModuleGOManager::SaveScene()const
 	}
 }
 
-void ModuleGOManager::LoadScene(const char * file_path) 
+bool ModuleGOManager::LoadScene(const char * file_path) 
 {
+	bool ret = false;
 	//TODO: Now the current scene is destroyed. Ask the user if wants to save the changes.
 
-	char* buffer;
+	char* buffer = nullptr;
 	uint size = App->file_system->Load(file_path, &buffer);
 	if (size == 0)
 	{
 		LOG("Error while loading Scene: %s", file_path);
-		delete[] buffer;
-		return;
+		if(buffer)
+			delete[] buffer;
+		return false;
 	}
 
 	Data scene(buffer);
@@ -185,13 +221,18 @@ void ModuleGOManager::LoadScene(const char * file_path)
 			else
 				LoadGameObject(scene.GetArray("GameObjects", i));
 		}	
+		current_scene_path = file_path;
+		ret = true;
 	}
 	else
 	{
 		LOG("The scene %s is not a valid scene file", file_path);
+		
 	}
 
 	delete[] buffer;
+
+	return ret;
 }
 
 bool ModuleGOManager::IsRoot(const GameObject * go) const

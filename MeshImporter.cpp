@@ -143,7 +143,7 @@ bool MeshImporter::Save(Mesh& mesh, std::string& output_file)
 Mesh * MeshImporter::Load(const char * path)
 {
 	Mesh* mesh = nullptr;
-	char* buffer;
+	char* buffer = nullptr;
 	
 	if (App->file_system->Load(path, &buffer) != 0)
 	{
@@ -219,8 +219,8 @@ Mesh * MeshImporter::Load(const char * path)
 		glBindBuffer(GL_ARRAY_BUFFER, mesh->id_uvs);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 2 * mesh->num_uvs, mesh->uvs, GL_STATIC_DRAW);
 	}
-
-	delete[] buffer;
+	if(buffer)
+		delete[] buffer;
 	buffer = nullptr;
 
 	return mesh;

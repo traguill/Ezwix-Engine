@@ -21,7 +21,6 @@ Editor::~Editor()
 
 bool Editor::Init(Data & config)
 {
-	LOG("Editor says %d and %s", config.GetInt("cam"), config.GetString("intro"));
 	return true;
 }
 

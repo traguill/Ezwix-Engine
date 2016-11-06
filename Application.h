@@ -32,6 +32,7 @@ public:
 	bool Init();
 	update_status Update();
 	bool CleanUp();
+	void SaveBeforeClosing();
 
 	void OpenURL(const char* url);
 	void SetMaxFPS(int max_fps);

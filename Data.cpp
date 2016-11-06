@@ -82,6 +82,11 @@ bool Data::AppendFloat3(const char * name,const float * value)
 	return json_object_set_value(root, name, j_value) == JSONSuccess;
 }
 
+Data Data::AppendJObject(const char * name)
+{
+	json_object_set_value(root, name, json_value_init_object());
+	return GetJObject(name);
+}
 
 Data Data::GetJObject(const char* name)const
 {
