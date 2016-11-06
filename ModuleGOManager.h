@@ -27,6 +27,7 @@ public:
 
 	void SaveScene()const;
 	bool LoadScene(const char* file_path); //Removes the current scene
+	void LoadEmptyScene();
 
 	bool IsRoot(const GameObject* go)const;
 

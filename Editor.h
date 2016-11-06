@@ -33,6 +33,7 @@ private:
 	update_status EditorWindows();
 
 	//Menus
+	void FileMenu();
 	void HelpMenu();
 	void WindowsMenu();
 	void EditMenu();

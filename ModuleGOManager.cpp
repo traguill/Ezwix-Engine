@@ -31,11 +31,8 @@ bool ModuleGOManager::Init(Data & config)
 	}
 
 	if (!scene_success)
-	{	//Empty scene
-		root = new GameObject();
-		root->AddComponent(C_TRANSFORM);
-		root->name = "Root";
-		current_scene_path = "";
+	{
+		LoadEmptyScene();
 	}
 	
 	return true;
@@ -48,11 +45,7 @@ bool ModuleGOManager::Start()
 	{
 		if (LoadScene(current_scene_path.data()) == false)
 		{
-			//Empty scene
-			root = new GameObject();
-			root->AddComponent(C_TRANSFORM);
-			root->name = "Root";
-			current_scene_path = "";
+			LoadEmptyScene();
 		}
 	}
 
@@ -233,6 +226,17 @@ bool ModuleGOManager::LoadScene(const char * file_path)
 	delete[] buffer;
 
 	return ret;
+}
+
+void ModuleGOManager::LoadEmptyScene()
+{
+	ClearScene();
+
+	//Empty scene
+	root = new GameObject();
+	root->AddComponent(C_TRANSFORM);
+	root->name = "Root";
+	current_scene_path = "";
 }
 
 bool ModuleGOManager::IsRoot(const GameObject * go) const

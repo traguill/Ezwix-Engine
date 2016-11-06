@@ -86,6 +86,7 @@ update_status Editor::EditorWindows()
 	{
 		if (ImGui::BeginMenu("File"))
 		{
+			FileMenu();
 			ImGui::EndMenu();
 		}
 		if (ImGui::BeginMenu("Edit"))
@@ -123,6 +124,14 @@ update_status Editor::EditorWindows()
 	return ret;
 }
 
+
+void Editor::FileMenu()
+{
+	if (ImGui::MenuItem("Create New Scene"))
+	{
+		App->go_manager->LoadEmptyScene();
+	}
+}
 
 //Menus -----------------------------------------------------------------------------------------------
 void Editor::HelpMenu()
