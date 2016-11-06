@@ -36,6 +36,7 @@ public:
 	math::float4x4 GetViewMatrix()const;
 
 	void Save(Data& file)const;
+	void Load(Data& conf);
 
 public:
 

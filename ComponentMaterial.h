@@ -13,6 +13,7 @@ public:
 	void OnInspector();
 
 	void Save(Data& file)const;
+	void Load(Data& conf);
 
 public:
 	size_t texture_id = 0;

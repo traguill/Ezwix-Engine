@@ -76,30 +76,33 @@ void Assets::Draw()
 			if (IsMeshExtension((*file).data()))
 			{
 				file_selected = current_dir->path + (*file);
-				ImGui::OpenPopup("FileOptions");
-			}			
+				ImGui::OpenPopup("FileMeshOptions");
+			}
+
+			if (IsSceneExtension((*file).data()))
+			{
+				file_selected = current_dir->path + (*file);
+				ImGui::OpenPopup("FileSceneOptions");
+			}
 		}
 	}
 
-	if (ImGui::BeginPopup("FileOptions"))
-	{
-		if (ImGui::Selectable("Load to scene"))
-		{
-			App->meshes->Load((file_selected).c_str(), current_dir->path.data());
-		}
+	//PopUps File type options --------------------------------------------------
 
-		if (ImGui::Selectable("Open"))
-		{
-			OpenInExplorer(&file_selected);
-		}
-		ImGui::EndPopup();
-	}
+	//Open Meshes
+	MeshFileOptions();
+
+	//Open Scenes
+	SceneFileOptions();
 	
 	ImGui::End();
 }
 
 void Assets::Init()
 {
+	//start active
+	active = true;
+
 	root = new Directory();
 	root->path = ASSETS_FOLDER;
 	root->name = "Assets";
@@ -127,7 +130,7 @@ void Assets::FillDirectoriesRecursive(Directory* root_dir)
 	}
 }
 
-bool Assets::IsMeshExtension(std::string fn)
+bool Assets::IsMeshExtension(const std::string& fn)const
 {
 	string extension = fn.substr(fn.find_last_of(".") + 1);
 
@@ -164,13 +167,23 @@ void Assets::DeleteDirectoriesRecursive(Directory* root_dir, bool keep_root)
 		delete root_dir;
 }
 
+bool Assets::IsSceneExtension(const std::string& file_name) const
+{
+	string extension = file_name.substr(file_name.find_last_of(".") + 1);
+
+	//TODO: improve this approach
+	const char* ext = "json";
+
+	return (extension.compare(ext) == 0) ? true : false;
+}
+
 void Assets::Refresh()
 {
 	DeleteDirectoriesRecursive(current_dir, true);
 	FillDirectoriesRecursive(current_dir);
 }
 
-void Assets::OpenInExplorer(std::string* file_name)const
+void Assets::OpenInExplorer(const std::string* file_name)const
 {
 	char* base_path = SDL_GetBasePath();
 	std::string base = base_path;
@@ -186,4 +199,33 @@ void Assets::OpenInExplorer(std::string* file_name)const
 		base += current_dir->path;
 	ShellExecute(NULL, "open", base.data(), NULL, NULL, SW_SHOWNORMAL);
 	SDL_free(base_path);
+}
+
+void Assets::MeshFileOptions() const
+{
+	if (ImGui::BeginPopup("FileMeshOptions"))
+	{
+		if (ImGui::Selectable("Load to scene"))
+		{
+			App->meshes->Load((file_selected).c_str(), current_dir->path.data());
+		}
+
+		if (ImGui::Selectable("Open"))
+		{
+			OpenInExplorer(&file_selected);
+		}
+		ImGui::EndPopup();
+	}
+}
+
+void Assets::SceneFileOptions()const
+{
+	if (ImGui::BeginPopup("FileSceneOptions"))
+	{
+		if (ImGui::Selectable("Load to scene"))
+		{
+			App->go_manager->LoadScene(file_selected.data());
+		}
+		ImGui::EndPopup();
+	}
 }

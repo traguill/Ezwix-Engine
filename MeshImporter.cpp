@@ -9,6 +9,10 @@
 #include "ModuleMeshes.h"
 #pragma comment (lib, "Assimp/libx86/assimp.lib")
 
+#include "Glew\include\glew.h"
+#include <gl\GL.h>
+
+
 bool MeshImporter::Import(const aiMesh * mesh_to_load, std::string & output)
 {
 	//Mesh --------------------------------------------------------------------------------------------------------------------------------
@@ -194,6 +198,26 @@ Mesh * MeshImporter::Load(const char * path)
 		bytes = sizeof(float) * mesh->num_uvs * 2;
 		mesh->uvs = new float[mesh->num_uvs * 2];
 		memcpy(mesh->uvs, cursor, bytes);
+
+		//Vertices ------------------------------------------------------------------------------------------------------
+
+		//Load buffer to VRAM
+		glGenBuffers(1, (GLuint*)&(mesh->id_vertices));
+		glBindBuffer(GL_ARRAY_BUFFER, mesh->id_vertices);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 3 * mesh->num_vertices, mesh->vertices, GL_STATIC_DRAW);
+
+		//Indices --------------------------------------------------------------------------------------------------------
+
+		//Load indices buffer to VRAM
+		glGenBuffers(1, (GLuint*) &(mesh->id_indices));
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_indices);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * mesh->num_indices, mesh->indices, GL_STATIC_DRAW);
+
+		//Load UVs -----------------------------------------------------------------------------------------------------------------------
+
+		glGenBuffers(1, (GLuint*)&(mesh->id_uvs));
+		glBindBuffer(GL_ARRAY_BUFFER, mesh->id_uvs);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 2 * mesh->num_uvs, mesh->uvs, GL_STATIC_DRAW);
 	}
 
 	delete[] buffer;

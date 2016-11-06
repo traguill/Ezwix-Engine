@@ -21,6 +21,7 @@ public:
 	void RecalculateBoundingBox();
 
 	void Save(Data& file)const;
+	void Load(Data& conf);
 
 private:
 	Mesh* mesh = nullptr;

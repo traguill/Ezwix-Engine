@@ -1,0 +1,766 @@
+{
+    "GameObjects": [
+        {
+            "name": "Root",
+            "UUID": 2826567379,
+            "parent": 0,
+            "active": true,
+            "components": [
+                {
+                    "type": 0,
+                    "UUID": 2005188098,
+                    "active": true,
+                    "matrix": [
+                        1,
+                        0,
+                        0,
+                        0,
+                        0,
+                        1,
+                        0,
+                        0,
+                        0,
+                        0,
+                        1,
+                        0,
+                        0,
+                        0,
+                        0,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "cloth_1",
+            "UUID": 1120333977,
+            "parent": 2826567379,
+            "active": true,
+            "components": [
+                {
+                    "type": 0,
+                    "UUID": -1676350210,
+                    "active": true,
+                    "matrix": [
+                        0.197704,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0.197704,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0.197704,
+                        0,
+                        0,
+                        0,
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "type": 1,
+                    "UUID": -1125623243,
+                    "active": true,
+                    "path": "\/Library\/Meshes\/mesh.ezx"
+                },
+                {
+                    "type": 2,
+                    "UUID": 1499918541,
+                    "active": true,
+                    "path": "Library\/Textures\/texture.dds"
+                }
+            ]
+        },
+        {
+            "name": "cloth_4",
+            "UUID": 459959850,
+            "parent": 2826567379,
+            "active": true,
+            "components": [
+                {
+                    "type": 0,
+                    "UUID": -14512233,
+                    "active": true,
+                    "matrix": [
+                        0.197704,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0.197704,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0.197704,
+                        0,
+                        0,
+                        0,
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "type": 1,
+                    "UUID": -946201108,
+                    "active": true,
+                    "path": "\/Library\/Meshes\/mesh1.ezx"
+                },
+                {
+                    "type": 2,
+                    "UUID": 47820513,
+                    "active": true,
+                    "path": "Library\/Textures\/texture1.dds"
+                }
+            ]
+        },
+        {
+            "name": "cloth_5",
+            "UUID": 574739746,
+            "parent": 2826567379,
+            "active": true,
+            "components": [
+                {
+                    "type": 0,
+                    "UUID": -193950471,
+                    "active": true,
+                    "matrix": [
+                        0.197704,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0.197704,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0.197704,
+                        0,
+                        0,
+                        0,
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "type": 1,
+                    "UUID": -489491311,
+                    "active": true,
+                    "path": "\/Library\/Meshes\/mesh2.ezx"
+                },
+                {
+                    "type": 2,
+                    "UUID": -1696524718,
+                    "active": true,
+                    "path": "Library\/Textures\/texture2.dds"
+                }
+            ]
+        },
+        {
+            "name": "cloth_3",
+            "UUID": 2009032972,
+            "parent": 2826567379,
+            "active": true,
+            "components": [
+                {
+                    "type": 0,
+                    "UUID": -1782264418,
+                    "active": true,
+                    "matrix": [
+                        0.197704,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0.197704,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0.197704,
+                        0,
+                        0,
+                        0,
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "type": 1,
+                    "UUID": 2052667893,
+                    "active": true,
+                    "path": "\/Library\/Meshes\/mesh3.ezx"
+                },
+                {
+                    "type": 2,
+                    "UUID": 1855759845,
+                    "active": true,
+                    "path": "Library\/Textures\/texture3.dds"
+                }
+            ]
+        },
+        {
+            "name": "cloth_2",
+            "UUID": 4268863557,
+            "parent": 2826567379,
+            "active": true,
+            "components": [
+                {
+                    "type": 0,
+                    "UUID": 566791384,
+                    "active": true,
+                    "matrix": [
+                        0.197704,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0.197704,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0.197704,
+                        0,
+                        0,
+                        0,
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "type": 1,
+                    "UUID": 783127824,
+                    "active": true,
+                    "path": "\/Library\/Meshes\/mesh4.ezx"
+                },
+                {
+                    "type": 2,
+                    "UUID": 1025709481,
+                    "active": true,
+                    "path": "Library\/Textures\/texture4.dds"
+                }
+            ]
+        },
+        {
+            "name": "pants_boots",
+            "UUID": 3357526916,
+            "parent": 2826567379,
+            "active": true,
+            "components": [
+                {
+                    "type": 0,
+                    "UUID": 869918833,
+                    "active": true,
+                    "matrix": [
+                        0.197704,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0.197704,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0.197704,
+                        0,
+                        0,
+                        0,
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "type": 1,
+                    "UUID": 1901001974,
+                    "active": true,
+                    "path": "\/Library\/Meshes\/mesh5.ezx"
+                },
+                {
+                    "type": 2,
+                    "UUID": 2088372733,
+                    "active": true,
+                    "path": "Library\/Textures\/texture5.dds"
+                }
+            ]
+        },
+        {
+            "name": "bust",
+            "UUID": 1008160388,
+            "parent": 2826567379,
+            "active": true,
+            "components": [
+                {
+                    "type": 0,
+                    "UUID": 2168304,
+                    "active": true,
+                    "matrix": [
+                        0.197704,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0.197704,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0.197704,
+                        0,
+                        0,
+                        0,
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "type": 1,
+                    "UUID": 81883309,
+                    "active": true,
+                    "path": "\/Library\/Meshes\/mesh6.ezx"
+                },
+                {
+                    "type": 2,
+                    "UUID": -1440514314,
+                    "active": true,
+                    "path": "Library\/Textures\/texture6.dds"
+                }
+            ]
+        },
+        {
+            "name": "medallion",
+            "UUID": 2092910227,
+            "parent": 2826567379,
+            "active": true,
+            "components": [
+                {
+                    "type": 0,
+                    "UUID": 1063476623,
+                    "active": true,
+                    "matrix": [
+                        0.197704,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0.197704,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0.197704,
+                        0,
+                        0,
+                        0,
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "type": 1,
+                    "UUID": 278101544,
+                    "active": true,
+                    "path": "\/Library\/Meshes\/mesh7.ezx"
+                },
+                {
+                    "type": 2,
+                    "UUID": -1109942387,
+                    "active": true,
+                    "path": "Library\/Textures\/texture7.dds"
+                }
+            ]
+        },
+        {
+            "name": "belt",
+            "UUID": 3459355790,
+            "parent": 2826567379,
+            "active": true,
+            "components": [
+                {
+                    "type": 0,
+                    "UUID": 147984598,
+                    "active": true,
+                    "matrix": [
+                        0.197704,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0.197704,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0.197704,
+                        0,
+                        0,
+                        0,
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "type": 1,
+                    "UUID": -1229505770,
+                    "active": true,
+                    "path": "\/Library\/Meshes\/mesh8.ezx"
+                },
+                {
+                    "type": 2,
+                    "UUID": 1954909780,
+                    "active": true,
+                    "path": "Library\/Textures\/texture8.dds"
+                }
+            ]
+        },
+        {
+            "name": "belt_details",
+            "UUID": 3907664118,
+            "parent": 2826567379,
+            "active": true,
+            "components": [
+                {
+                    "type": 0,
+                    "UUID": -1626841953,
+                    "active": true,
+                    "matrix": [
+                        0.197704,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0.197704,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0.197704,
+                        0,
+                        0,
+                        0,
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "type": 1,
+                    "UUID": -32512223,
+                    "active": true,
+                    "path": "\/Library\/Meshes\/mesh9.ezx"
+                },
+                {
+                    "type": 2,
+                    "UUID": -1018307879,
+                    "active": true,
+                    "path": "Library\/Textures\/texture9.dds"
+                }
+            ]
+        },
+        {
+            "name": "head",
+            "UUID": 369509645,
+            "parent": 2826567379,
+            "active": true,
+            "components": [
+                {
+                    "type": 0,
+                    "UUID": 1692197978,
+                    "active": true,
+                    "matrix": [
+                        0.197704,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0.197704,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0.197704,
+                        0,
+                        0,
+                        0,
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "type": 1,
+                    "UUID": 782422873,
+                    "active": true,
+                    "path": "\/Library\/Meshes\/mesh10.ezx"
+                },
+                {
+                    "type": 2,
+                    "UUID": 1160020156,
+                    "active": true,
+                    "path": "Library\/Textures\/texture10.dds"
+                }
+            ]
+        },
+        {
+            "name": "eyes_refl_refr",
+            "UUID": 2371173528,
+            "parent": 2826567379,
+            "active": true,
+            "components": [
+                {
+                    "type": 0,
+                    "UUID": -619211955,
+                    "active": true,
+                    "matrix": [
+                        0.197704,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0.197704,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0.197704,
+                        0,
+                        0,
+                        0,
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "type": 1,
+                    "UUID": -1041414846,
+                    "active": true,
+                    "path": "\/Library\/Meshes\/mesh11.ezx"
+                },
+                {
+                    "type": 2,
+                    "UUID": -322845587,
+                    "active": true,
+                    "path": "Library\/Textures\/texture11.dds"
+                }
+            ]
+        },
+        {
+            "name": "eyes_details",
+            "UUID": 1245802439,
+            "parent": 2826567379,
+            "active": true,
+            "components": [
+                {
+                    "type": 0,
+                    "UUID": -1722968957,
+                    "active": true,
+                    "matrix": [
+                        0.197704,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0.197704,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0.197704,
+                        0,
+                        0,
+                        0,
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "type": 1,
+                    "UUID": -1906686501,
+                    "active": true,
+                    "path": "\/Library\/Meshes\/mesh12.ezx"
+                },
+                {
+                    "type": 2,
+                    "UUID": 19225900,
+                    "active": true,
+                    "path": "Library\/Textures\/texture12.dds"
+                }
+            ]
+        },
+        {
+            "name": "eyelashes",
+            "UUID": 1182458395,
+            "parent": 2826567379,
+            "active": true,
+            "components": [
+                {
+                    "type": 0,
+                    "UUID": -1046938674,
+                    "active": true,
+                    "matrix": [
+                        0.197704,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0.197704,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0.197704,
+                        0,
+                        0,
+                        0,
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "type": 1,
+                    "UUID": 1384487602,
+                    "active": true,
+                    "path": "\/Library\/Meshes\/mesh13.ezx"
+                },
+                {
+                    "type": 2,
+                    "UUID": -1887335356,
+                    "active": true,
+                    "path": "Library\/Textures\/texture13.dds"
+                }
+            ]
+        },
+        {
+            "name": "teeth",
+            "UUID": 2471340100,
+            "parent": 2826567379,
+            "active": true,
+            "components": [
+                {
+                    "type": 0,
+                    "UUID": 1159903041,
+                    "active": true,
+                    "matrix": [
+                        0.197704,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0.197704,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0.197704,
+                        0,
+                        0,
+                        0,
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "type": 1,
+                    "UUID": -1113168893,
+                    "active": true,
+                    "path": "\/Library\/Meshes\/mesh14.ezx"
+                },
+                {
+                    "type": 2,
+                    "UUID": 1405182516,
+                    "active": true,
+                    "path": "Library\/Textures\/texture14.dds"
+                }
+            ]
+        },
+        {
+            "name": "eyes_diffuse",
+            "UUID": 3505556637,
+            "parent": 2826567379,
+            "active": true,
+            "components": [
+                {
+                    "type": 0,
+                    "UUID": 1744823141,
+                    "active": true,
+                    "matrix": [
+                        0.197704,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0.197704,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0.197704,
+                        0,
+                        0,
+                        0,
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "type": 1,
+                    "UUID": -1714112103,
+                    "active": true,
+                    "path": "\/Library\/Meshes\/mesh15.ezx"
+                },
+                {
+                    "type": 2,
+                    "UUID": 1927461349,
+                    "active": true,
+                    "path": "Library\/Textures\/texture15.dds"
+                }
+            ]
+        },
+        {
+            "name": "Hair",
+            "UUID": 2206780073,
+            "parent": 2826567379,
+            "active": true,
+            "components": [
+                {
+                    "type": 0,
+                    "UUID": 1460980293,
+                    "active": true,
+                    "matrix": [
+                        0.197704,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0.197704,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0.197704,
+                        0,
+                        0,
+                        0,
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "type": 1,
+                    "UUID": -679244599,
+                    "active": true,
+                    "path": "\/Library\/Meshes\/mesh16.ezx"
+                },
+                {
+                    "type": 2,
+                    "UUID": -616975303,
+                    "active": true,
+                    "path": "Library\/Textures\/texture16.dds"
+                }
+            ]
+        }
+    ]
+} 

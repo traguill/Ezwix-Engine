@@ -14,6 +14,7 @@ class GameObject
 public:
 	GameObject();
 	GameObject(GameObject* parent);
+	GameObject(const char* name, unsigned int uuid, GameObject* parent, bool active);
 	~GameObject();
 
 	void PreUpdate();

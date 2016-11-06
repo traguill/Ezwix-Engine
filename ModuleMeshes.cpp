@@ -180,27 +180,6 @@ void ModuleMeshes::LoadNode(aiNode* node,const aiScene* scene, GameObject* paren
 		bool ret = MeshImporter::Import(mesh_to_load, mesh_path);
 
 		Mesh* mesh = MeshImporter::Load(mesh_path.data());
-
-	
-		//Vertices ------------------------------------------------------------------------------------------------------
-
-		//Load buffer to VRAM
-		glGenBuffers(1, (GLuint*)&(mesh->id_vertices));
-		glBindBuffer(GL_ARRAY_BUFFER, mesh->id_vertices);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 3 * mesh->num_vertices, mesh->vertices, GL_STATIC_DRAW);
-
-		//Indices --------------------------------------------------------------------------------------------------------
-
-		//Load indices buffer to VRAM
-		glGenBuffers(1, (GLuint*) &(mesh->id_indices));
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_indices);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * mesh->num_indices, mesh->indices, GL_STATIC_DRAW);
-
-		//Load UVs -----------------------------------------------------------------------------------------------------------------------
-
-		glGenBuffers(1, (GLuint*)&(mesh->id_uvs));
-		glBindBuffer(GL_ARRAY_BUFFER, mesh->id_uvs);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 2 * mesh->num_uvs, mesh->uvs, GL_STATIC_DRAW);
 		
 
 		c_mesh->SetMesh(mesh);

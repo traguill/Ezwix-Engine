@@ -24,6 +24,9 @@ public:
 	void GetAllCameras(std::vector<ComponentCamera*>& list, GameObject* from = nullptr) const;
 
 	void SaveScene()const;
+	void LoadScene(const char* file_path); //Removes the current scene
+
+	bool IsRoot(const GameObject* go)const;
 
 private:
 
@@ -34,6 +37,13 @@ private:
 
 	void UpdateGameObjects(float dt, GameObject* obj);
 	void PreUpdateGameObjects(GameObject* obj);
+
+	void ClearScene(); //Removes the current scene
+
+	GameObject* LoadGameObject(const Data& go_data)const;
+
+	GameObject* FindGameObjectByUUID(GameObject* start, unsigned int uuid)const; //Should be a public method?
+
 private:
 	GameObject* root = nullptr;
 

@@ -22,6 +22,9 @@ GameObject::GameObject(GameObject* parent) : parent(parent)
 	uuid = App->rnd->RandomInt();
 }
 
+GameObject::GameObject(const char* name, unsigned int uuid, GameObject* parent, bool active) : name(name), uuid(uuid), parent(parent), active(active)
+{}
+
 GameObject::~GameObject()
 {
 	global_matrix = nullptr;
@@ -251,8 +254,11 @@ void GameObject::Save(Data & file) const
 
 	//GameObject data
 	data.AppendString("name", name.data());
-	data.AppendInt("UUID", uuid);
-	data.AppendInt("parent", parent->GetUUID());
+	data.AppendUInt("UUID", uuid);
+	if(App->go_manager->IsRoot(this))
+		data.AppendUInt("parent", 0);
+	else
+		data.AppendUInt("parent", parent->GetUUID());
 	data.AppendBool("active", active);
 	data.AppendArray("components");
 

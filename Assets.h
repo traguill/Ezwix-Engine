@@ -29,10 +29,14 @@ private:
 	void FillDirectoriesRecursive(Directory* root_dir);
 	void DeleteDirectoriesRecursive(Directory* root_dir, bool keep_root = false);
 
-	bool IsMeshExtension(std::string file_name);
+	bool IsMeshExtension(const std::string& file_name)const;
+	bool IsSceneExtension(const std::string& file_name)const;
 
 	void Refresh();
-	void OpenInExplorer(std::string* file = NULL)const;
+	void OpenInExplorer(const std::string* file = NULL)const;
+
+	void MeshFileOptions()const;
+	void SceneFileOptions()const;
 
 private:
 	Directory* root = nullptr; //Assets directory

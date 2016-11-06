@@ -83,7 +83,7 @@ void ComponentTransform::SetRotation(const math::float3& rot_euler)
 	
 	float3 rot_deg = DegToRad(rot_euler);
 
-	rotation = rotation.FromEulerXYZ(rot_deg.z, rot_deg.y, rot_deg.x);
+	rotation = rotation.FromEulerXYZ(rot_deg.x, rot_deg.y, rot_deg.z);
 
 	transform_modified = true;
 }
@@ -138,11 +138,26 @@ void ComponentTransform::Save(Data & file) const
 {
 	Data data;
 	data.AppendInt("type", type);
-	data.AppendInt("UUID", uuid);
+	data.AppendUInt("UUID", uuid);
 	data.AppendBool("active", active);
 	data.AppendMatrix("matrix", transform_matrix);
 
 	file.AppendArrayValue(data);
+}
+
+void ComponentTransform::Load(Data & conf)
+{
+	uuid = conf.GetUInt("UUID");
+	active = conf.GetBool("active");
+
+	transform_matrix = conf.GetMatrix("matrix");
+
+	position = transform_matrix.TranslatePart();
+	rotation_euler = transform_matrix.ToEulerXYZ(); //In radians for now.
+	rotation = Quat::FromEulerXYZ(rotation_euler.x, rotation_euler.y, rotation_euler.z); 
+	rotation_euler = RadToDeg(rotation_euler); //To degrees
+	scale = transform_matrix.GetScale();
+	CalculateFinalTransform();
 }
 
 void ComponentTransform::Remove()

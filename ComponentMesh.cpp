@@ -5,7 +5,7 @@
 #include "GameObject.h"
 #include "ComponentTransform.h"
 #include "ComponentMaterial.h"
-
+#include "MeshImporter.h"
 #include "ComponentCamera.h"
 
 ComponentMesh::ComponentMesh(ComponentType type, GameObject* game_object) : Component(type, game_object)
@@ -115,9 +115,23 @@ void ComponentMesh::Save(Data & file)const
 {
 	Data data;
 	data.AppendInt("type", type);
-	data.AppendInt("UUID", uuid);
+	data.AppendUInt("UUID", uuid);
 	data.AppendBool("active", active);
 	data.AppendString("path", mesh->file_path.data());
 
 	file.AppendArrayValue(data);
+}
+
+void ComponentMesh::Load(Data & conf)
+{
+	uuid = conf.GetUInt("UUID");
+	active = conf.GetBool("active");
+
+	const char* path = conf.GetString("path");
+	Mesh* mesh = MeshImporter::Load(path);
+	mesh->file_path = path;
+
+	SetMesh(mesh);
+
+	OnTransformModified();
 }

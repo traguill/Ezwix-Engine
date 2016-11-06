@@ -220,7 +220,7 @@ void ComponentCamera::Save(Data & file)const
 {
 	Data data;
 	data.AppendInt("type", type);
-	data.AppendInt("UUID", uuid);
+	data.AppendUInt("UUID", uuid);
 	data.AppendBool("active", active);
 	
 	data.AppendFloat("near_plane", near_plane);
@@ -230,4 +230,30 @@ void ComponentCamera::Save(Data & file)const
 	data.AppendFloat3("color", color.ptr());
 
 	file.AppendArrayValue(data);
+}
+
+void ComponentCamera::Load(Data & conf)
+{
+	uuid = conf.GetUInt("UUID");
+	active = conf.GetBool("active");
+
+	near_plane = conf.GetFloat("near_plane");
+	far_plane = conf.GetFloat("far_plane");
+	fov = conf.GetFloat("fov");
+	aspect_ratio = conf.GetFloat("aspect_ratio");
+	color = conf.GetFloat3("color");
+
+	//Init frustrum
+	float vertical_fov = DegToRad(fov);
+	float horizontal_fov = 2.0f*atanf(tanf(vertical_fov / 2.0f) * aspect_ratio);
+
+	frustum.SetPerspective(horizontal_fov, vertical_fov);
+	frustum.SetKind(FrustumProjectiveSpace::FrustumSpaceGL, FrustumHandedness::FrustumRightHanded);
+	frustum.SetPos(float3::zero);
+	frustum.SetFront(float3::unitZ);
+	frustum.SetUp(float3::unitY);
+	frustum.SetViewPlaneDistances(near_plane, far_plane);
+	frustum.SetVerticalFovAndAspectRatio(DegToRad(fov), aspect_ratio);
+
+	OnTransformModified();
 }

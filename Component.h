@@ -3,10 +3,10 @@
 
 enum ComponentType
 {
-	C_TRANSFORM,
-	C_MESH,
-	C_MATERIAL,
-	C_CAMERA
+	C_TRANSFORM = 0,
+	C_MESH = 1,
+	C_MATERIAL = 2,
+	C_CAMERA = 3
 };
 
 class GameObject;
@@ -32,6 +32,7 @@ public:
 	virtual void OnTransformModified();
 	virtual void Save(Data& file) const;
 	virtual void Remove();
+	virtual void Load(Data& config);
 
 protected:
 	bool active = true;

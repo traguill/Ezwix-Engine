@@ -10,7 +10,7 @@ ModuleGOManager::ModuleGOManager(const char* name, bool start_enabled) : Module(
 
 ModuleGOManager::~ModuleGOManager()
 {
-	if(root)
+	if (root)
 		delete root;
 
 	selected_GO = nullptr;
@@ -20,6 +20,7 @@ bool ModuleGOManager::Init(Data & config)
 {
 	root = new GameObject();
 	root->AddComponent(C_TRANSFORM);
+	root->name = "Root";
 	return true;
 }
 
@@ -76,7 +77,8 @@ bool ModuleGOManager::RemoveGameObject(GameObject* object)
 
 	if (object)
 	{
-		object->GetParent()->RemoveChild(object);
+		if(object->GetParent() != nullptr)
+			object->GetParent()->RemoveChild(object);
 		object->RemoveAllChilds();
 		
 		go_to_remove.push_back(object);
@@ -138,9 +140,7 @@ void ModuleGOManager::SaveScene()const
 		Data root_node;
 		root_node.AppendArray("GameObjects");
 
-		const vector<GameObject*>* childs = root->GetChilds();
-		for (vector<GameObject*>::const_iterator gameobjects = childs->begin(); gameobjects != childs->end(); ++gameobjects)
-			(*gameobjects)->Save(root_node);
+		root->Save(root_node);
 
 		char* buf;
 		size_t size = root_node.Serialize(&buf);
@@ -154,6 +154,124 @@ void ModuleGOManager::SaveScene()const
 		delete[] buf;
 		//------------------------------------------------------------------------------------------------------------------
 	}
+}
+
+void ModuleGOManager::LoadScene(const char * file_path) 
+{
+	//TODO: Now the current scene is destroyed. Ask the user if wants to save the changes.
+
+	char* buffer;
+	uint size = App->file_system->Load(file_path, &buffer);
+	if (size == 0)
+	{
+		LOG("Error while loading Scene: %s", file_path);
+		delete[] buffer;
+		return;
+	}
+
+	Data scene(buffer);
+	Data root_objects;
+	root_objects = scene.GetArray("GameObjects", 0);
+
+	if (root_objects.IsNull() == false)
+	{
+		//Remove the current scene
+		ClearScene();
+		
+		for (int i = 0; i < scene.GetArraySize("GameObjects"); i++)
+		{
+			if(i == 0)
+				root = LoadGameObject(scene.GetArray("GameObjects", i)); //First GO is always the root
+			else
+				LoadGameObject(scene.GetArray("GameObjects", i));
+		}	
+	}
+	else
+	{
+		LOG("The scene %s is not a valid scene file", file_path);
+	}
+
+	delete[] buffer;
+}
+
+bool ModuleGOManager::IsRoot(const GameObject * go) const
+{
+	bool ret = false;
+
+	if (go)
+	{
+		if (go == root)
+			ret = true;
+	}
+
+	return ret;
+}
+
+void ModuleGOManager::ClearScene()
+{
+	RemoveGameObject(root);
+	selected_GO = nullptr;
+	root = nullptr;
+}
+
+GameObject * ModuleGOManager::LoadGameObject(const Data & go_data) const
+{
+	const char* name = go_data.GetString("name");
+	unsigned int uuid = go_data.GetUInt("UUID");
+	unsigned int uuid_parent = go_data.GetUInt("parent");
+	bool active = go_data.GetBool("active");
+
+	//Find parent GameObject reference
+	GameObject* parent = nullptr;
+	if (uuid_parent != 0 && root)
+	{
+		parent = FindGameObjectByUUID(root, uuid_parent);
+	}
+
+	//Basic GameObject properties
+	GameObject* go = new GameObject(name, uuid, parent, active);
+
+	if(parent)
+		parent->AddChild(go);
+	
+	//Components
+	Data component;
+	unsigned int comp_size = go_data.GetArraySize("components");
+	for (int i = 0; i < comp_size; i++)
+	{
+		component = go_data.GetArray("components", i);
+
+		int type = component.GetInt("type");
+
+		Component* go_component = go->AddComponent(static_cast<ComponentType>(type));
+		go_component->Load(component);
+	}
+
+	return go;
+}
+
+GameObject * ModuleGOManager::FindGameObjectByUUID(GameObject* start, unsigned int uuid) const
+{
+	GameObject* ret = nullptr;
+	if (start)
+	{
+		if (start->GetUUID() == uuid)
+		{
+			ret = start;
+		}
+		else
+		{
+			const std::vector<GameObject*>* childs = start->GetChilds();
+			for (std::vector<GameObject*>::const_iterator child = childs->begin(); child != childs->end(); ++child)
+			{
+				ret = FindGameObjectByUUID((*child), uuid);
+				if (ret != nullptr)
+					break;
+			}
+		}
+	}
+	
+	return ret;
 }
 
 void ModuleGOManager::HierarchyWindow()
@@ -298,8 +416,6 @@ void ModuleGOManager::UpdateGameObjects(float dt, GameObject* object)
 	{
 		UpdateGameObjects(dt, (*child));
 	}
-	
-
 }
 
 void ModuleGOManager::PreUpdateGameObjects(GameObject * obj)

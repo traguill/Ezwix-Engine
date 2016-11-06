@@ -56,3 +56,6 @@ void Component::Remove()
 	game_object->RemoveComponent(this);
 }
 
+void Component::Load(Data & config)
+{}
+

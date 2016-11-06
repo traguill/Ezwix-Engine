@@ -31,6 +31,7 @@ public:
 	math::float4x4 GetGlobalMatrix()const;
 
 	void Save(Data& file)const;
+	void Load(Data& conf);
 	void Remove();
 
 private:
