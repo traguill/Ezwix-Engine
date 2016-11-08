@@ -4,6 +4,9 @@
 #include "GameObject.h"
 #include "Imgui\imgui.h"
 #include "ComponentCamera.h"
+#include "ComponentMesh.h"
+#include "RaycastHit.h"
+#include <algorithm>
 
 ModuleGOManager::ModuleGOManager(const char* name, bool start_enabled) : Module(name, start_enabled)
 {}
@@ -75,6 +78,17 @@ update_status ModuleGOManager::Update(float dt)
 	//Display windows
 	HierarchyWindow();
 	InspectorWindow();
+
+	PickObjects();
+
+	//Selected Object shows it's boudning box
+	if (selected_GO)
+	{
+		if (selected_GO->bounding_box)
+		{
+			g_Debug->AddAABB(*selected_GO->bounding_box, g_Debug->green);
+		}
+	}
 
 	return UPDATE_CONTINUE;
 }
@@ -252,6 +266,15 @@ bool ModuleGOManager::IsRoot(const GameObject * go) const
 	return ret;
 }
 
+void ModuleGOManager::PickObjects()
+{
+	if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_UP)
+	{
+		Ray ray = App->camera->GetCurrentCamera()->CastCameraRay(float2(App->input->GetMouseX(), App->input->GetMouseY()));
+		selected_GO = Raycast(ray);
+	}
+}
+
 void ModuleGOManager::ClearScene()
 {
 	RemoveGameObject(root);
@@ -317,6 +340,58 @@ GameObject * ModuleGOManager::FindGameObjectByUUID(GameObject* start, unsigned i
 	}
 	
 	return ret;
+}
+
+//Sort the AABBs for the distance from the current camera
+int  CompareAABB(const void * a, const void * b)
+{
+	float3 cam_pos = App->camera->GetPosition();
+	float a_dst = (cam_pos - ((GameObject*)a)->bounding_box->CenterPoint()).Length();
+	float b_dst = (cam_pos - ((GameObject*)b)->bounding_box->CenterPoint()).Length();
+	if (a_dst < b_dst) return -1;
+	if (a_dst = b_dst) return 0;
+	if (a_dst > b_dst) return 1;
+}
+
+GameObject * ModuleGOManager::Raycast(const Ray & ray) const
+{
+	GameObject* ret = nullptr;
+
+	vector<GameObject*> collisions;
+	FillIntersectionList(root, ray, collisions); //with AABBs
+
+	std::sort(collisions.begin(), collisions.end(), CompareAABB);
+
+	vector<GameObject*>::iterator it = collisions.begin(); //Test with vertices
+	RaycastHit hit;
+	while (it != collisions.end())
+	{
+		if ((*it)->RayCast(ray, hit))
+		{
+			ret = (*it);
+			break;
+		}
+		++it;
+	}
+
+	return ret;
+}
+
+void ModuleGOManager::FillIntersectionList(GameObject * obj, const Ray & ray, vector<GameObject*>& list) const
+{
+	if (obj->bounding_box) 
+	{
+		if (ray.Intersects(*obj->bounding_box))
+		{
+			list.push_back(obj);
+		}
+	}
+
+	const vector<GameObject*>* childs = obj->GetChilds();
+	for (vector<GameObject*>::const_iterator child = childs->begin(); child != childs->end(); child++)
+	{
+		FillIntersectionList(*child, ray, list);
+	}
 }
 
 void ModuleGOManager::HierarchyWindow()

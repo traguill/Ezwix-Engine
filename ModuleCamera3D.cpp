@@ -4,6 +4,7 @@
 #include "ComponentCamera.h"
 #include "ComponentTransform.h"
 #include "GameObject.h"
+#include "ModuleInput.h"
 
 ModuleCamera3D::ModuleCamera3D(const char* name, bool start_enabled) : Module(name, start_enabled)
 {

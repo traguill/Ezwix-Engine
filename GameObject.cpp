@@ -6,7 +6,7 @@
 #include "ComponentMaterial.h"
 #include "ComponentCamera.h"
 #include "ModuleMeshes.h"
-
+#include "RaycastHit.h"
 
 GameObject::GameObject()
 {
@@ -28,6 +28,8 @@ GameObject::GameObject(const char* name, unsigned int uuid, GameObject* parent, 
 GameObject::~GameObject()
 {
 	global_matrix = nullptr;
+	bounding_box = nullptr;
+	mesh_to_draw = nullptr;
 	for (std::vector<Component*>::iterator component = components.begin(); component != components.end(); ++component)
 	{
 		delete (*component);
@@ -43,7 +45,6 @@ void GameObject::PreUpdate()
 	//Reset elements to draw
 	mesh_to_draw = nullptr;
 	texture_to_draw = 0;
-	bounding_box = nullptr;
 
 	//Remove all components that need to be removed. Secure way.
 	for (std::vector<Component*>::iterator component = components_to_remove.begin(); component != components_to_remove.end(); ++component)
@@ -228,7 +229,7 @@ void GameObject::RemoveComponent(Component * component)
 
 float4x4 GameObject::GetGlobalMatrix() const
 {
-	return *global_matrix;
+	return (global_matrix) ? *global_matrix : float4x4::identity;
 }
 
 unsigned int GameObject::GetUUID() const
@@ -273,4 +274,36 @@ void GameObject::Save(Data & file) const
 
 	for (vector<GameObject*>::const_iterator child = childs.begin(); child != childs.end(); ++child)
 		(*child)->Save(file);
+}
+
+bool GameObject::RayCast(const Ray & ray, RaycastHit & hit)
+{
+	bool ret = false;
+	ComponentMesh* c_mesh = (ComponentMesh*)GetComponent(C_MESH);
+	if (c_mesh)
+	{
+		const Mesh* mesh = c_mesh->GetMesh();
+		if (mesh)
+		{
+			//Transform ray into local coordinates
+			Ray raycast = ray;
+			raycast.Transform(global_matrix->Inverted());
+			for (int i = 0; i < mesh->num_indices / 3; i++)
+			{
+				uint u1 = mesh->indices[i * 3];
+				uint u2 = mesh->indices[i * 3 + 1];
+				uint u3 = mesh->indices[i * 3 + 2];
+				float3 v1(&mesh->vertices[u1]);
+				float3 v2(&mesh->vertices[u2]);
+				float3 v3(&mesh->vertices[u3]);
+				if (raycast.Intersects(Triangle(v1, v2, v3)))
+				{
+					ret = true; //For now don't save hit info
+					break;
+				}
+				
+			}
+		}
+	}
+	return ret;
 }

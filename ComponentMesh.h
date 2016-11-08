@@ -23,6 +23,8 @@ public:
 	void Save(Data& file)const;
 	void Load(Data& conf);
 
+	const Mesh* GetMesh()const;
+
 private:
 	Mesh* mesh = nullptr;
 	math::AABB aabb; //Local one

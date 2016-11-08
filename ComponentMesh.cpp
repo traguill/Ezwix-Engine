@@ -32,7 +32,6 @@ void ComponentMesh::Update(float dt)
 		if (material)
 			go->texture_to_draw = material->texture_id;
 		go->mesh_to_draw = mesh;
-		go->bounding_box = &bounding_box;
 
 		App->renderer3D->AddToDraw(GetGameObject());
 	}
@@ -104,11 +103,9 @@ bool ComponentMesh::SetMesh(Mesh * mesh)
 
 void ComponentMesh::RecalculateBoundingBox()
 {
-	ComponentTransform* trans = (ComponentTransform*)GetGameObject()->GetComponent(C_TRANSFORM);
-	assert(trans);
-
-	math::OBB ob = aabb.Transform(trans->GetGlobalMatrix());
+	math::OBB ob = aabb.Transform(game_object->GetGlobalMatrix());
 	bounding_box = ob.MinimalEnclosingAABB();
+	game_object->bounding_box = &bounding_box;
 }
 
 void ComponentMesh::Save(Data & file)const
@@ -134,4 +131,9 @@ void ComponentMesh::Load(Data & conf)
 	SetMesh(mesh);
 
 	OnTransformModified();
+}
+
+const Mesh * ComponentMesh::GetMesh() const
+{
+	return mesh;
 }

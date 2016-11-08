@@ -186,6 +186,7 @@
     <ClInclude Include="Profiler.h" />
     <ClInclude Include="Quadtree.h" />
     <ClInclude Include="Random.h" />
+    <ClInclude Include="RaycastHit.h" />
     <ClInclude Include="StackAllocator.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Window.h" />
@@ -273,6 +274,7 @@
     <ClCompile Include="Primitive.cpp" />
     <ClCompile Include="Profiler.cpp" />
     <ClCompile Include="Random.cpp" />
+    <ClCompile Include="RaycastHit.cpp" />
     <ClCompile Include="StackAllocator.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Window.cpp" />

@@ -38,6 +38,8 @@ public:
 	void Save(Data& file)const;
 	void Load(Data& conf);
 
+	math::Ray CastCameraRay(math::float2 screen_pos);
+
 public:
 
 	bool properties_modified = false;

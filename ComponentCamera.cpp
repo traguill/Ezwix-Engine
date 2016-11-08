@@ -257,3 +257,16 @@ void ComponentCamera::Load(Data & conf)
 
 	OnTransformModified();
 }
+
+math::Ray ComponentCamera::CastCameraRay(math::float2 screen_pos)
+{
+	//TODO: Change this for the actual screen widht and height
+	float2 pos = screen_pos;
+
+	pos.x = 2.0f * pos.x / SCREEN_WIDTH - 1.0f;
+	pos.y = 1.0f - 2.0f * pos.y / SCREEN_HEIGHT;
+	
+	Ray ray = frustum.UnProjectFromNearPlane(pos.x, pos.y);
+ 
+	return ray;
+}

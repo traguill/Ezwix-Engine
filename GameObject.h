@@ -8,6 +8,8 @@
 class Component;
 enum ComponentType;
 struct Mesh;
+class RaycastHit;
+class Data;
 
 class GameObject
 {
@@ -42,11 +44,15 @@ public:
 
 	void Save(Data& file) const;
 
+	bool RayCast(const Ray& ray, RaycastHit& hit); //Raycast testing ONLY against geometry. 
+
 public:
 	std::string name;
+	//Filled the moment to draw. Do not use it elsewhere.
 	Mesh* mesh_to_draw = nullptr; //Pointer to the mesh to draw in one frame
-	AABB* bounding_box = nullptr;
-	unsigned int texture_to_draw = 0; //Texture to draw in one frame
+	unsigned int texture_to_draw = 0; //Texture to draw in one frame 
+
+	AABB* bounding_box = nullptr; //Only mesh component can Set this.
 
 private:
 	GameObject* parent = NULL;
