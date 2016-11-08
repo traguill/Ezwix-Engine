@@ -278,6 +278,7 @@ void GameObject::Save(Data & file) const
 
 bool GameObject::RayCast(const Ray & ray, RaycastHit & hit)
 {
+	RaycastHit hit_info;
 	bool ret = false;
 	ComponentMesh* c_mesh = (ComponentMesh*)GetComponent(C_MESH);
 	if (c_mesh)
@@ -288,22 +289,56 @@ bool GameObject::RayCast(const Ray & ray, RaycastHit & hit)
 			//Transform ray into local coordinates
 			Ray raycast = ray;
 			raycast.Transform(global_matrix->Inverted());
+
+			uint u1, u2, u3;
+			float3 v1, v2, v3;
+			float distance;
+			vec hit_point;
+			Triangle triangle;
 			for (int i = 0; i < mesh->num_indices / 3; i++)
 			{
-				uint u1 = mesh->indices[i * 3];
-				uint u2 = mesh->indices[i * 3 + 1];
-				uint u3 = mesh->indices[i * 3 + 2];
-				float3 v1(&mesh->vertices[u1]);
-				float3 v2(&mesh->vertices[u2]);
-				float3 v3(&mesh->vertices[u3]);
-				if (raycast.Intersects(Triangle(v1, v2, v3)))
+				u1 = mesh->indices[i * 3];
+				u2 = mesh->indices[i * 3 + 1];
+				u3 = mesh->indices[i * 3 + 2];
+				v1 = float3(&mesh->vertices[u1]);
+				v2 = float3(&mesh->vertices[u2]);
+				v3 = float3(&mesh->vertices[u3]);
+				triangle = Triangle(v1, v2, v3);
+				if (raycast.Intersects(triangle, &distance, &hit_point))
 				{
-					ret = true; //For now don't save hit info
-					break;
+					ret = true;
+					if (hit_info.distance == 0) //First entry
+					{
+						hit_info.distance = distance;
+						hit_info.point = hit_point;
+						hit_info.normal = triangle.PlaneCCW().normal;
+						
+					}
+					else
+					{
+						if (hit_info.distance > distance)
+						{
+							hit_info.distance = distance;
+							hit_info.point = hit_point;
+							hit_info.normal = triangle.PlaneCCW().normal;
+						}
+					}
 				}
-				
+
+				if (ret == true)
+				{
+					//Transfrom the hit parameters to global coordinates
+					hit.point = global_matrix->MulPos(hit_info.point);
+					hit.distance = ray.pos.Distance(hit.point);
+					hit.object = this;
+					hit.normal = global_matrix->MulDir(hit_info.normal); //TODO: normal needs revision. May not work as expected.
+					hit.normal.Normalize();
+				}
 			}
 		}
 	}
+
+	
+
 	return ret;
 }
