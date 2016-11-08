@@ -482,6 +482,16 @@ void ModuleGOManager::InspectorWindow()
 		ImGui::SameLine();
 		ImGui::InputText("###goname", selected_GO->name._Myptr(), selected_GO->name.capacity());
 
+		//Static
+		ImGui::SameLine();
+		ImGui::Text("Static:");
+		ImGui::SameLine();
+		bool is_static = selected_GO->IsStatic();
+		if (ImGui::Checkbox("###static_option", &is_static))
+		{
+			selected_GO->SetStatic(is_static);
+		}
+
 		//Components
 		const std::vector<Component*>* components = selected_GO->GetComponents();
 		for (std::vector<Component*>::const_iterator component = (*components).begin(); component != (*components).end(); ++component)

@@ -133,7 +133,7 @@ size_t GameObject::ChildCount()
 	return childs.size();
 }
 
-bool GameObject::IsActive()
+bool GameObject::IsActive() const
 {
 	return active;
 }
@@ -149,6 +149,24 @@ void GameObject::SetActive(bool value)
 
 		for (std::vector<GameObject*>::iterator child = childs.begin(); child != childs.end(); ++child)
 			(*child)->SetActive(value);
+	}
+}
+
+bool GameObject::IsStatic() const
+{
+	return is_static;
+}
+
+void GameObject::SetStatic(bool value)
+{
+	if (is_static != value && App->go_manager->IsRoot(this) == false)
+	{
+		is_static = value;
+		if (is_static) //Set parents static too. Except root.
+		{
+			if (parent)
+				parent->SetStatic(true);
+		}
 	}
 }
 
@@ -337,8 +355,6 @@ bool GameObject::RayCast(const Ray & ray, RaycastHit & hit)
 			}
 		}
 	}
-
-	
 
 	return ret;
 }

@@ -29,8 +29,10 @@ public:
 	const std::vector<GameObject*>* GetChilds();
 	size_t ChildCount();
 
-	bool IsActive();
+	bool IsActive()const;
 	void SetActive(bool value);
+	bool IsStatic()const;
+	void SetStatic(bool value);
 
 	Component* AddComponent(ComponentType type);
 	const std::vector<Component*>* GetComponents();
@@ -59,7 +61,7 @@ private:
 	std::vector<GameObject*> childs;
 
 	bool active = true;
-
+	bool is_static = false;
 	std::vector<Component*> components;
 	std::vector<Component*> components_to_remove;
 
