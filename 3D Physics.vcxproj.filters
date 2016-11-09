@@ -414,6 +414,9 @@
     <ClInclude Include="RaycastHit.h">
       <Filter>Sources\Tools</Filter>
     </ClInclude>
+    <ClInclude Include="Time.h">
+      <Filter>Sources\Tools</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -672,6 +675,9 @@
       <Filter>Resources\JSON</Filter>
     </ClCompile>
     <ClCompile Include="RaycastHit.cpp">
+      <Filter>Sources\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="Time.cpp">
       <Filter>Sources\Tools</Filter>
     </ClCompile>
   </ItemGroup>

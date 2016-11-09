@@ -86,10 +86,7 @@ public:
 					content = nullptr;
 					content_position = math::vec::zero;
 
-					//If parent other child nodes doesnt have conent and doesnt have childs remove the parent childs
-
-					//No clue how to do this in a secure way. ?¿
-
+					//Set dirty
 					ret = true;
 				}
 			}

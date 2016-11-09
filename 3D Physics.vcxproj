@@ -188,6 +188,7 @@
     <ClInclude Include="Random.h" />
     <ClInclude Include="RaycastHit.h" />
     <ClInclude Include="StackAllocator.h" />
+    <ClInclude Include="Time.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Window.h" />
     <ClInclude Include="WindowOptions.h" />
@@ -276,6 +277,7 @@
     <ClCompile Include="Random.cpp" />
     <ClCompile Include="RaycastHit.cpp" />
     <ClCompile Include="StackAllocator.cpp" />
+    <ClCompile Include="Time.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="WindowOptions.cpp" />
