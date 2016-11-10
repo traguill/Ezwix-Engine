@@ -275,6 +275,26 @@ void ModuleGOManager::PickObjects()
 	}
 }
 
+void ModuleGOManager::SaveSceneBeforeRunning()
+{
+	Data root_node;
+	root_node.AppendArray("GameObjects");
+
+	root->Save(root_node);
+
+	char* buf;
+	size_t size = root_node.Serialize(&buf);
+
+	App->file_system->Save("Library/current_scene.json", buf, size); //TODO: Find the right place to save the scene.
+
+	delete[] buf;
+}
+
+void ModuleGOManager::LoadSceneBeforeRunning()
+{
+	LoadScene("Library/current_scene.json");
+}
+
 void ModuleGOManager::ClearScene()
 {
 	RemoveGameObject(root);

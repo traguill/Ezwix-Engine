@@ -8,6 +8,7 @@ using namespace std;
 
 Application::Application()
 {
+	time = new Time();
 	//Random
 	rnd = new Random();
 
@@ -62,6 +63,8 @@ Application::~Application()
 		delete (*i);
 		++i;
 	}
+
+	delete time;
 }
 
 bool Application::Init()
@@ -115,17 +118,13 @@ bool Application::Init()
 
 	capped_ms = 1000 / fps;
 	
-	ms_timer.Start();
-	last_sec_frame_time.Start();
 	return ret;
 }
 
 // ---------------------------------------------
 void Application::PrepareUpdate()
 {
-	frame_count++;
-	dt = ms_timer.ReadSec();
-	ms_timer.Start();
+	time->UpdateFrame();
 }
 
 // ---------------------------------------------
@@ -134,18 +133,34 @@ void Application::FinishUpdate()
 	//Update Profiler
 	g_Profiler.Update();
 
-	if (last_sec_frame_time.Read() > 1000)
-	{
-		last_sec_frame_time.Start();
-		last_sec_frame_count = frame_count;
-		frame_count = 0;
-	}
-
-	uint32_t last_frame_ms = ms_timer.Read();
-	if (capped_ms > 0 && last_frame_ms < capped_ms)
+	//TODO:limit FPS
+	/*if (capped_ms > 0 && last_frame_ms < capped_ms)
 	{
 		SDL_Delay(capped_ms - last_frame_ms);
-	}
+	}*/
+}
+
+void Application::RunGame() 
+{
+	//Save current scene only if the game was stopped
+	if(game_state == GAME_STOP)
+		go_manager->SaveSceneBeforeRunning();
+
+	game_state = GAME_RUNNING;
+	time->Play();
+}
+
+void Application::PauseGame()
+{
+	game_state = GAME_PAUSED;
+	time->Pause();
+}
+
+void Application::StopGame()
+{
+	game_state = GAME_STOP;
+	go_manager->LoadSceneBeforeRunning();
+	time->Stop();
 }
 
 // Call PreUpdate, Update and PostUpdate on all modules
@@ -158,7 +173,7 @@ update_status Application::Update()
 
 	while (i != list_modules.end() && ret == UPDATE_CONTINUE)
 	{
-		ret = (*i)->PreUpdate(dt);
+		ret = (*i)->PreUpdate(time->RealDeltaTime());
 		++i;
 	}
 
@@ -166,7 +181,7 @@ update_status Application::Update()
 
 	while(i != list_modules.end() && ret == UPDATE_CONTINUE)
 	{
-		ret = (*i)->Update(dt);
+		ret = (*i)->Update(time->RealDeltaTime());
 		++i;
 	}
 
@@ -174,7 +189,7 @@ update_status Application::Update()
 
 	while (i != list_modules.end() && ret == UPDATE_CONTINUE)
 	{
-		ret = (*i)->PostUpdate(dt);
+		ret = (*i)->PostUpdate(time->RealDeltaTime());
 		i++;
 	}
 
@@ -238,5 +253,52 @@ void Application::SetMaxFPS(int max_fps)
 
 int Application::GetFPS()
 {
-	return last_sec_frame_count;
+	return 60; //TODO: Update time with fps limit.
+}
+
+bool Application::ChangeGameState(game_states new_state)
+{
+	bool success = false;
+	switch (new_state)
+	{
+	case GAME_STOP:
+		if (game_state == GAME_RUNNING || game_state == GAME_PAUSED)
+		{
+			StopGame();
+			success = true;
+		}
+		break;
+	case GAME_RUNNING:
+		if (game_state == GAME_STOP || game_state == GAME_PAUSED)
+		{
+			RunGame();
+			success = true;
+		}
+		break;
+	case GAME_PAUSED:
+		if (game_state == GAME_RUNNING || game_state == GAME_NEXT_FRAME)
+		{
+			PauseGame();
+			success = true;
+		}
+		break;
+	case GAME_NEXT_FRAME:
+		if(game_state == GAME_RUNNING || game_state == GAME_PAUSED) //TODO: Now this features is not available yet. Nothing happens in the game now. 
+			//NextFrameGame();
+		break;
+	}
+
+	return success;
+}
+
+///Returns true if the game simulation has started. If the game is paused also returns true.
+bool Application::IsGameRunning() const
+{
+	return (game_state == GAME_RUNNING || game_state == GAME_NEXT_FRAME || game_state == GAME_PAUSED) ? true : false;
+}
+
+///Returns true if the game is paused or in next frame mode. If the game is stop returns false.
+bool Application::IsGamePaused() const
+{
+	return (game_state == GAME_PAUSED || game_state == GAME_NEXT_FRAME) ? true : false;
 }

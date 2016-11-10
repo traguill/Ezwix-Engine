@@ -10,6 +10,7 @@
 #include "Profiler.h"
 #include "DebugDraw.h"
 #include "CameraWindow.h"
+#include "Time.h"
 
 Editor::Editor(const char* name, bool start_enabled) : Module(name, start_enabled)
 {
@@ -55,6 +56,8 @@ update_status Editor::Update(float dt)
 
 	update_status ret = UPDATE_CONTINUE;
 
+	GameOptions(); //Play/Stop/Next Frame buttons
+
 	ret = EditorWindows(); //Update the windows of the editor
 	
 	//Draw Grid
@@ -75,6 +78,36 @@ update_status Editor::Update(float dt)
 		ret = UPDATE_STOP;
 
 	return ret;	
+}
+
+void Editor::GameOptions() const
+{
+	ImGui::SetNextWindowPos(ImVec2(SCREEN_WIDTH/2, 30)); //TODO: change this for real screen size.
+	bool open = true;
+	ImGui::Begin("##GameOptions", &open, ImVec2(0, 0), 0.3f, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoSavedSettings);
+
+	if (App->IsGameRunning() == false || App->IsGamePaused())
+	{
+		if (ImGui::Button("Play ##gameoptions_play"))
+			App->ChangeGameState(GAME_RUNNING);
+	}
+	else
+	{
+		if (ImGui::Button("Stop ##gameoptions_stop"))
+			App->ChangeGameState(GAME_STOP);
+	}
+	
+	ImGui::SameLine();
+	if (ImGui::Button("Pause ##gameoptions_pause"))
+	{
+		App->ChangeGameState(GAME_PAUSED);
+	}
+	ImGui::SameLine();
+	ImGui::Button("Next ##gameoptions_next");
+	ImGui::SameLine();
+	int time_game_running = time->TimeSinceGameStartup();
+	ImGui::Text("Game time: %i", time_game_running);
+	ImGui::End();
 }
 
 update_status Editor::EditorWindows()

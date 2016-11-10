@@ -19,8 +19,17 @@
 #include "DebugDraw.h"
 #include "AutoProfile.h"
 #include "Random.h"
+#include "Time.h"
 
 using namespace std; 
+
+enum game_states
+{
+	GAME_STOP,
+	GAME_RUNNING,
+	GAME_PAUSED,
+	GAME_NEXT_FRAME
+};
 
 class Application
 {
@@ -38,11 +47,19 @@ public:
 	void SetMaxFPS(int max_fps);
 	int GetFPS();
 
+	bool ChangeGameState(game_states new_state);
+	bool IsGameRunning()const;
+	bool IsGamePaused()const;
 private:
 
 	void AddModule(Module* mod);
 	void PrepareUpdate();
 	void FinishUpdate();
+
+	//Game States
+	void StopGame();
+	void RunGame();
+	void PauseGame();
 
 public:
 	ModuleWindow* window;
@@ -59,15 +76,12 @@ public:
 	Random* rnd = nullptr;
 private:
 
-	Timer	ms_timer;
-	float	dt;
+
 	list<Module*> list_modules;
 	int fps = 60;
 	int capped_ms = -1;
-	int frame_count = 0;
-	int last_sec_frame_count = 0;
-	Timer last_sec_frame_time;
 
+	game_states game_state = GAME_STOP;
 };
 
 extern Application* App;

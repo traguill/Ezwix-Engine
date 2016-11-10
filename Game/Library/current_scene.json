@@ -1,0 +1,560 @@
+{
+    "GameObjects": [
+        {
+            "name": "Root",
+            "UUID": 3939016051,
+            "parent": 0,
+            "active": true,
+            "components": [
+                {
+                    "type": 0,
+                    "UUID": 1148575562,
+                    "active": true,
+                    "matrix": [
+                        1,
+                        0,
+                        0,
+                        0,
+                        0,
+                        1,
+                        0,
+                        0,
+                        0,
+                        0,
+                        1,
+                        0,
+                        0,
+                        0,
+                        0,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "pSphere1",
+            "UUID": 2026929851,
+            "parent": 3939016051,
+            "active": true,
+            "components": [
+                {
+                    "type": 0,
+                    "UUID": 3589502630,
+                    "active": true,
+                    "matrix": [
+                        1,
+                        0,
+                        0,
+                        0,
+                        0,
+                        1,
+                        0,
+                        0,
+                        0,
+                        0,
+                        1,
+                        0,
+                        0,
+                        0,
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "type": 1,
+                    "UUID": 2350996555,
+                    "active": true,
+                    "path": "\/Library\/Meshes\/mesh45.ezx"
+                }
+            ]
+        },
+        {
+            "name": "pSphere2",
+            "UUID": 179292733,
+            "parent": 3939016051,
+            "active": true,
+            "components": [
+                {
+                    "type": 0,
+                    "UUID": 2320088425,
+                    "active": true,
+                    "matrix": [
+                        1,
+                        0,
+                        0,
+                        2.976767,
+                        0,
+                        1,
+                        0,
+                        3.999608,
+                        0,
+                        0,
+                        1,
+                        0,
+                        0,
+                        0,
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "type": 1,
+                    "UUID": 494593529,
+                    "active": true,
+                    "path": "\/Library\/Meshes\/mesh46.ezx"
+                }
+            ]
+        },
+        {
+            "name": "pSphere3",
+            "UUID": 986788139,
+            "parent": 3939016051,
+            "active": true,
+            "components": [
+                {
+                    "type": 0,
+                    "UUID": 1576070963,
+                    "active": true,
+                    "matrix": [
+                        1,
+                        0,
+                        0,
+                        -1.507960,
+                        0,
+                        1,
+                        0,
+                        3.999608,
+                        0,
+                        0,
+                        1,
+                        3.176941,
+                        0,
+                        0,
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "type": 1,
+                    "UUID": 426744059,
+                    "active": true,
+                    "path": "\/Library\/Meshes\/mesh47.ezx"
+                }
+            ]
+        },
+        {
+            "name": "pSphere4",
+            "UUID": 332790975,
+            "parent": 3939016051,
+            "active": true,
+            "components": [
+                {
+                    "type": 0,
+                    "UUID": 857809676,
+                    "active": true,
+                    "matrix": [
+                        1,
+                        0,
+                        0,
+                        -1.507960,
+                        0,
+                        1,
+                        0,
+                        3.999608,
+                        0,
+                        0,
+                        1,
+                        -0.909910,
+                        0,
+                        0,
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "type": 1,
+                    "UUID": 2532922150,
+                    "active": true,
+                    "path": "\/Library\/Meshes\/mesh48.ezx"
+                }
+            ]
+        },
+        {
+            "name": "pSphere5",
+            "UUID": 1032791743,
+            "parent": 3939016051,
+            "active": true,
+            "components": [
+                {
+                    "type": 0,
+                    "UUID": 2542473728,
+                    "active": true,
+                    "matrix": [
+                        1,
+                        0,
+                        0,
+                        -3.743889,
+                        0,
+                        1,
+                        0,
+                        6.304570,
+                        0,
+                        0,
+                        1,
+                        -0.909910,
+                        0,
+                        0,
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "type": 1,
+                    "UUID": 3698538442,
+                    "active": true,
+                    "path": "\/Library\/Meshes\/mesh49.ezx"
+                }
+            ]
+        },
+        {
+            "name": "pSphere6",
+            "UUID": 3619739428,
+            "parent": 3939016051,
+            "active": true,
+            "components": [
+                {
+                    "type": 0,
+                    "UUID": 3641184309,
+                    "active": true,
+                    "matrix": [
+                        1,
+                        0,
+                        0,
+                        1.158294,
+                        0,
+                        1,
+                        0,
+                        6.304570,
+                        0,
+                        0,
+                        1,
+                        -4.294856,
+                        0,
+                        0,
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "type": 1,
+                    "UUID": 4218972037,
+                    "active": true,
+                    "path": "\/Library\/Meshes\/mesh50.ezx"
+                }
+            ]
+        },
+        {
+            "name": "pSphere7",
+            "UUID": 2289898689,
+            "parent": 3939016051,
+            "active": true,
+            "components": [
+                {
+                    "type": 0,
+                    "UUID": 1899443549,
+                    "active": true,
+                    "matrix": [
+                        1,
+                        0,
+                        0,
+                        5.867808,
+                        0,
+                        1,
+                        0,
+                        4.725617,
+                        0,
+                        0,
+                        1,
+                        -4.294856,
+                        0,
+                        0,
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "type": 1,
+                    "UUID": 2736471089,
+                    "active": true,
+                    "path": "\/Library\/Meshes\/mesh51.ezx"
+                }
+            ]
+        },
+        {
+            "name": "pSphere8",
+            "UUID": 3738486004,
+            "parent": 3939016051,
+            "active": true,
+            "components": [
+                {
+                    "type": 0,
+                    "UUID": 391282070,
+                    "active": true,
+                    "matrix": [
+                        1,
+                        0,
+                        0,
+                        -1.644753,
+                        0,
+                        1,
+                        0,
+                        2.935477,
+                        0,
+                        0,
+                        1,
+                        -4.294856,
+                        0,
+                        0,
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "type": 1,
+                    "UUID": 3147024824,
+                    "active": true,
+                    "path": "\/Library\/Meshes\/mesh52.ezx"
+                }
+            ]
+        },
+        {
+            "name": "pSphere9",
+            "UUID": 2998979119,
+            "parent": 3939016051,
+            "active": true,
+            "components": [
+                {
+                    "type": 0,
+                    "UUID": 1567136195,
+                    "active": true,
+                    "matrix": [
+                        1,
+                        0,
+                        0,
+                        1.449706,
+                        0,
+                        1,
+                        0,
+                        2.935477,
+                        0,
+                        0,
+                        1,
+                        -4.294856,
+                        0,
+                        0,
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "type": 1,
+                    "UUID": 4017405438,
+                    "active": true,
+                    "path": "\/Library\/Meshes\/mesh53.ezx"
+                }
+            ]
+        },
+        {
+            "name": "pSphere10",
+            "UUID": 2032157862,
+            "parent": 3939016051,
+            "active": true,
+            "components": [
+                {
+                    "type": 0,
+                    "UUID": 396652832,
+                    "active": true,
+                    "matrix": [
+                        1,
+                        0,
+                        0,
+                        1.449706,
+                        0,
+                        1,
+                        0,
+                        2.935477,
+                        0,
+                        0,
+                        1,
+                        4.448451,
+                        0,
+                        0,
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "type": 1,
+                    "UUID": 679366898,
+                    "active": true,
+                    "path": "\/Library\/Meshes\/mesh54.ezx"
+                }
+            ]
+        },
+        {
+            "name": "pSphere11",
+            "UUID": 3404314384,
+            "parent": 3939016051,
+            "active": true,
+            "components": [
+                {
+                    "type": 0,
+                    "UUID": 1629557098,
+                    "active": true,
+                    "matrix": [
+                        1,
+                        0,
+                        0,
+                        -4.645667,
+                        0,
+                        1,
+                        0,
+                        2.935477,
+                        0,
+                        0,
+                        1,
+                        4.448451,
+                        0,
+                        0,
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "type": 1,
+                    "UUID": 88348915,
+                    "active": true,
+                    "path": "\/Library\/Meshes\/mesh55.ezx"
+                }
+            ]
+        },
+        {
+            "name": "pSphere12",
+            "UUID": 3713548907,
+            "parent": 3939016051,
+            "active": true,
+            "components": [
+                {
+                    "type": 0,
+                    "UUID": 3804028747,
+                    "active": true,
+                    "matrix": [
+                        1,
+                        0,
+                        0,
+                        -4.645667,
+                        0,
+                        1,
+                        0,
+                        2.935477,
+                        0,
+                        0,
+                        1,
+                        -6.520523,
+                        0,
+                        0,
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "type": 1,
+                    "UUID": 4253375378,
+                    "active": true,
+                    "path": "\/Library\/Meshes\/mesh56.ezx"
+                }
+            ]
+        },
+        {
+            "name": "pSphere13",
+            "UUID": 104622179,
+            "parent": 3939016051,
+            "active": true,
+            "components": [
+                {
+                    "type": 0,
+                    "UUID": 2892827528,
+                    "active": true,
+                    "matrix": [
+                        1,
+                        0,
+                        0,
+                        3.130121,
+                        0,
+                        1,
+                        0,
+                        2.935477,
+                        0,
+                        0,
+                        1,
+                        -6.520523,
+                        0,
+                        0,
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "type": 1,
+                    "UUID": 1385188907,
+                    "active": true,
+                    "path": "\/Library\/Meshes\/mesh57.ezx"
+                }
+            ]
+        },
+        {
+            "name": "pSphere14",
+            "UUID": 653946439,
+            "parent": 3939016051,
+            "active": true,
+            "components": [
+                {
+                    "type": 0,
+                    "UUID": 2510990746,
+                    "active": true,
+                    "matrix": [
+                        1,
+                        0,
+                        0,
+                        5.614360,
+                        0,
+                        1,
+                        0,
+                        2.935477,
+                        0,
+                        0,
+                        1,
+                        1.196908,
+                        0,
+                        0,
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "type": 1,
+                    "UUID": 527978914,
+                    "active": true,
+                    "path": "\/Library\/Meshes\/mesh58.ezx"
+                }
+            ]
+        },
+        {
+            "name": "Empty GameObject",
+            "UUID": 1793199869,
+            "parent": 3939016051,
+            "active": true,
+            "components": []
+        }
+    ]
+} 

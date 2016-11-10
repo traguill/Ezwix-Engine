@@ -33,6 +33,9 @@ public:
 
 	void PickObjects();
 
+	void SaveSceneBeforeRunning();//Saves the scene before running the game
+	void LoadSceneBeforeRunning();
+
 private:
 
 	void HierarchyWindow();

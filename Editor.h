@@ -28,6 +28,8 @@ public:
 	bool CleanUp();
 
 private:
+	//Game Simulation Options
+	void GameOptions()const;
 
 	//Editor Windows
 	update_status EditorWindows();
