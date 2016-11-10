@@ -50,7 +50,7 @@ bool Editor::CleanUp()
 	return true;
 }
 
-update_status Editor::Update(float dt)
+update_status Editor::Update()
 {
 	PROFILE("Editor::Update()");
 

@@ -16,8 +16,8 @@ public:
 
 	bool Init(Data& config);
 	bool Start(); 
-	update_status PreUpdate(float dt);
-	update_status Update(float dt);
+	update_status PreUpdate();
+	update_status Update();
 	void SaveBeforeClosing(Data& data)const;
 
 	GameObject* CreateGameObject(GameObject* parent);

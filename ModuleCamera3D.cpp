@@ -41,10 +41,10 @@ bool ModuleCamera3D::CleanUp()
 	return true;
 }
 
-update_status ModuleCamera3D::Update(float dt)
+update_status ModuleCamera3D::Update()
 {
 	if(current_camera == editor_cam)
-		EditorCameraMovement(dt);
+		EditorCameraMovement(time->RealDeltaTime());
 
 	//If the current camera properties has been modified update the projection matrix.
 	if (current_camera->properties_modified)

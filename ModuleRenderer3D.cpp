@@ -125,7 +125,7 @@ bool ModuleRenderer3D::Init(Data& config)
 }
 
 // PreUpdate: clear buffer
-update_status ModuleRenderer3D::PreUpdate(float dt)
+update_status ModuleRenderer3D::PreUpdate()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
@@ -145,7 +145,7 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 }
 
 // PostUpdate present buffer to screen
-update_status ModuleRenderer3D::PostUpdate(float dt)
+update_status ModuleRenderer3D::PostUpdate()
 {
 	for (vector<GameObject*>::iterator obj = objects_to_draw.begin(); obj != objects_to_draw.end(); ++obj)
 		Draw((*obj));

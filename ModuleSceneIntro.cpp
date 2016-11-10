@@ -42,7 +42,7 @@ bool ModuleSceneIntro::CleanUp()
 }
 
 // Update
-update_status ModuleSceneIntro::Update(float dt)
+update_status ModuleSceneIntro::Update()
 {
 	
 

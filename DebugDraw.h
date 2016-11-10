@@ -27,8 +27,8 @@ public:
 
 	bool Start();
 
-	update_status PreUpdate(float dt);
-	update_status PostUpdate(float dt);
+	update_status PreUpdate();
+	update_status PostUpdate();
 
 	void AddCross(const float3& point, math::float3 color, float size, float line_width = 1.0f, float duration = 0.0f, bool depth_enabled = true);
 	void AddLine(const math::float3& from_position, const math::float3& to_position, math::float3 color, float line_width = 1.0f, float duration = 0.0f, bool depth_enabled = true);

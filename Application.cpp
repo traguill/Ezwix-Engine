@@ -173,7 +173,7 @@ update_status Application::Update()
 
 	while (i != list_modules.end() && ret == UPDATE_CONTINUE)
 	{
-		ret = (*i)->PreUpdate(time->RealDeltaTime());
+		ret = (*i)->PreUpdate();
 		++i;
 	}
 
@@ -181,7 +181,7 @@ update_status Application::Update()
 
 	while(i != list_modules.end() && ret == UPDATE_CONTINUE)
 	{
-		ret = (*i)->Update(time->RealDeltaTime());
+		ret = (*i)->Update();
 		++i;
 	}
 
@@ -189,7 +189,7 @@ update_status Application::Update()
 
 	while (i != list_modules.end() && ret == UPDATE_CONTINUE)
 	{
-		ret = (*i)->PostUpdate(time->RealDeltaTime());
+		ret = (*i)->PostUpdate();
 		i++;
 	}
 

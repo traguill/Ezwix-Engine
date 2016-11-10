@@ -55,7 +55,7 @@ bool ModuleGOManager::Start()
 	return true;
 }
 
-update_status ModuleGOManager::PreUpdate(float dt)
+update_status ModuleGOManager::PreUpdate()
 {
 	//Remove all GameObjects that needs to be erased
 	for (vector<GameObject*>::iterator go = go_to_remove.begin(); go != go_to_remove.end(); ++go)
@@ -69,11 +69,11 @@ update_status ModuleGOManager::PreUpdate(float dt)
 	return UPDATE_CONTINUE;
 }
 
-update_status ModuleGOManager::Update(float dt)
+update_status ModuleGOManager::Update()
 {
 	//Update GameObjects
 	if(root)
-		UpdateGameObjects(dt, root);
+		UpdateGameObjects(time->DeltaTime(), root);
 
 	//Display windows
 	HierarchyWindow();

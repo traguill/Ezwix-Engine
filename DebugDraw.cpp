@@ -38,7 +38,7 @@ bool DebugDraw::Start()
 	return true;
 }
 
-update_status DebugDraw::PreUpdate(float dt)
+update_status DebugDraw::PreUpdate()
 {
 	//Update timers
 	std::list<DebugPrimitive*>::iterator d_primitive = draw_list.begin();
@@ -52,7 +52,7 @@ update_status DebugDraw::PreUpdate(float dt)
 			continue;
 		}
 
-		(*d_primitive)->life -= dt;
+		(*d_primitive)->life -= time->RealDeltaTime();
 
 		if ((*d_primitive)->life <= 0.0f)
 		{
@@ -65,7 +65,7 @@ update_status DebugDraw::PreUpdate(float dt)
 	return UPDATE_CONTINUE;
 }
 
-update_status DebugDraw::PostUpdate(float dt)
+update_status DebugDraw::PostUpdate()
 {
 	Draw();
 	return UPDATE_CONTINUE;
