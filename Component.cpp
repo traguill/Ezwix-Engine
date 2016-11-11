@@ -40,7 +40,7 @@ void Component::SetActive(bool value)
 	active = value;
 }
 
-void Component::Update(float dt)
+void Component::Update()
 {
 }
 

@@ -201,7 +201,7 @@ void ModuleCamera3D::EditorCameraMovement(float dt)
 	}
 
 	//Update Transform component manually
-	cam_transform->Update(dt);
+	cam_transform->Update();
 }
 
 

@@ -2,13 +2,13 @@
     "GameObjects": [
         {
             "name": "Root",
-            "UUID": 3939016051,
+            "UUID": 3628112427,
             "parent": 0,
             "active": true,
             "components": [
                 {
                     "type": 0,
-                    "UUID": 1148575562,
+                    "UUID": 3305253013,
                     "active": true,
                     "matrix": [
                         1,
@@ -32,27 +32,27 @@
             ]
         },
         {
-            "name": "pSphere1",
-            "UUID": 2026929851,
-            "parent": 3939016051,
+            "name": "cloth_1",
+            "UUID": 876614412,
+            "parent": 3628112427,
             "active": true,
             "components": [
                 {
                     "type": 0,
-                    "UUID": 3589502630,
+                    "UUID": 2913187679,
                     "active": true,
                     "matrix": [
-                        1,
-                        0,
-                        0,
-                        -2,
-                        0,
-                        1,
+                        0.197704,
                         0,
                         0,
                         0,
                         0,
-                        1,
+                        0.197704,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0.197704,
                         0,
                         0,
                         0,
@@ -62,34 +62,40 @@
                 },
                 {
                     "type": 1,
-                    "UUID": 2350996555,
+                    "UUID": 1823545173,
                     "active": true,
-                    "path": "\/Library\/Meshes\/mesh45.ezx"
+                    "path": "\/Library\/Meshes\/mesh.ezx"
+                },
+                {
+                    "type": 2,
+                    "UUID": 1604219882,
+                    "active": true,
+                    "path": "Library\/Textures\/texture.dds"
                 }
             ]
         },
         {
-            "name": "pSphere2",
-            "UUID": 179292733,
-            "parent": 3939016051,
+            "name": "cloth_4",
+            "UUID": 3104728746,
+            "parent": 3628112427,
             "active": true,
             "components": [
                 {
                     "type": 0,
-                    "UUID": 2320088425,
+                    "UUID": 2841315903,
                     "active": true,
                     "matrix": [
-                        1,
+                        0.197704,
                         0,
                         0,
-                        2.976767,
-                        0,
-                        1,
-                        0,
-                        3.999608,
                         0,
                         0,
-                        1,
+                        0.197704,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0.197704,
                         0,
                         0,
                         0,
@@ -99,35 +105,41 @@
                 },
                 {
                     "type": 1,
-                    "UUID": 494593529,
+                    "UUID": 229203789,
                     "active": true,
-                    "path": "\/Library\/Meshes\/mesh46.ezx"
+                    "path": "\/Library\/Meshes\/mesh1.ezx"
+                },
+                {
+                    "type": 2,
+                    "UUID": 2572930296,
+                    "active": true,
+                    "path": "Library\/Textures\/texture1.dds"
                 }
             ]
         },
         {
-            "name": "pSphere3",
-            "UUID": 986788139,
-            "parent": 3939016051,
+            "name": "cloth_5",
+            "UUID": 1003976810,
+            "parent": 3628112427,
             "active": true,
             "components": [
                 {
                     "type": 0,
-                    "UUID": 1576070963,
+                    "UUID": 262489769,
                     "active": true,
                     "matrix": [
-                        1,
+                        0.157797,
+                        0.005510,
+                        -0.118981,
                         0,
+                        -0.000667,
+                        0.197530,
+                        0.008264,
+                        17,
+                        0.119107,
+                        -0.006194,
+                        0.157677,
                         0,
-                        -1.507960,
-                        0,
-                        1,
-                        0,
-                        3.999608,
-                        0,
-                        0,
-                        1,
-                        3.176941,
                         0,
                         0,
                         0,
@@ -136,35 +148,41 @@
                 },
                 {
                     "type": 1,
-                    "UUID": 426744059,
+                    "UUID": 966308517,
                     "active": true,
-                    "path": "\/Library\/Meshes\/mesh47.ezx"
+                    "path": "\/Library\/Meshes\/mesh2.ezx"
+                },
+                {
+                    "type": 2,
+                    "UUID": 2837589746,
+                    "active": true,
+                    "path": "Library\/Textures\/texture2.dds"
                 }
             ]
         },
         {
-            "name": "pSphere4",
-            "UUID": 332790975,
-            "parent": 3939016051,
+            "name": "cloth_3",
+            "UUID": 3582294221,
+            "parent": 3628112427,
             "active": true,
             "components": [
                 {
                     "type": 0,
-                    "UUID": 857809676,
+                    "UUID": 796608446,
                     "active": true,
                     "matrix": [
-                        1,
+                        0.197704,
                         0,
                         0,
-                        -1.507960,
-                        0,
-                        1,
-                        0,
-                        3.999608,
                         0,
                         0,
-                        1,
-                        -0.909910,
+                        0.197704,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0.197704,
+                        0,
                         0,
                         0,
                         0,
@@ -173,35 +191,41 @@
                 },
                 {
                     "type": 1,
-                    "UUID": 2532922150,
+                    "UUID": 3313076259,
                     "active": true,
-                    "path": "\/Library\/Meshes\/mesh48.ezx"
+                    "path": "\/Library\/Meshes\/mesh3.ezx"
+                },
+                {
+                    "type": 2,
+                    "UUID": 4173094855,
+                    "active": true,
+                    "path": "Library\/Textures\/texture3.dds"
                 }
             ]
         },
         {
-            "name": "pSphere5",
-            "UUID": 1032791743,
-            "parent": 3939016051,
+            "name": "cloth_2",
+            "UUID": 587692058,
+            "parent": 3628112427,
             "active": true,
             "components": [
                 {
                     "type": 0,
-                    "UUID": 2542473728,
+                    "UUID": 3111346777,
                     "active": true,
                     "matrix": [
-                        1,
+                        0.197704,
                         0,
                         0,
-                        -3.743889,
-                        0,
-                        1,
-                        0,
-                        6.304570,
                         0,
                         0,
-                        1,
-                        -0.909910,
+                        0.197704,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0.197704,
+                        0,
                         0,
                         0,
                         0,
@@ -210,35 +234,41 @@
                 },
                 {
                     "type": 1,
-                    "UUID": 3698538442,
+                    "UUID": 1375728000,
                     "active": true,
-                    "path": "\/Library\/Meshes\/mesh49.ezx"
+                    "path": "\/Library\/Meshes\/mesh4.ezx"
+                },
+                {
+                    "type": 2,
+                    "UUID": 4004434446,
+                    "active": true,
+                    "path": "Library\/Textures\/texture4.dds"
                 }
             ]
         },
         {
-            "name": "pSphere6",
-            "UUID": 3619739428,
-            "parent": 3939016051,
+            "name": "pants_boots",
+            "UUID": 3861336810,
+            "parent": 3628112427,
             "active": true,
             "components": [
                 {
                     "type": 0,
-                    "UUID": 3641184309,
+                    "UUID": 2445961538,
                     "active": true,
                     "matrix": [
-                        1,
+                        0.197704,
                         0,
                         0,
-                        1.158294,
-                        0,
-                        1,
-                        0,
-                        6.304570,
                         0,
                         0,
-                        1,
-                        -4.294856,
+                        0.197704,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0.197704,
+                        0,
                         0,
                         0,
                         0,
@@ -247,35 +277,41 @@
                 },
                 {
                     "type": 1,
-                    "UUID": 4218972037,
+                    "UUID": 2281917240,
                     "active": true,
-                    "path": "\/Library\/Meshes\/mesh50.ezx"
+                    "path": "\/Library\/Meshes\/mesh5.ezx"
+                },
+                {
+                    "type": 2,
+                    "UUID": 2482353449,
+                    "active": true,
+                    "path": "Library\/Textures\/texture5.dds"
                 }
             ]
         },
         {
-            "name": "pSphere7",
-            "UUID": 2289898689,
-            "parent": 3939016051,
+            "name": "bust",
+            "UUID": 3160079953,
+            "parent": 3628112427,
             "active": true,
             "components": [
                 {
                     "type": 0,
-                    "UUID": 1899443549,
+                    "UUID": 4129790552,
                     "active": true,
                     "matrix": [
-                        1,
+                        0.197704,
                         0,
                         0,
-                        5.867808,
-                        0,
-                        1,
-                        0,
-                        4.725617,
                         0,
                         0,
-                        1,
-                        -4.294856,
+                        0.197704,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0.197704,
+                        0,
                         0,
                         0,
                         0,
@@ -284,35 +320,41 @@
                 },
                 {
                     "type": 1,
-                    "UUID": 2736471089,
+                    "UUID": 2273622142,
                     "active": true,
-                    "path": "\/Library\/Meshes\/mesh51.ezx"
+                    "path": "\/Library\/Meshes\/mesh6.ezx"
+                },
+                {
+                    "type": 2,
+                    "UUID": 3004418019,
+                    "active": true,
+                    "path": "Library\/Textures\/texture6.dds"
                 }
             ]
         },
         {
-            "name": "pSphere8",
-            "UUID": 3738486004,
-            "parent": 3939016051,
+            "name": "medallion",
+            "UUID": 2315355738,
+            "parent": 3628112427,
             "active": true,
             "components": [
                 {
                     "type": 0,
-                    "UUID": 391282070,
+                    "UUID": 1206925456,
                     "active": true,
                     "matrix": [
-                        1,
+                        0.197704,
                         0,
                         0,
-                        -1.644753,
-                        0,
-                        1,
-                        0,
-                        2.935477,
                         0,
                         0,
-                        1,
-                        -4.294856,
+                        0.197704,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0.197704,
+                        0,
                         0,
                         0,
                         0,
@@ -321,35 +363,41 @@
                 },
                 {
                     "type": 1,
-                    "UUID": 3147024824,
+                    "UUID": 3310071657,
                     "active": true,
-                    "path": "\/Library\/Meshes\/mesh52.ezx"
+                    "path": "\/Library\/Meshes\/mesh7.ezx"
+                },
+                {
+                    "type": 2,
+                    "UUID": 1668664699,
+                    "active": true,
+                    "path": "Library\/Textures\/texture7.dds"
                 }
             ]
         },
         {
-            "name": "pSphere9",
-            "UUID": 2998979119,
-            "parent": 3939016051,
+            "name": "belt",
+            "UUID": 2127499896,
+            "parent": 3628112427,
             "active": true,
             "components": [
                 {
                     "type": 0,
-                    "UUID": 1567136195,
+                    "UUID": 1831952530,
                     "active": true,
                     "matrix": [
-                        1,
+                        0.197704,
                         0,
                         0,
-                        1.449706,
-                        0,
-                        1,
-                        0,
-                        2.935477,
                         0,
                         0,
-                        1,
-                        -4.294856,
+                        0.197704,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0.197704,
+                        0,
                         0,
                         0,
                         0,
@@ -358,35 +406,41 @@
                 },
                 {
                     "type": 1,
-                    "UUID": 4017405438,
+                    "UUID": 231842937,
                     "active": true,
-                    "path": "\/Library\/Meshes\/mesh53.ezx"
+                    "path": "\/Library\/Meshes\/mesh8.ezx"
+                },
+                {
+                    "type": 2,
+                    "UUID": 1338345584,
+                    "active": true,
+                    "path": "Library\/Textures\/texture8.dds"
                 }
             ]
         },
         {
-            "name": "pSphere10",
-            "UUID": 2032157862,
-            "parent": 3939016051,
+            "name": "belt_details",
+            "UUID": 1799243988,
+            "parent": 3628112427,
             "active": true,
             "components": [
                 {
                     "type": 0,
-                    "UUID": 396652832,
+                    "UUID": 825904750,
                     "active": true,
                     "matrix": [
-                        1,
+                        0.197704,
                         0,
                         0,
-                        1.449706,
-                        0,
-                        1,
-                        0,
-                        2.935477,
                         0,
                         0,
-                        1,
-                        4.448451,
+                        0.197704,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0.197704,
+                        0,
                         0,
                         0,
                         0,
@@ -395,35 +449,41 @@
                 },
                 {
                     "type": 1,
-                    "UUID": 679366898,
+                    "UUID": 2327788722,
                     "active": true,
-                    "path": "\/Library\/Meshes\/mesh54.ezx"
+                    "path": "\/Library\/Meshes\/mesh9.ezx"
+                },
+                {
+                    "type": 2,
+                    "UUID": 2328776183,
+                    "active": true,
+                    "path": "Library\/Textures\/texture9.dds"
                 }
             ]
         },
         {
-            "name": "pSphere11",
-            "UUID": 3404314384,
-            "parent": 3939016051,
+            "name": "head",
+            "UUID": 324772136,
+            "parent": 3628112427,
             "active": true,
             "components": [
                 {
                     "type": 0,
-                    "UUID": 1629557098,
+                    "UUID": 1933381716,
                     "active": true,
                     "matrix": [
-                        1,
+                        0.197704,
                         0,
                         0,
-                        -4.645667,
-                        0,
-                        1,
-                        0,
-                        2.935477,
                         0,
                         0,
-                        1,
-                        4.448451,
+                        0.197704,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0.197704,
+                        0,
                         0,
                         0,
                         0,
@@ -432,35 +492,41 @@
                 },
                 {
                     "type": 1,
-                    "UUID": 88348915,
+                    "UUID": 862991660,
                     "active": true,
-                    "path": "\/Library\/Meshes\/mesh55.ezx"
+                    "path": "\/Library\/Meshes\/mesh10.ezx"
+                },
+                {
+                    "type": 2,
+                    "UUID": 6995224,
+                    "active": true,
+                    "path": "Library\/Textures\/texture10.dds"
                 }
             ]
         },
         {
-            "name": "pSphere12",
-            "UUID": 3713548907,
-            "parent": 3939016051,
+            "name": "eyes_refl_refr",
+            "UUID": 1113623536,
+            "parent": 3628112427,
             "active": true,
             "components": [
                 {
                     "type": 0,
-                    "UUID": 3804028747,
+                    "UUID": 2450528703,
                     "active": true,
                     "matrix": [
-                        1,
+                        0.197704,
                         0,
                         0,
-                        -4.645667,
-                        0,
-                        1,
-                        0,
-                        2.935477,
                         0,
                         0,
-                        1,
-                        -6.520523,
+                        0.197704,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0.197704,
+                        0,
                         0,
                         0,
                         0,
@@ -469,35 +535,41 @@
                 },
                 {
                     "type": 1,
-                    "UUID": 4253375378,
+                    "UUID": 3581812550,
                     "active": true,
-                    "path": "\/Library\/Meshes\/mesh56.ezx"
+                    "path": "\/Library\/Meshes\/mesh11.ezx"
+                },
+                {
+                    "type": 2,
+                    "UUID": 3577133097,
+                    "active": true,
+                    "path": "Library\/Textures\/texture11.dds"
                 }
             ]
         },
         {
-            "name": "pSphere13",
-            "UUID": 104622179,
-            "parent": 3939016051,
+            "name": "eyes_details",
+            "UUID": 2339021572,
+            "parent": 3628112427,
             "active": true,
             "components": [
                 {
                     "type": 0,
-                    "UUID": 2892827528,
+                    "UUID": 1749380850,
                     "active": true,
                     "matrix": [
-                        1,
+                        0.197704,
                         0,
                         0,
-                        3.130121,
-                        0,
-                        1,
-                        0,
-                        2.935477,
                         0,
                         0,
-                        1,
-                        -6.520523,
+                        0.197704,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0.197704,
+                        0,
                         0,
                         0,
                         0,
@@ -506,35 +578,41 @@
                 },
                 {
                     "type": 1,
-                    "UUID": 1385188907,
+                    "UUID": 1510361655,
                     "active": true,
-                    "path": "\/Library\/Meshes\/mesh57.ezx"
+                    "path": "\/Library\/Meshes\/mesh12.ezx"
+                },
+                {
+                    "type": 2,
+                    "UUID": 2839114095,
+                    "active": true,
+                    "path": "Library\/Textures\/texture12.dds"
                 }
             ]
         },
         {
-            "name": "pSphere14",
-            "UUID": 653946439,
-            "parent": 3939016051,
+            "name": "eyelashes",
+            "UUID": 181936501,
+            "parent": 3628112427,
             "active": true,
             "components": [
                 {
                     "type": 0,
-                    "UUID": 2510990746,
+                    "UUID": 645844085,
                     "active": true,
                     "matrix": [
-                        1,
+                        0.197704,
                         0,
                         0,
-                        5.614360,
-                        0,
-                        1,
-                        0,
-                        2.935477,
                         0,
                         0,
-                        1,
-                        1.196908,
+                        0.197704,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0.197704,
+                        0,
                         0,
                         0,
                         0,
@@ -543,18 +621,146 @@
                 },
                 {
                     "type": 1,
-                    "UUID": 527978914,
+                    "UUID": 2175005743,
                     "active": true,
-                    "path": "\/Library\/Meshes\/mesh58.ezx"
+                    "path": "\/Library\/Meshes\/mesh13.ezx"
+                },
+                {
+                    "type": 2,
+                    "UUID": 3287225892,
+                    "active": true,
+                    "path": "Library\/Textures\/texture13.dds"
                 }
             ]
         },
         {
-            "name": "Empty GameObject",
-            "UUID": 1793199869,
-            "parent": 3939016051,
+            "name": "teeth",
+            "UUID": 1006669898,
+            "parent": 3628112427,
             "active": true,
-            "components": []
+            "components": [
+                {
+                    "type": 0,
+                    "UUID": 3116965406,
+                    "active": true,
+                    "matrix": [
+                        0.197704,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0.197704,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0.197704,
+                        0,
+                        0,
+                        0,
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "type": 1,
+                    "UUID": 3143137416,
+                    "active": true,
+                    "path": "\/Library\/Meshes\/mesh14.ezx"
+                },
+                {
+                    "type": 2,
+                    "UUID": 3291162611,
+                    "active": true,
+                    "path": "Library\/Textures\/texture14.dds"
+                }
+            ]
+        },
+        {
+            "name": "eyes_diffuse",
+            "UUID": 305735853,
+            "parent": 3628112427,
+            "active": true,
+            "components": [
+                {
+                    "type": 0,
+                    "UUID": 314306284,
+                    "active": true,
+                    "matrix": [
+                        0.197704,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0.197704,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0.197704,
+                        0,
+                        0,
+                        0,
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "type": 1,
+                    "UUID": 885213725,
+                    "active": true,
+                    "path": "\/Library\/Meshes\/mesh15.ezx"
+                },
+                {
+                    "type": 2,
+                    "UUID": 2272548781,
+                    "active": true,
+                    "path": "Library\/Textures\/texture15.dds"
+                }
+            ]
+        },
+        {
+            "name": "Hair",
+            "UUID": 377918456,
+            "parent": 3628112427,
+            "active": true,
+            "components": [
+                {
+                    "type": 0,
+                    "UUID": 1390758303,
+                    "active": true,
+                    "matrix": [
+                        0.197704,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0.197704,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0.197704,
+                        0,
+                        0,
+                        0,
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "type": 1,
+                    "UUID": 2639138588,
+                    "active": true,
+                    "path": "\/Library\/Meshes\/mesh16.ezx"
+                },
+                {
+                    "type": 2,
+                    "UUID": 387739683,
+                    "active": true,
+                    "path": "Library\/Textures\/texture16.dds"
+                }
+            ]
         }
     ]
 } 

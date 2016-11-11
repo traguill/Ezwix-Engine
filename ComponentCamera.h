@@ -10,7 +10,7 @@ public:
 	ComponentCamera(ComponentType type, GameObject* game_object);
 	~ComponentCamera();
 
-	void Update(float dt);
+	void Update();
 
 	void OnInspector();
 	void OnTransformModified();

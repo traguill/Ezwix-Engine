@@ -25,7 +25,7 @@ ComponentCamera::ComponentCamera(ComponentType type, GameObject* game_object) : 
 ComponentCamera::~ComponentCamera()
 {}
 
-void ComponentCamera::Update(float dt)
+void ComponentCamera::Update()
 {
 	g_Debug->AddFrustum(frustum, 30.0f, g_Debug->blue, 2.0f);
 }

@@ -19,7 +19,7 @@ public:
 	Component(ComponentType type, GameObject* game_object);
 	virtual ~Component();
 
-	virtual void Update(float dt);
+	virtual void Update();
 
 	bool IsActive();
 	void SetActive(bool value);

@@ -63,13 +63,13 @@ void GameObject::PreUpdate()
 	components_to_remove.clear();
 }
 
-void GameObject::Update(float dt)
+void GameObject::Update()
 {
 	std::vector<Component*>::iterator comp = components.begin();
 
 	for (comp; comp != components.end(); comp++)
 	{
-		(*comp)->Update(dt);
+		(*comp)->Update();
 	}
 }
 
