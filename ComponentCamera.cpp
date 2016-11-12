@@ -13,9 +13,10 @@ ComponentCamera::ComponentCamera(ComponentType type, GameObject* game_object) : 
 
 	frustum.SetPerspective(horizontal_fov, vertical_fov);
 	frustum.SetKind(FrustumProjectiveSpace::FrustumSpaceGL, FrustumHandedness::FrustumRightHanded);
-	frustum.SetPos(float3::zero);
-	frustum.SetFront(float3::unitZ);
-	frustum.SetUp(float3::unitY);
+	float4x4 matrix = game_object->GetGlobalMatrix();
+	frustum.SetPos(matrix.TranslatePart());
+	frustum.SetFront(matrix.WorldZ());
+	frustum.SetUp(matrix.WorldY());
 	frustum.SetViewPlaneDistances(near_plane, far_plane);
 	frustum.SetVerticalFovAndAspectRatio(DegToRad(fov), aspect_ratio);
 
