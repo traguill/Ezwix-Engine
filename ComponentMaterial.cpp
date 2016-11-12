@@ -17,7 +17,7 @@ void ComponentMaterial::OnInspector()
 		ImGui::Text("Texture id: %d", texture_id);
 		ImGui::Image((ImTextureID)texture_id, ImVec2(250, 250));
 
-		if (ImGui::Button("###mat_rem Remove"))
+		if (ImGui::Button("Remove ###mat_rem"))
 		{
 			Remove();
 		}

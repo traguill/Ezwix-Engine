@@ -302,7 +302,7 @@ void ModuleGOManager::ClearScene()
 	root = nullptr;
 }
 
-GameObject * ModuleGOManager::LoadGameObject(const Data & go_data) const
+GameObject * ModuleGOManager::LoadGameObject(const Data & go_data) 
 {
 	const char* name = go_data.GetString("name");
 	unsigned int uuid = go_data.GetUInt("UUID");

@@ -61,7 +61,7 @@ void ComponentCamera::OnInspector()
 			this->color = color;
 		}
 
-		if (ImGui::Button("###cam_rem Remove"))
+		if (ImGui::Button("Remove ###cam_rem"))
 		{
 			Remove();
 		}

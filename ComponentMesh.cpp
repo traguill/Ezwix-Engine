@@ -74,7 +74,7 @@ void ComponentMesh::OnInspector()
 			ImGui::SameLine(); ImGui::Text("No mesh was loaded.");
 		}
 
-		if (ImGui::Button("###mesh_rem Remove"))
+		if (ImGui::Button("Remove ##mesh_rem"))
 		{
 			Remove();
 		}

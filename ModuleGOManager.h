@@ -4,6 +4,7 @@
 #include "Module.h"
 #include <vector>
 #include <string>
+#include "Quadtree.h"
 
 class GameObject;
 class ComponentCamera;
@@ -48,7 +49,7 @@ private:
 
 	void ClearScene(); //Removes the current scene
 
-	GameObject* LoadGameObject(const Data& go_data)const;
+	GameObject* LoadGameObject(const Data& go_data);
 
 	GameObject* FindGameObjectByUUID(GameObject* start, unsigned int uuid)const; //Should be a public method?
 

@@ -33,7 +33,7 @@ public:
 		{
 			if (childs.size() > 0)
 			{
-				for (std::list<Quadnode<Type>*>::iterator i = childs.begin(); i != childs.end(), i++) //Try with childs
+				for (std::list<Quadnode<Type>*>::iterator i = childs.begin(); i != childs.end(); i++) //Try with childs
 					(*i)->Insert(item, point);
 			}
 			else //Leaf
@@ -41,7 +41,7 @@ public:
 				if (content) //Divide the node
 				{
 					Divide();
-					for (std::list<Quadnode<Type>*>::iterator i = childs.begin(); i != childs.end(), i++) //Insert content and item in childs
+					for (std::list<Quadnode<Type>*>::iterator i = childs.begin(); i != childs.end(); i++) //Insert content and item in childs
 					{
 						bool success;
 						(*i)->Insert(content, content_position);
@@ -66,7 +66,7 @@ public:
 		return ret;
 	}
 
-	bool Remove(Type* item, const math::vec& point)
+	bool Remove(Type* item, const math::vec& point, vector<Quadnode*>& nodes_to_remove)
 	{
 		bool ret = false;
 
@@ -74,7 +74,7 @@ public:
 		{
 			if (childs.size > 0)
 			{
-				for (std::list<Quadnode<Type>*>::iterator i = childs.begin(); i != childs.end(), i++)
+				for (std::list<Quadnode<Type>*>::iterator i = childs.begin(); i != childs.end(); i++)
 				{
 					(*i)->Remove(item, point);
 				}
@@ -86,13 +86,22 @@ public:
 					content = nullptr;
 					content_position = math::vec::zero;
 
-					//Set dirty
+					nodes_to_remove.push_back(this);
 					ret = true;
 				}
 			}
 		}
 		
 		return ret;
+	}
+
+	void Draw() const
+	{
+		g_Debug->AddAABB(aabb, g_Debug->red);
+		for (std::list<Quadnode<Type>*>::const_iterator i = childs.begin(); i != childs.end(); i++)
+		{
+			(*i)->Draw();
+		}
 	}
 
 private:
@@ -185,7 +194,11 @@ public:
 
 		if (root != nullptr)
 		{
-			ret = root->Remove(item, point);
+			vector<Quadnode*> nodes_to_remove;
+			ret = root->Remove(item, point, nodes_to_remove);
+
+			for (vector<Quadnode*>::iterator it = nodes_to_remove.begin(); it != nodes_to_remove.end(); ++it)
+				delete (*it);
 		}
 
 		return ret;
@@ -199,6 +212,14 @@ public:
 	void Create(const math::AABB& limits)
 	{
 		root = new Quadnode<Type>(NULL, limits);
+	}
+
+	void Draw() const
+	{
+		if (root)
+		{
+			root->Draw();
+		}
 	}
 
 private:
