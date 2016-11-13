@@ -4,7 +4,7 @@
 #include "Module.h"
 #include <vector>
 #include <string>
-#include "Quadtree.h"
+#include "Octree.h"
 
 class GameObject;
 class ComponentCamera;
@@ -37,6 +37,9 @@ public:
 	void SaveSceneBeforeRunning();//Saves the scene before running the game
 	void LoadSceneBeforeRunning();
 
+	bool InsertGameObjectInQuadtree(GameObject* go);
+	bool RemoveGameObjectOfQuadtree(GameObject* go);
+
 private:
 
 	void HierarchyWindow();
@@ -64,6 +67,7 @@ private:
 
 	string current_scene_path = "";
 
+	Octree<GameObject*> octree;
 };
 
 #endif // !__MODULE_GO_MANAGER_H__

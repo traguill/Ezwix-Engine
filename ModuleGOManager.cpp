@@ -43,6 +43,7 @@ bool ModuleGOManager::Init(Data & config)
 
 bool ModuleGOManager::Start()
 {
+	octree.Create(30);
 	//Load last scene 
 	if (root == nullptr)
 	{
@@ -89,6 +90,8 @@ update_status ModuleGOManager::Update()
 			g_Debug->AddAABB(*selected_GO->bounding_box, g_Debug->green);
 		}
 	}
+
+	octree.Draw();
 
 	return UPDATE_CONTINUE;
 }
@@ -293,6 +296,29 @@ void ModuleGOManager::SaveSceneBeforeRunning()
 void ModuleGOManager::LoadSceneBeforeRunning()
 {
 	LoadScene("Library/current_scene.json");
+}
+
+bool ModuleGOManager::InsertGameObjectInQuadtree(GameObject * go)
+{
+	bool ret = false;
+	if (go->IsStatic())
+	{
+		if (go->bounding_box) //Only GameObjects with mesh can go inside for now.
+		{
+			ret = octree.Insert(go, go->bounding_box->CenterPoint());
+		}
+	}
+	return ret;
+}
+
+bool ModuleGOManager::RemoveGameObjectOfQuadtree(GameObject * go)
+{
+	bool ret = false;
+	if (go->bounding_box)
+	{
+		ret = octree.Remove(go, go->bounding_box->CenterPoint());
+	}
+	return ret;
 }
 
 void ModuleGOManager::ClearScene()

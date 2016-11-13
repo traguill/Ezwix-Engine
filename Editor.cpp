@@ -61,9 +61,9 @@ update_status Editor::Update()
 	ret = EditorWindows(); //Update the windows of the editor
 	
 	//Draw Grid
-	Plane_P grid(0,1,0,0);
+	/*Plane_P grid(0,1,0,0);
 	grid.axis = true;
-	grid.Render();
+	grid.Render();*/
 
 	//Shortcut to save. TODO: Do a better implementation of the shortcuts
 	if (App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN)

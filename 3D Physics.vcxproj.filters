@@ -402,9 +402,6 @@
     <ClInclude Include="CameraWindow.h">
       <Filter>Sources\Editor\Windows</Filter>
     </ClInclude>
-    <ClInclude Include="Quadtree.h">
-      <Filter>Sources\Containers</Filter>
-    </ClInclude>
     <ClInclude Include="Data.h">
       <Filter>Sources\Tools</Filter>
     </ClInclude>
@@ -416,6 +413,9 @@
     </ClInclude>
     <ClInclude Include="Time.h">
       <Filter>Sources\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="Octree.h">
+      <Filter>Sources\Containers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

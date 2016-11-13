@@ -158,14 +158,25 @@ bool GameObject::IsStatic() const
 }
 
 void GameObject::SetStatic(bool value)
-{
+{	//Conditions: if is static parent MUST be static too. If is dynamic childs must be dynamic too.
 	if (is_static != value && App->go_manager->IsRoot(this) == false)
 	{
 		is_static = value;
 		if (is_static) //Set parents static too. Except root.
 		{
+			bool ret = App->go_manager->InsertGameObjectInQuadtree(this);
+			if (!ret)
+				LOG("INSERTION FAILED");
 			if (parent)
 				parent->SetStatic(true);
+		}
+		else //Set childs dynamic too
+		{
+			bool ret = App->go_manager->RemoveGameObjectOfQuadtree(this);
+			if (!ret)
+				LOG("REMOVING FAILED");
+			for (std::vector<GameObject*>::iterator child = childs.begin(); child != childs.end(); ++child)
+				(*child)->SetStatic(false);
 		}
 	}
 }
