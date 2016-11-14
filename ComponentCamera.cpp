@@ -183,7 +183,7 @@ void ComponentCamera::SetBackgroundColor(const math::float3 color)
 	this->color = color;
 }
 
-bool ComponentCamera::IsVisible(const math::AABB & box)const
+bool ComponentCamera::Intersects(const math::AABB & box)const
 {
 	bool ret = true;
 	math::vec corners[8];

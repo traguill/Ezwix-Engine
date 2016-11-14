@@ -16,6 +16,7 @@
 #include "ModuleMeshes.h"
 #include "ModuleFileSystem.h"
 #include "ModuleGOManager.h"
+#include "ModuleResourceManager.h"
 #include "DebugDraw.h"
 #include "AutoProfile.h"
 #include "Random.h"
@@ -72,6 +73,7 @@ public:
 	ModuleMeshes* meshes;
 	ModuleFileSystem* file_system;
 	ModuleGOManager* go_manager;
+	ModuleResourceManager* resource_manager;
 	Editor* editor;
 	Random* rnd = nullptr;
 private:

@@ -71,7 +71,8 @@ private:
 
 	string current_scene_path = "";
 
-	//GameObjects
+public: 
+	//GameObjects TODO:Add functionallity to make it private
 	Octree<GameObject*> octree; //Static
 	list<GameObject*> dynamic_gameobjects;
 

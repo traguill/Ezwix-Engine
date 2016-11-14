@@ -14,6 +14,7 @@ Application::Application()
 
 	//Modules
 	window = new ModuleWindow("window");
+	resource_manager = new ModuleResourceManager("resource_manager");
 	input = new ModuleInput("input");
 	audio = new ModuleAudio("audio");
 	scene_intro = new ModuleSceneIntro("scene_intro");
@@ -33,6 +34,7 @@ Application::Application()
 
 	// Main Modules
 	AddModule(file_system);
+	AddModule(resource_manager);
 	AddModule(window);
 	AddModule(camera);
 	AddModule(input);

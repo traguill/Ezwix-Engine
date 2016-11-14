@@ -42,7 +42,9 @@ public:
 	bool Remove(Type object, const math::float3& position);
 	void Create(float size);
 	void Draw();
-
+	
+	template<typename Primitive>
+	bool Intersect(vector<Type>& results, Primitive& prim)const;
 private:
 	void RemoveUnnecessaryNodes(OctreeNode<Type>* start);
 
@@ -311,6 +313,44 @@ inline void Octree<Type>::RemoveUnnecessaryNodes(OctreeNode<Type>* start)
 		else
 			break;
 	}
+}
+
+template<typename Type>
+template<typename Primitive>
+inline bool Octree<Type>::Intersect(vector<Type>& results, Primitive & prim) const
+{
+	/*if (root == nullptr) //Octree has not been created
+		return false;
+
+	if (prim.Intersects(root->bbox)) //Point out of the boundaries
+		return false;
+
+	bool ret = false;
+	queue<OctreeNode<Type>*> queue;
+	OctreeNode<Type>* current = nullptr;
+
+	queue.push(root);
+
+	while (queue.empty() == false)
+	{
+		current = queue.front();
+		queue.pop();
+
+		if (prim.Intersects(current->bbox))
+		{
+			if (current->childs.size() == 0) //Leaf node
+			{
+				if (current->empty == false)
+				{
+					results.push_back(current->content);
+				}
+			}
+			else
+				for (vector<OctreeNode<Type>*>::iterator child = current->childs.begin(); child != current->childs.end(); ++child)
+					queue.push(*child);
+		}
+	}*/
+	return true; //TODO: Check why prim makes a compiler error.
 }
 
 #endif // !__OCTREE_H__

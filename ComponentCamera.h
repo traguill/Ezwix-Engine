@@ -31,7 +31,7 @@ public:
 	void SetUp(const math::float3& value);
 	void LookAt(const math::float3& point);
 	void SetBackgroundColor(const math::float3 color);
-	bool IsVisible(const math::AABB& box)const;
+	bool Intersects(const math::AABB& box)const;
 
 	math::float4x4 GetViewMatrix()const;
 

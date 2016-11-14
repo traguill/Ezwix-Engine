@@ -6,6 +6,8 @@
 #include "SDL\include\SDL_opengl.h"
 #include "ModuleMeshes.h"
 #include "GameObject.h"
+#include "ModuleGOManager.h"
+#include "Octree.h"
 #include <gl/GL.h>
 #include <gl/GLU.h>
 
@@ -147,8 +149,23 @@ update_status ModuleRenderer3D::PreUpdate()
 // PostUpdate present buffer to screen
 update_status ModuleRenderer3D::PostUpdate()
 {
+	ComponentCamera* current_cam = App->camera->GetCurrentCamera();
+	//Draw Static GO
+	vector<GameObject*> static_objects;
+	App->go_manager->octree.Intersect(static_objects, current_cam); //Culling for static objects
+
+	for (vector<GameObject*>::iterator obj = static_objects.begin(); obj != static_objects.end(); ++obj)
+	{
+		if((*obj)->IsActive()) //TODO: if component mesh is not active don't draw the object.
+			Draw(*obj);
+	}
+
+	//Draw dynamic GO
 	for (vector<GameObject*>::iterator obj = objects_to_draw.begin(); obj != objects_to_draw.end(); ++obj)
-		Draw((*obj));
+	{
+		if(current_cam->Intersects(*(*obj)->bounding_box)) //Culling for dynamic Objects
+			Draw((*obj));
+	}
 
 	ImGui::Render();
 	SDL_GL_SwapWindow(App->window->window);
@@ -211,8 +228,7 @@ void ModuleRenderer3D::AddToDraw(GameObject* obj)
 {
 	if (obj)
 	{
-		//Furstum culling
-		if(App->camera->GetCurrentCamera()->IsVisible(*obj->bounding_box))
+		if(obj->IsStatic() == false)
 			objects_to_draw.push_back(obj);
 	}
 }
