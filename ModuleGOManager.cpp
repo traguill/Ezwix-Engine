@@ -17,6 +17,7 @@ ModuleGOManager::~ModuleGOManager()
 		delete root;
 
 	selected_GO = nullptr;
+	dynamic_gameobjects.clear();
 }
 
 bool ModuleGOManager::Init(Data & config)
@@ -43,7 +44,7 @@ bool ModuleGOManager::Init(Data & config)
 
 bool ModuleGOManager::Start()
 {
-	octree.Create(30);
+	octree.Create(OCTREE_SIZE);
 	//Load last scene 
 	if (root == nullptr)
 	{
@@ -60,7 +61,18 @@ update_status ModuleGOManager::PreUpdate()
 {
 	//Remove all GameObjects that needs to be erased
 	for (vector<GameObject*>::iterator go = go_to_remove.begin(); go != go_to_remove.end(); ++go)
+	{
+		if ((*go)->IsStatic())
+		{
+			if ((*go)->bounding_box)
+				octree.Remove((*go), (*go)->bounding_box->CenterPoint());
+		}
+		else
+		{
+			dynamic_gameobjects.remove(*go);
+		}
 		delete (*go);
+	}
 
 	go_to_remove.clear();
 
@@ -108,9 +120,9 @@ GameObject* ModuleGOManager::CreateGameObject(GameObject* parent)
 	GameObject* object = new GameObject(obj_parent);
 
 	if (obj_parent->AddChild(object) == false)
-	{
 		LOG("A child insertion to GameObject %s could not be done", obj_parent->name.data());
-	}
+
+	dynamic_gameobjects.push_back(object);
 
 	return object;
 }
@@ -298,25 +310,27 @@ void ModuleGOManager::LoadSceneBeforeRunning()
 	LoadScene("Library/current_scene.json");
 }
 
-bool ModuleGOManager::InsertGameObjectInQuadtree(GameObject * go)
+bool ModuleGOManager::InsertGameObjectInOctree(GameObject * go)
 {
 	bool ret = false;
 	if (go->IsStatic())
 	{
 		if (go->bounding_box) //Only GameObjects with mesh can go inside for now.
 		{
+			dynamic_gameobjects.remove(go);
 			ret = octree.Insert(go, go->bounding_box->CenterPoint());
 		}
 	}
 	return ret;
 }
 
-bool ModuleGOManager::RemoveGameObjectOfQuadtree(GameObject * go)
+bool ModuleGOManager::RemoveGameObjectOfOctree(GameObject * go)
 {
 	bool ret = false;
 	if (go->bounding_box)
 	{
 		ret = octree.Remove(go, go->bounding_box->CenterPoint());
+		dynamic_gameobjects.push_back(go);
 	}
 	return ret;
 }
@@ -326,6 +340,8 @@ void ModuleGOManager::ClearScene()
 	RemoveGameObject(root);
 	selected_GO = nullptr;
 	root = nullptr;
+	dynamic_gameobjects.clear();
+	octree.Create(OCTREE_SIZE);
 }
 
 GameObject * ModuleGOManager::LoadGameObject(const Data & go_data) 
@@ -334,6 +350,7 @@ GameObject * ModuleGOManager::LoadGameObject(const Data & go_data)
 	unsigned int uuid = go_data.GetUInt("UUID");
 	unsigned int uuid_parent = go_data.GetUInt("parent");
 	bool active = go_data.GetBool("active");
+	bool is_static = go_data.GetBool("static");
 
 	//Find parent GameObject reference
 	GameObject* parent = nullptr;
@@ -343,7 +360,7 @@ GameObject * ModuleGOManager::LoadGameObject(const Data & go_data)
 	}
 
 	//Basic GameObject properties
-	GameObject* go = new GameObject(name, uuid, parent, active);
+	GameObject* go = new GameObject(name, uuid, parent, active, is_static);
 
 	if(parent)
 		parent->AddChild(go);
@@ -360,6 +377,11 @@ GameObject * ModuleGOManager::LoadGameObject(const Data & go_data)
 		Component* go_component = go->AddComponent(static_cast<ComponentType>(type));
 		go_component->Load(component);
 	}
+
+	if (is_static)
+		octree.Insert(go, go->bounding_box->CenterPoint()); //Needs to go after the components because of the bounding box reference
+	else
+		dynamic_gameobjects.push_back(go);
 
 	return go;
 }

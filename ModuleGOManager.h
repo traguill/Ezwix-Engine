@@ -3,11 +3,14 @@
 
 #include "Module.h"
 #include <vector>
+#include <list>
 #include <string>
 #include "Octree.h"
 
 class GameObject;
 class ComponentCamera;
+
+#define OCTREE_SIZE 50
 
 class ModuleGOManager : public Module
 {
@@ -37,8 +40,9 @@ public:
 	void SaveSceneBeforeRunning();//Saves the scene before running the game
 	void LoadSceneBeforeRunning();
 
-	bool InsertGameObjectInQuadtree(GameObject* go);
-	bool RemoveGameObjectOfQuadtree(GameObject* go);
+	//Handles the insertion / remove of the octree and dynamic gameobjects list. TODO: Rename the methods. Look confusing.
+	bool InsertGameObjectInOctree(GameObject* go);
+	bool RemoveGameObjectOfOctree(GameObject* go);
 
 private:
 
@@ -67,7 +71,10 @@ private:
 
 	string current_scene_path = "";
 
-	Octree<GameObject*> octree;
+	//GameObjects
+	Octree<GameObject*> octree; //Static
+	list<GameObject*> dynamic_gameobjects;
+
 };
 
 #endif // !__MODULE_GO_MANAGER_H__

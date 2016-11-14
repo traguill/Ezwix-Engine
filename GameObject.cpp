@@ -22,7 +22,7 @@ GameObject::GameObject(GameObject* parent) : parent(parent)
 	uuid = App->rnd->RandomInt();
 }
 
-GameObject::GameObject(const char* name, unsigned int uuid, GameObject* parent, bool active) : name(name), uuid(uuid), parent(parent), active(active)
+GameObject::GameObject(const char* name, unsigned int uuid, GameObject* parent, bool active, bool is_static) : name(name), uuid(uuid), parent(parent), active(active), is_static(is_static)
 {}
 
 GameObject::~GameObject()
@@ -164,7 +164,7 @@ void GameObject::SetStatic(bool value)
 		is_static = value;
 		if (is_static) //Set parents static too. Except root.
 		{
-			bool ret = App->go_manager->InsertGameObjectInQuadtree(this);
+			bool ret = App->go_manager->InsertGameObjectInOctree(this);
 			if (!ret)
 				LOG("INSERTION FAILED");
 			if (parent)
@@ -172,7 +172,7 @@ void GameObject::SetStatic(bool value)
 		}
 		else //Set childs dynamic too
 		{
-			bool ret = App->go_manager->RemoveGameObjectOfQuadtree(this);
+			bool ret = App->go_manager->RemoveGameObjectOfOctree(this);
 			if (!ret)
 				LOG("REMOVING FAILED");
 			for (std::vector<GameObject*>::iterator child = childs.begin(); child != childs.end(); ++child)
@@ -290,6 +290,7 @@ void GameObject::Save(Data & file) const
 	else
 		data.AppendUInt("parent", parent->GetUUID());
 	data.AppendBool("active", active);
+	data.AppendBool("static", is_static);
 	data.AppendArray("components");
 
 	//Components data

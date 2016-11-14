@@ -244,7 +244,7 @@ template<typename Type>
 inline void Octree<Type>::Create(float size)
 {
 	if (root)
-		return; //TODO: Destroy the Octree to create a new one
+		delete root; 
 	math::AABB bbox = math::AABB(math::vec(-(size / 2.0f)), math::vec(size / 2.0f));
 	root = new OctreeNode<Type>(nullptr, bbox);
 }
