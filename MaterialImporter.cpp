@@ -8,7 +8,7 @@
 #pragma comment ( lib, "Devil/libx86/ILU.lib" )
 #pragma comment ( lib, "Devil/libx86/ILUT.lib" )
 
-bool MaterialImporter::Import(const char* file, const char * path, std::string & output_file)
+bool MaterialImporter::Import(const char* file, const char * path,const std::string & to_path)
 {
 	bool ret = false;
 
@@ -28,13 +28,7 @@ bool MaterialImporter::Import(const char* file, const char * path, std::string &
 		data = new ILubyte[size];
 		if (ilSaveL(IL_DDS, data, size) > 0)
 		{
-			string file_name = LIBRARY_FOLDER;
-			file_name += file;
-			file_name += "/";
-			App->file_system->GenerateDirectory(file_name.data());
-			file_name += file;
-			file_name += ".dds";
-			ret = App->file_system->Save(file_name.data(), data, size);
+			ret = App->file_system->Save(to_path.data(), data, size);
 		}
 		delete[] data;
 		data = nullptr;

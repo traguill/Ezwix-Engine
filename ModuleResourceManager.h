@@ -7,7 +7,8 @@ enum FileTypes
 {
 	NONE,
 	IMAGE,
-	MESH
+	MESH,
+	FOLDER
 };
 
 class ModuleResourceManager : public Module
@@ -20,13 +21,14 @@ public:
 
 private:
 
-	FileTypes GetFileExtension(const char* path);
-	string CopyOutsideFileToAssetsCurrentDir(const char* path)const;
+	FileTypes GetFileExtension(const char* path)const;
+	string CopyOutsideFileToAssetsCurrentDir(const char* path, string base_dir = string())const;
 
-	void GenerateMetaFile(const char* path, FileTypes type, uint uuid)const;
+	void GenerateMetaFile(const char* path, FileTypes type, uint uuid,bool is_file = true)const;
 
-	void ImageDropped(const char* path)const;
-
+	void ImportFolder(const char* path, string base_dir = string(), string base_library_dir = string())const;
+	void ImportFile(const char* path, string base_dir = string(), string base_library_dir = string())const;
+	void ImageDropped(const char* path, string base_dir = string(), string base_library_dir = string())const;
 
 };
 #endif // !__MODULE_RESOURCE_MANAGER_H__

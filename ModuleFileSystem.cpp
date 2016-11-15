@@ -247,6 +247,30 @@ void ModuleFileSystem::GetFilesAndDirectories(const char * dir, std::vector<stri
 	PHYSFS_freeList(ef);
 }
 
+void ModuleFileSystem::GetFilesAndDirectoriesOutside(const char * dir, std::vector<string>& folders, std::vector<string>& files)
+{
+	//Only for Windows
+	string directory = dir;
+	string search_path = directory + "/*.*";
+	WIN32_FIND_DATA find_data;
+	HANDLE handle_find = ::FindFirstFile(search_path.data(), &find_data);
+	if (handle_find != INVALID_HANDLE_VALUE)
+	{
+		while (::FindNextFile(handle_find, &find_data))
+		{
+			if (!(find_data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY))
+				files.push_back(find_data.cFileName);
+			else
+			{
+				if(strcmp("..", find_data.cFileName) != 0)
+					folders.push_back(find_data.cFileName);
+			}
+				
+		}
+		::FindClose(handle_find);
+	}
+}
+
 bool ModuleFileSystem::CopyFromOutsideFile(const char * from_path, const char * to_path) const
 {
 	bool ret = false;
@@ -264,14 +288,14 @@ bool ModuleFileSystem::CopyFromOutsideFile(const char * from_path, const char * 
 			written += PHYSFS_write(fs_file, buffer, 1, read_ret);
 
 		ret = true;
-		fclose(file);
-		PHYSFS_close(fs_file);
-
 	}
 	else
 	{
 		LOG("File System error while copying %s", from_path);
 	}
+
+	fclose(file);
+	PHYSFS_close(fs_file);
 
 	return ret;
 }

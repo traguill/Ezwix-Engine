@@ -41,7 +41,7 @@ public:
 
 	bool GetEnumerateFiles(const char* dir, std::vector<std::string>& buffer);
 	void GetFilesAndDirectories(const char* dir, std::vector<string>& folders, std::vector<string>& files);
-
+	void GetFilesAndDirectoriesOutside(const char* dir, std::vector<string>& folders, std::vector<string>& files);
 	bool CopyFromOutsideFile(const char* from_path, const char* to_path)const;
 
 	string GetNameFromPath(const string& path)const;
