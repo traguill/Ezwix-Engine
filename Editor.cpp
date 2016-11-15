@@ -50,6 +50,11 @@ bool Editor::CleanUp()
 	return true;
 }
 
+string Editor::GetAssetsCurrentDir() const
+{
+	return assets->CurrentDirectory();
+}
+
 update_status Editor::Update()
 {
 	PROFILE("Editor::Update()");

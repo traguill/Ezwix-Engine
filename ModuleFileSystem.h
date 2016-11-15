@@ -26,6 +26,7 @@ public:
 	bool AddPath(const char* path_or_zip, const char* mount_point = nullptr);
 	bool Exists(const char* file) const;
 	bool IsDirectory(const char* file) const;
+	bool IsDirectoryOutside(const char* file)const;
 	const char* GetSaveDirectory() const
 	{
 		return "save/";
@@ -40,6 +41,12 @@ public:
 
 	bool GetEnumerateFiles(const char* dir, std::vector<std::string>& buffer);
 	void GetFilesAndDirectories(const char* dir, std::vector<string>& folders, std::vector<string>& files);
+
+	bool CopyFromOutsideFile(const char* from_path, const char* to_path)const;
+
+	string GetNameFromPath(const string& path)const;
+	double GetLastModificationTime(const char* file_path)const;
+	bool GenerateDirectory(const char* path)const;
 
 private:
 

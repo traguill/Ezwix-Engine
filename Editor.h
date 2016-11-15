@@ -27,6 +27,8 @@ public:
 	update_status Update();
 	bool CleanUp();
 
+	string GetAssetsCurrentDir()const;
+
 private:
 	//Game Simulation Options
 	void GameOptions()const;

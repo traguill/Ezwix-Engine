@@ -98,6 +98,11 @@ void Assets::Draw()
 	ImGui::End();
 }
 
+string Assets::CurrentDirectory() const
+{
+	return current_dir->path;
+}
+
 void Assets::Init()
 {
 	//start active

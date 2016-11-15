@@ -78,6 +78,11 @@ bool ModuleFileSystem::IsDirectory(const char* file) const
 	return PHYSFS_isDirectory(file) != 0;
 }
 
+bool ModuleFileSystem::IsDirectoryOutside(const char * file) const
+{
+	return (GetFileAttributes((LPCTSTR)file) == FILE_ATTRIBUTE_DIRECTORY) ? true : false;
+}
+
 // Read a whole file and put it in a new buffer
 unsigned int ModuleFileSystem::Load(const char* file, char** buffer) const
 {
@@ -240,6 +245,52 @@ void ModuleFileSystem::GetFilesAndDirectories(const char * dir, std::vector<stri
 	}
 
 	PHYSFS_freeList(ef);
+}
+
+bool ModuleFileSystem::CopyFromOutsideFile(const char * from_path, const char * to_path) const
+{
+	bool ret = false;
+
+	FILE* file;
+	fopen_s(&file, from_path, "rb"); //rb-> read in binary
+	PHYSFS_file* fs_file = PHYSFS_openWrite(to_path);
+	char buffer[8192];
+	
+	if (fs_file && file)
+	{
+		size_t read_ret;
+		PHYSFS_sint64 written = 0;
+		while( read_ret = fread_s(buffer, 8192, 1, 8192, file))
+			written += PHYSFS_write(fs_file, buffer, 1, read_ret);
+
+		ret = true;
+		fclose(file);
+		PHYSFS_close(fs_file);
+
+	}
+	else
+	{
+		LOG("File System error while copying %s", from_path);
+	}
+
+	return ret;
+}
+
+string ModuleFileSystem::GetNameFromPath(const string & path) const
+{
+	//Note: we supose the given path is a file and not a directory. 
+	size_t name = path.find_last_of("/\\");
+	return path.substr(name + 1);
+}
+
+double ModuleFileSystem::GetLastModificationTime(const char * file_path) const
+{
+	return PHYSFS_getLastModTime(file_path);
+}
+
+bool ModuleFileSystem::GenerateDirectory(const char * path) const
+{
+	return PHYSFS_mkdir(path);
 }
 
 void ModuleFileSystem::SearchResourceFolders()

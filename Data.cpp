@@ -82,6 +82,11 @@ bool Data::AppendFloat3(const char * name,const float * value)
 	return json_object_set_value(root, name, j_value) == JSONSuccess;
 }
 
+bool Data::AppendDouble(const char * name, double value)
+{
+	return json_object_set_number(root, name, value) == JSONSuccess;
+}
+
 Data Data::AppendJObject(const char * name)
 {
 	json_object_set_value(root, name, json_value_init_object());
@@ -174,6 +179,11 @@ float3 Data::GetFloat3(const char * name) const
 				   (float)json_array_get_number(j_array, 2));
 	}
 	return float3::zero;
+}
+
+double Data::GetDouble(const char * name) const
+{
+	return json_object_get_number(root, name);
 }
 
 size_t Data::Serialize(char ** buffer)

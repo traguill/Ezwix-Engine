@@ -21,6 +21,7 @@ public:
 	~Assets();
 
 	void Draw();
+	string CurrentDirectory()const;
 
 private:
 

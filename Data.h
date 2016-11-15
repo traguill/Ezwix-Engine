@@ -24,6 +24,7 @@ public:
 	bool AppendMatrix(const char* name, const math::float4x4& matrix);
 	bool AppendFloat(const char* name, float value);
 	bool AppendFloat3(const char* name,const float* value);
+	bool AppendDouble(const char* name, double value);
 	Data AppendJObject(const char* name);
 
 	//Gets
@@ -37,6 +38,7 @@ public:
 	float4x4 GetMatrix(const char* name)const;
 	float GetFloat(const char* name)const;
 	float3 GetFloat3(const char* name)const;
+	double GetDouble(const char* name)const;
 
 	//Save
 	size_t Serialize(char** buffer);
