@@ -6,7 +6,7 @@
 namespace MaterialImporter
 {
 	//File is the name of the final file. Path includes the file with it's extension.
-	bool Import(const char* file, const char* path,const std::string& to_path);
+	bool Import(const char* file, const char* path);
 
 }
 

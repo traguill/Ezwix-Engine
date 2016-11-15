@@ -212,7 +212,7 @@ void Assets::MeshFileOptions() const
 	{
 		if (ImGui::Selectable("Load to scene"))
 		{
-			App->meshes->Load((file_selected).c_str(), current_dir->path.data());
+			//App->meshes->Load((file_selected).c_str(), current_dir->path.data()); //TODO: change it for a resource method
 		}
 
 		if (ImGui::Selectable("Open"))

@@ -35,15 +35,6 @@ ModuleMeshes::~ModuleMeshes()
 
 bool ModuleMeshes::Init(Data& config)
 {
-	aiLogStream stream;
-	stream = aiGetPredefinedLogStream(aiDefaultLogStream_DEBUGGER, nullptr);
-	aiAttachLogStream(&stream);
-
-	//Initialize Devil
-	ilInit();
-	iluInit();
-	ilutInit();
-	ilutRenderer(ILUT_OPENGL);
 	return true;
 }
 
@@ -177,7 +168,7 @@ void ModuleMeshes::LoadNode(aiNode* node,const aiScene* scene, GameObject* paren
 		ComponentMesh* c_mesh = (ComponentMesh*)game_object->AddComponent(C_MESH);
 
 		string mesh_path;
-		bool ret = MeshImporter::Import(mesh_to_load, mesh_path);
+		bool ret = MeshImporter::ImportMesh(mesh_to_load, mesh_path);
 
 		Mesh* mesh = MeshImporter::Load(mesh_path.data());
 		

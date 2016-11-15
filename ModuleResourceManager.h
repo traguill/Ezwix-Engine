@@ -17,6 +17,9 @@ public:
 	ModuleResourceManager(const char* name, bool start_enabled = true);
 	~ModuleResourceManager();
 
+	bool Init(Data& config);
+	bool CleanUp();
+
 	void FileDropped(const char* file_path);
 
 private:
@@ -29,6 +32,7 @@ private:
 	void ImportFolder(const char* path, string base_dir = string(), string base_library_dir = string())const;
 	void ImportFile(const char* path, string base_dir = string(), string base_library_dir = string())const;
 	void ImageDropped(const char* path, string base_dir = string(), string base_library_dir = string())const;
+	void MeshDropped(const char* path, string base_dir = string(), string base_library_dir = string())const;
 
 };
 #endif // !__MODULE_RESOURCE_MANAGER_H__

@@ -1,8 +1,24 @@
 #include "Application.h"
 #include "ModuleResourceManager.h"
 #include "MaterialImporter.h"
+#include "MeshImporter.h"
 #include "Random.h"
 #include "Data.h"
+
+#include "Glew\include\glew.h"
+#include <gl\GL.h>
+
+#include "Assimp/include/cimport.h"
+#include "Assimp/include/scene.h"
+#include "Assimp/include/postprocess.h"
+#include "Assimp/include/cfileio.h"
+#pragma comment (lib, "Assimp/libx86/assimp.lib")
+
+#include "Devil/include/il.h"
+#include "Devil/include/ilut.h"
+#pragma comment ( lib, "Devil/libx86/DevIL.lib" )
+#pragma comment ( lib, "Devil/libx86/ILU.lib" )
+#pragma comment ( lib, "Devil/libx86/ILUT.lib" )
 
 ModuleResourceManager::ModuleResourceManager(const char* name, bool start_enabled) : Module(name, start_enabled)
 {
@@ -12,19 +28,31 @@ ModuleResourceManager::~ModuleResourceManager()
 {
 }
 
+bool ModuleResourceManager::Init(Data & config)
+{
+	aiLogStream stream;
+	stream = aiGetPredefinedLogStream(aiDefaultLogStream_DEBUGGER, nullptr);
+	aiAttachLogStream(&stream);
+
+	//Initialize Devil
+	ilInit();
+	iluInit();
+	ilutInit();
+	ilutRenderer(ILUT_OPENGL);
+	return true;
+}
+
+bool ModuleResourceManager::CleanUp()
+{
+	aiDetachAllLogStreams();
+	return true;
+}
+
 void ModuleResourceManager::FileDropped(const char * file_path)
 {
-	//File
-	//Make a copy
-
-	//Folder
-	//Create folder
-	//Look inside
-	//Copy all files and folders(look inside..etc)
-
 	//Files extensions accepted
 	//Images: PNG
-	//Meshes: FBX
+	//Meshes: FBX / OBJ
 	//Audio: PENDING
 
 	if (App->file_system->IsDirectoryOutside(file_path))
@@ -146,6 +174,7 @@ void ModuleResourceManager::ImportFile(const char * path, string base_dir, strin
 		ImageDropped(path, base_dir, base_library_dir);
 		break;
 	case MESH:
+		MeshDropped(path, base_dir, base_library_dir);
 		break;
 	}
 }
@@ -167,5 +196,27 @@ void ModuleResourceManager::ImageDropped(const char* path, string base_dir, stri
 	final_image_path += std::to_string(uuid);
 	final_image_path += ".dds";
 
-	MaterialImporter::Import(std::to_string(uuid).data(), file_assets_path.data(), final_image_path);
+	MaterialImporter::Import(final_image_path.data(), file_assets_path.data());
+}
+
+void ModuleResourceManager::MeshDropped(const char * path, string base_dir, string base_library_dir) const
+{
+	//Create a copy and a .meta inside the Assets folder
+	string file_assets_path = CopyOutsideFileToAssetsCurrentDir(path, base_dir);
+	uint uuid = App->rnd->RandomInt();
+	GenerateMetaFile(file_assets_path.data(), MESH, uuid);
+
+	//Create the link to Library
+	string final_mesh_path;
+	if (base_library_dir.size() == 0)
+		final_mesh_path = LIBRARY_FOLDER;
+	else
+		final_mesh_path = base_library_dir;
+
+	final_mesh_path += std::to_string(uuid) + "/";
+	App->file_system->GenerateDirectory(final_mesh_path.data());
+	string library_dir = final_mesh_path;
+	final_mesh_path += std::to_string(uuid) + ".inf";
+
+	MeshImporter::Import(final_mesh_path.data(), file_assets_path.data(), library_dir.data());
 }
