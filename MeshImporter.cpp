@@ -40,6 +40,10 @@ bool MeshImporter::Import(const char * file, const char * path, const char* base
 
 		aiNode* root = scene->mRootNode;
 		vector<GameObject*> objects_created;
+		
+		//Folder to save everything
+		string folder_path = file;
+		folder_path.substr(0, folder_path.find_last_of(("/\\")));
 
 		//Level-Order Load Nodes
 		queue<aiNode*> queue;
@@ -48,7 +52,7 @@ bool MeshImporter::Import(const char * file, const char * path, const char* base
 		while (tmp_node)
 		{
 			if(tmp_node != root) //Do not load the root node(unnecessary)
-				MeshImporter::ImportNode(tmp_node, scene, NULL, base_path, root_node, objects_created);
+				MeshImporter::ImportNode(tmp_node, scene, NULL, base_path, objects_created, folder_path);
 
 			for (int i = 0; i < tmp_node->mNumChildren; i++)
 				queue.push(tmp_node->mChildren[i]);
@@ -84,7 +88,7 @@ bool MeshImporter::Import(const char * file, const char * path, const char* base
 	return ret;
 }
 
-void MeshImporter::ImportNode(aiNode * node, const aiScene * scene, GameObject* parent, const char * base_path, Data& conf, vector<GameObject*>& objects_created)
+void MeshImporter::ImportNode(aiNode * node, const aiScene * scene, GameObject* parent, const char * base_path, vector<GameObject*>& objects_created, string folder_path)
 {
 	//Transformation ------------------------------------------------------------------------------------------------------------------
 	GameObject* go_root = new GameObject(parent);
@@ -162,7 +166,7 @@ void MeshImporter::ImportNode(aiNode * node, const aiScene * scene, GameObject* 
 
 		string mesh_path;
 
-		bool ret = MeshImporter::ImportMesh(mesh_to_load, mesh_path); //TODO: save mesh inside the folder
+		bool ret = MeshImporter::ImportMesh(mesh_to_load, folder_path.data(), mesh_path); 
 
 		Mesh* mesh = MeshImporter::Load(mesh_path.data());
 
@@ -195,7 +199,7 @@ void MeshImporter::ImportNode(aiNode * node, const aiScene * scene, GameObject* 
 	}
 }
 
-bool MeshImporter::ImportMesh(const aiMesh * mesh_to_load, std::string & output)
+bool MeshImporter::ImportMesh(const aiMesh * mesh_to_load, const char* folder_path, string& output_name)
 {
 	//Mesh --------------------------------------------------------------------------------------------------------------------------------
 
@@ -251,10 +255,10 @@ bool MeshImporter::ImportMesh(const aiMesh * mesh_to_load, std::string & output)
 		memcpy(mesh.colors, mesh_to_load->mColors, sizeof(float) * mesh.num_vertices * 3);
 	}
 		
-	return Save(mesh, output);
+	return Save(mesh, folder_path, output_name);
 }
 
-bool MeshImporter::Save(Mesh& mesh, std::string& output_file)
+bool MeshImporter::Save(Mesh& mesh, const char* folder_path, string& output_name)
 {
 	bool ret = false;
 
@@ -314,7 +318,8 @@ bool MeshImporter::Save(Mesh& mesh, std::string& output_file)
 	bytes = sizeof(float) * header[4] * 2;
 	memcpy(cursor, mesh.uvs, bytes);
 
-	ret = App->file_system->SaveUnique("mesh", data, size, LIBRARY_MESHES_FOLDER, "ezx", output_file);
+	//Generate random UUID for the name
+	ret = App->file_system->SaveUnique(std::to_string(App->rnd->RandomInt()).data(), data, size, folder_path, "msh", output_name);
 
 	delete[] data;
 	data = nullptr;
