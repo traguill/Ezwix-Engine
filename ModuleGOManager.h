@@ -32,6 +32,7 @@ public:
 	void SaveScene()const;
 	bool LoadScene(const char* file_path); //Removes the current scene
 	void LoadEmptyScene();
+	void LoadMeshGameObject(const Data& go_data);
 
 	bool IsRoot(const GameObject* go)const;
 

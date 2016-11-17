@@ -76,19 +76,23 @@ void Assets::Draw()
 			switch ((*file)->type)
 			{
 			case IMAGE:
+				if (ImGui::Selectable((*file)->name.data()))
+				{
+					file_selected = (*file);
+					//imgui open popup fileimageoptions TODO
+				}
 				break;
 			case MESH:
+				if (ImGui::Selectable((*file)->name.data()))
+				{
+					file_selected = (*file);
+					ImGui::OpenPopup("FileMeshOptions");
+				}
 				break;
 			}
 
-
-			if (ImGui::Selectable((*file)->name.data()))
-			{
-				file_selected = (*file);
-				//ImGui::OpenPopup("FileMeshOptions");
-
 				//ImGui::OpenPopup("FileSceneOptions");
-			}
+			
 		}
 	}
 
@@ -164,7 +168,7 @@ void Assets::FillDirectoriesRecursive(Directory* root_dir)
 			a_file->type = type;
 			a_file->name = (*file).substr(0, (*file).length() - 5); //Substract extension (.meta)
 			a_file->file_path = root_dir->path + (*file);
-			a_file->content_path = root_dir->library_path + std::to_string(meta.GetUInt("UUID"));
+			a_file->content_path = root_dir->library_path + std::to_string(meta.GetUInt("UUID")) + "/" + std::to_string(meta.GetUInt("UUID"));
 			a_file->time_mod = meta.GetInt("time_mod");
 			root_dir->files.push_back(a_file);
 		}
@@ -255,7 +259,7 @@ void Assets::MeshFileOptions() const
 	{
 		if (ImGui::Selectable("Load to scene"))
 		{
-			//App->meshes->Load((file_selected).c_str(), current_dir->path.data()); //TODO: change it for a resource method
+			App->resource_manager->LoadFile(file_selected->content_path, MESH);
 		}
 
 		if (ImGui::Selectable("Open"))

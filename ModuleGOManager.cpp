@@ -238,8 +238,8 @@ bool ModuleGOManager::LoadScene(const char * file_path)
 		
 		for (int i = 0; i < scene.GetArraySize("GameObjects"); i++)
 		{
-			if(i == 0)
-				root = LoadGameObject(scene.GetArray("GameObjects", i)); //First GO is always the root
+			if(i == 0) 
+				root = LoadGameObject(scene.GetArray("GameObjects", i)); 
 			else
 				LoadGameObject(scene.GetArray("GameObjects", i));
 		}	
@@ -384,6 +384,46 @@ GameObject * ModuleGOManager::LoadGameObject(const Data & go_data)
 		dynamic_gameobjects.push_back(go);
 
 	return go;
+}
+
+void ModuleGOManager::LoadMeshGameObject(const Data & go_data)
+{
+	const char* name = go_data.GetString("name");
+	unsigned int uuid = go_data.GetUInt("UUID");
+	unsigned int uuid_parent = go_data.GetUInt("parent");
+	bool active = go_data.GetBool("active");
+	bool is_static = go_data.GetBool("static");
+
+	//Find parent GameObject reference
+	GameObject* parent = nullptr;
+	if (uuid_parent != 0)
+		parent = FindGameObjectByUUID(root, uuid_parent);
+	else
+		parent = root;
+
+	//Basic GameObject properties
+	GameObject* go = new GameObject(name, uuid, parent, active, is_static);
+
+	if (parent)
+		parent->AddChild(go);
+
+	//Components
+	Data component;
+	unsigned int comp_size = go_data.GetArraySize("components");
+	for (int i = 0; i < comp_size; i++)
+	{
+		component = go_data.GetArray("components", i);
+
+		int type = component.GetInt("type");
+
+		Component* go_component = go->AddComponent(static_cast<ComponentType>(type));
+		go_component->Load(component);
+	}
+
+	if (is_static)
+		octree.Insert(go, go->bounding_box->CenterPoint()); //Needs to go after the components because of the bounding box reference
+	else
+		dynamic_gameobjects.push_back(go);
 }
 
 GameObject * ModuleGOManager::FindGameObjectByUUID(GameObject* start, unsigned int uuid) const

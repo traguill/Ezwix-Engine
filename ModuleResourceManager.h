@@ -21,6 +21,7 @@ public:
 	bool CleanUp();
 
 	void FileDropped(const char* file_path);
+	void LoadFile(const string& library_path, const FileTypes& type);
 
 private:
 
@@ -33,6 +34,8 @@ private:
 	void ImportFile(const char* path, string base_dir = string(), string base_library_dir = string())const;
 	void ImageDropped(const char* path, string base_dir = string(), string base_library_dir = string())const;
 	void MeshDropped(const char* path, string base_dir = string(), string base_library_dir = string())const;
+
+	void LoadMeshFile(const string& library_path);
 
 };
 #endif // !__MODULE_RESOURCE_MANAGER_H__

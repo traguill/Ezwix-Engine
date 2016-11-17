@@ -66,6 +66,18 @@ void ModuleResourceManager::FileDropped(const char * file_path)
 	
 }
 
+void ModuleResourceManager::LoadFile(const string & library_path, const FileTypes & type)
+{
+	switch (type)
+	{
+	case MESH:
+		LoadMeshFile(library_path);
+		break;
+	case IMAGE:
+		break;
+	}
+}
+
 ///Given a path returns if the file is one of the valid extensions to import.
 FileTypes ModuleResourceManager::GetFileExtension(const char * path) const
 {
@@ -219,4 +231,37 @@ void ModuleResourceManager::MeshDropped(const char * path, string base_dir, stri
 	final_mesh_path += std::to_string(uuid) + ".inf";
 
 	MeshImporter::Import(final_mesh_path.data(), file_assets_path.data(), library_dir.data());
+}
+
+void ModuleResourceManager::LoadMeshFile(const string & library_path)
+{
+	string library_path_extension = library_path + ".inf";
+	
+	char* buffer = nullptr;
+	uint size = App->file_system->Load(library_path_extension.data(), &buffer);
+	if (size == 0)
+	{
+		LOG("Error while loading Mesh: %s", library_path_extension.data());
+		if (buffer)
+			delete[] buffer;
+		return;
+	}
+
+	Data scene(buffer);
+	Data root_objects;
+	root_objects = scene.GetArray("GameObjects", 0);
+
+	if (root_objects.IsNull() == false)
+	{
+		for (int i = 0; i < scene.GetArraySize("GameObjects"); i++)
+		{
+			App->go_manager->LoadMeshGameObject(scene.GetArray("GameObjects", i));
+		}
+	}
+	else
+	{
+		LOG("The Mesh %s is not a valid mesh file", library_path_extension.data());
+	}
+
+	delete[] buffer;
 }
