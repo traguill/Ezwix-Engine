@@ -285,7 +285,7 @@ void GameObject::Save(Data & file) const
 	//GameObject data
 	data.AppendString("name", name.data());
 	data.AppendUInt("UUID", uuid);
-	if(App->go_manager->IsRoot(this))
+	if(parent == nullptr)
 		data.AppendUInt("parent", 0);
 	else
 		data.AppendUInt("parent", parent->GetUUID());

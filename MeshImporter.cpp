@@ -40,37 +40,36 @@ bool MeshImporter::Import(const char * file, const char * path, const char* base
 
 		aiNode* root = scene->mRootNode;
 		vector<GameObject*> objects_created;
-		
-		//Folder to save everything
-		string folder_path = file;
-		folder_path.substr(0, folder_path.find_last_of(("/\\")));
 
 		//Level-Order Load Nodes
 		queue<aiNode*> queue;
-		aiNode* tmp_node = root;
+		aiNode* tmp_node;
 
-		while (tmp_node)
+		queue.push(root);
+		while (queue.empty() == false)
 		{
+			tmp_node = queue.front();
+			queue.pop();
+
 			if(tmp_node != root) //Do not load the root node(unnecessary)
-				MeshImporter::ImportNode(tmp_node, scene, NULL, base_path, objects_created, folder_path);
+				MeshImporter::ImportNode(tmp_node, scene, NULL, base_path, objects_created, base_path);
 
 			for (int i = 0; i < tmp_node->mNumChildren; i++)
 				queue.push(tmp_node->mChildren[i]);
-
-			tmp_node = queue.front();
-			queue.pop();
 		}
+
+		for (vector<GameObject*>::iterator go = objects_created.begin(); go != objects_created.end(); ++go)
+			(*go)->Save(root_node);
+		
+		for (vector<GameObject*>::iterator go = objects_created.begin(); go != objects_created.end(); ++go)
+			delete (*go);
+
+		objects_created.clear();
 
 		char* buf;
 		size_t size = root_node.Serialize(&buf);
 
-		//iterate objects created
-		//Save it to root_node
-		//Remove objects created
-
-		//name to save .json
-
-		App->file_system->Save(name_to_save.data(), buf, size);
+		App->file_system->Save(file, buf, size);
 
 		delete[] buf;
 
@@ -174,7 +173,7 @@ void MeshImporter::ImportNode(aiNode * node, const aiScene * scene, GameObject* 
 
 		//Load Textures --------------------------------------------------------------------------------------------------------------------
 
-		aiMaterial* material = scene->mMaterials[mesh_to_load->mMaterialIndex];
+		/*aiMaterial* material = scene->mMaterials[mesh_to_load->mMaterialIndex];
 		//uint numTextures = material->GetTextureCount(aiTextureType_DIFFUSE);
 		if (material)
 		{
@@ -194,7 +193,7 @@ void MeshImporter::ImportNode(aiNode * node, const aiScene * scene, GameObject* 
 				c_material->file_path = "texture"; //TODO: change texture for a valid path
 			}
 
-		}
+		}*/
 
 	}
 }

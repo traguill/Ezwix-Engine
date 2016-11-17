@@ -40,7 +40,7 @@ bool ModuleMeshes::Init(Data& config)
 
 bool ModuleMeshes::CleanUp()
 {
-	aiDetachAllLogStreams();
+	
 	return true;
 }
 
@@ -95,118 +95,5 @@ uint ModuleMeshes::LoadTexture(const char* path)
 
 void ModuleMeshes::LoadNode(aiNode* node,const aiScene* scene, GameObject* parent, const char* base_path)
 {
-	//Transformation ------------------------------------------------------------------------------------------------------------------
-	GameObject* go_root = App->go_manager->CreateGameObject(parent);
-
-	ComponentTransform* c_transform = (ComponentTransform*)go_root->AddComponent(C_TRANSFORM);
-
-	aiVector3D translation;
-	aiVector3D scaling;
-	aiQuaternion rotation;
-
-	node->mTransformation.Decompose(scaling, rotation, translation);
-
-	math::float3 pos;
-	pos.x = translation.x; pos.y = translation.y; pos.z = translation.z;
 	
-	math::Quat rot;
-	rot.x = rotation.x; rot.y = rotation.y; rot.z = rotation.z; rot.w = rotation.w;
-
-	math::float3 scale;
-	scale.x = scaling.x; scale.y = scaling.y; scale.z = scaling.z;
-	
-	//Don't load fbx dummies as gameobjects. 
-	static const char* dummies[5] = 
-	{
-		"$AssimpFbx$_PreRotation", 
-		"$AssimpFbx$_Rotation", 
-		"$AssimpFbx$_PostRotation",
-		"$AssimpFbx$_Scaling", 
-		"$AssimpFbx$_Translation" 
-	};
-
-	for (int i = 0; i < 5; ++i)
-	{
-		if (((string)(node->mName.C_Str())).find(dummies[i]) != string::npos && node->mNumChildren == 1)
-		{
-			node = node->mChildren[0];
-			node->mTransformation.Decompose(scaling, rotation, translation);
-			pos += float3(translation.x, translation.y, translation.z);
-			scale = float3(scale.x * scaling.x, scale.y * scaling.y, scale.z * scaling.z);
-			rot = rot * Quat(rotation.x, rotation.y, rotation.z, rotation.w);
-			i = -1; 
-		}
-	}
-
-	c_transform->SetPosition(pos);
-	c_transform->SetRotation(rot);
-	c_transform->SetScale(scale);
-
-	for (int i = 0; i < node->mNumMeshes; i++)
-	{
-		aiMesh* mesh_to_load = scene->mMeshes[node->mMeshes[i]];
-
-		GameObject* game_object; 
-
-		//Transform
-		if (node->mNumMeshes > 1)
-		{
-			game_object= App->go_manager->CreateGameObject(go_root);
-			game_object->AddComponent(C_TRANSFORM);
-		}
-		else
-		{
-			game_object = go_root;
-		}
-
-		if(node->mName.length > 0)
-			game_object->name = node->mName.C_Str();
-		
-
-		//Mesh --------------------------------------------------------------------------------------------------------------------------------
-
-		ComponentMesh* c_mesh = (ComponentMesh*)game_object->AddComponent(C_MESH);
-
-		string mesh_path;
-		bool ret = MeshImporter::ImportMesh(mesh_to_load, mesh_path);
-
-		Mesh* mesh = MeshImporter::Load(mesh_path.data());
-		
-
-		c_mesh->SetMesh(mesh);
-
-		//Load Textures --------------------------------------------------------------------------------------------------------------------
-		
-		aiMaterial* material = scene->mMaterials[mesh_to_load->mMaterialIndex];
-		//uint numTextures = material->GetTextureCount(aiTextureType_DIFFUSE);
-		if (material)
-		{
-			aiString path;
-			material->GetTexture(aiTextureType_DIFFUSE, 0, &path);
-
-			if (path.length > 0)
-			{
-				ComponentMaterial* c_material = (ComponentMaterial*)game_object->AddComponent(C_MATERIAL);
-				
-				string texture_name;
-
-				string complete_path = base_path;
-				complete_path += path.data;
-				
-				complete_path.erase(0, 1);
-
-				MaterialImporter::Import("texture", complete_path.data(), texture_name);
-				c_material->texture_id = LoadTexture(texture_name.data());
-				c_material->file_path = texture_name;
-				LOG("Texture id %i Load: %s", c_material->texture_id, texture_name.data());
-			}
-			
-		}
-		
-	}
-
-	for (int i = 0; i < node->mNumChildren; i++)
-	{
-		LoadNode(node->mChildren[i], scene, go_root, base_path);
-	}
 }
