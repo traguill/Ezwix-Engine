@@ -227,11 +227,12 @@ bool ModuleFileSystem::GetEnumerateFiles(const char * dir, std::vector<std::stri
 	return (ef != NULL) ? true : false;
 }
 
-void ModuleFileSystem::GetFilesAndDirectories(const char * dir, std::vector<string>& folders, std::vector<string>& files)
+void ModuleFileSystem::GetFilesAndDirectories(const char * dir, std::vector<string>& folders, std::vector<string>& files, bool only_meta_files)
 {
 	char** ef = PHYSFS_enumerateFiles(dir);
 
 	string directory(dir);
+	string file_name;
 	for (char**i = ef; *i != NULL; i++)
 	{
 		if (PHYSFS_isDirectory((directory+(*i)).c_str()))
@@ -240,7 +241,15 @@ void ModuleFileSystem::GetFilesAndDirectories(const char * dir, std::vector<stri
 		}
 		else
 		{
-			files.push_back(*i);
+			if(!only_meta_files)
+				files.push_back(*i);
+			else
+			{
+				file_name = (*i);
+				file_name = file_name.substr(file_name.length() - 4, 4);
+				if (file_name.compare("meta") == 0)
+					files.push_back(*i);
+			}
 		}
 	}
 

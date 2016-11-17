@@ -318,7 +318,7 @@ bool MeshImporter::Save(Mesh& mesh, const char* folder_path, string& output_name
 	memcpy(cursor, mesh.uvs, bytes);
 
 	//Generate random UUID for the name
-	ret = App->file_system->SaveUnique(std::to_string(App->rnd->RandomInt()).data(), data, size, folder_path, "msh", output_name);
+	ret = App->file_system->SaveUnique(std::to_string((unsigned int)App->rnd->RandomInt()).data(), data, size, folder_path, "msh", output_name);
 
 	delete[] data;
 	data = nullptr;

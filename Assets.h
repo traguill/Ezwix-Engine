@@ -3,14 +3,25 @@
 #define __ASSETS_H__
 
 #include "Window.h"
+#include "ModuleResourceManager.h"
 #include <vector>
+
+struct AssetFile
+{
+	FileTypes type;
+	std::string name; //To display
+	std::string file_path;
+	std::string content_path;
+	int time_mod;
+};
 
 struct Directory
 {
-	std::string name;
+	std::string name; //To display
 	std::string path; //Path from Assets to the current directory
 	std::vector<Directory*> directories;
-	std::vector<string> files;
+	std::vector<AssetFile*> files;
+	std::string library_path;
 	Directory* parent = nullptr;
 };
 
@@ -43,7 +54,7 @@ private:
 	Directory* root = nullptr; //Assets directory
 
 	Directory* current_dir = root;
-	std::string file_selected;
+	AssetFile* file_selected = nullptr;
 	//Icons
 	uint folder_id;
 	uint file_id;

@@ -65,24 +65,29 @@ void Assets::Draw()
 	}
 
 	//Print files
-	std::vector<string>::iterator file = current_dir->files.begin();
+	std::vector<AssetFile*>::iterator file = current_dir->files.begin();
 	for (file; file != current_dir->files.end(); file++)
 	{
-		ImGui::Image((ImTextureID)file_id, ImVec2(15, 15));
-		ImGui::SameLine();
-
-		if (ImGui::Selectable((*file).data()))
+		if ((*file)->type != FOLDER)
 		{
-			if (IsMeshExtension((*file).data()))
+			ImGui::Image((ImTextureID)file_id, ImVec2(15, 15)); //Same image for every type of file for now
+			ImGui::SameLine();
+
+			switch ((*file)->type)
 			{
-				file_selected = current_dir->path + (*file);
-				ImGui::OpenPopup("FileMeshOptions");
+			case IMAGE:
+				break;
+			case MESH:
+				break;
 			}
 
-			if (IsSceneExtension((*file).data()))
+
+			if (ImGui::Selectable((*file)->name.data()))
 			{
-				file_selected = current_dir->path + (*file);
-				ImGui::OpenPopup("FileSceneOptions");
+				file_selected = (*file);
+				//ImGui::OpenPopup("FileMeshOptions");
+
+				//ImGui::OpenPopup("FileSceneOptions");
 			}
 		}
 	}
@@ -111,6 +116,7 @@ void Assets::Init()
 	root = new Directory();
 	root->path = ASSETS_FOLDER;
 	root->name = "Assets";
+	root->library_path = LIBRARY_FOLDER;
 	FillDirectoriesRecursive(root);
 
 	current_dir = root;
@@ -121,17 +127,48 @@ void Assets::Init()
 
 void Assets::FillDirectoriesRecursive(Directory* root_dir)
 {
-	std::vector<string> folders;
-	App->file_system->GetFilesAndDirectories(root_dir->path.data(), folders, root_dir->files);
+	vector<string> folders;
+	vector<string> files;
+	App->file_system->GetFilesAndDirectories(root_dir->path.data(), folders, files, true);
 
-	for (std::vector<string>::iterator it = folders.begin(); it != folders.end(); it++)
+	for (vector<string>::iterator file = files.begin(); file != files.end(); ++file)
 	{
-		Directory* dir = new Directory();
-		dir->path = root_dir->path + *it + "/";
-		dir->name = (*it);
-		dir->parent = root_dir;
-		FillDirectoriesRecursive(dir);
-		root_dir->directories.push_back(dir);
+		char* buffer = nullptr;
+		uint size = App->file_system->Load((root_dir->path + (*file)).data(), &buffer);
+		if (size == 0)
+		{
+			LOG("Error while loading Meta file: %s", (root_dir->path + (*file)).data());
+			if (buffer)
+				delete[] buffer;
+			return;
+		}
+		Data meta(buffer);
+
+		FileTypes type = static_cast<FileTypes>(meta.GetInt("Type"));
+
+		if (type == FOLDER)
+		{
+			Directory* dir = new Directory();
+			string folder_name = (*file).substr(0, (*file).length() - 5);
+			dir->path = root_dir->path + folder_name + "/";
+			dir->name = folder_name;
+			dir->parent = root_dir;
+			dir->library_path = root_dir->library_path + std::to_string(meta.GetUInt("UUID")) + "/";
+			root_dir->directories.push_back(dir);
+
+			FillDirectoriesRecursive(dir);
+		}
+		else
+		{
+			AssetFile* a_file = new AssetFile();
+			a_file->type = type;
+			a_file->name = (*file).substr(0, (*file).length() - 5); //Substract extension (.meta)
+			a_file->file_path = root_dir->path + (*file);
+			a_file->content_path = root_dir->library_path + std::to_string(meta.GetUInt("UUID"));
+			a_file->time_mod = meta.GetInt("time_mod");
+			root_dir->files.push_back(a_file);
+		}
+		delete[] buffer;
 	}
 }
 
@@ -158,7 +195,7 @@ void Assets::CleanUp()
 
 void Assets::DeleteDirectoriesRecursive(Directory* root_dir, bool keep_root)
 {
-	std::vector<Directory*>::iterator dir = root_dir->directories.begin();
+	vector<Directory*>::iterator dir = root_dir->directories.begin();
 
 	for (dir; dir != root_dir->directories.end(); dir++)
 	{
@@ -166,10 +203,15 @@ void Assets::DeleteDirectoriesRecursive(Directory* root_dir, bool keep_root)
 	}
 
 	root_dir->directories.clear();
+	
+	vector<AssetFile*>::iterator file = root_dir->files.begin();
+	for (file; file != root_dir->files.end(); ++file)
+		delete *file;
 	root_dir->files.clear();
 
 	if(!keep_root)
 		delete root_dir;
+
 }
 
 bool Assets::IsSceneExtension(const std::string& file_name) const
@@ -185,6 +227,7 @@ bool Assets::IsSceneExtension(const std::string& file_name) const
 void Assets::Refresh()
 {
 	DeleteDirectoriesRecursive(current_dir, true);
+	file_selected = nullptr;
 	FillDirectoriesRecursive(current_dir);
 }
 
@@ -217,7 +260,7 @@ void Assets::MeshFileOptions() const
 
 		if (ImGui::Selectable("Open"))
 		{
-			OpenInExplorer(&file_selected);
+			OpenInExplorer(&file_selected->file_path);
 		}
 		ImGui::EndPopup();
 	}
@@ -229,7 +272,7 @@ void Assets::SceneFileOptions()const
 	{
 		if (ImGui::Selectable("Load to scene"))
 		{
-			App->go_manager->LoadScene(file_selected.data());
+			//App->go_manager->LoadScene(file_selected.data()); TODO:Load scenes in new format
 		}
 		ImGui::EndPopup();
 	}
