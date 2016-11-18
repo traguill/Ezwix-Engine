@@ -1,10 +1,12 @@
 #ifndef __MESH_IMPORTER_H__
 #define __MESH_IMPORTER_H__
 
-struct aiMesh;
-struct Mesh;
-
 #include <string>
+
+struct aiMesh;
+struct aiNode;
+struct aiScene;
+struct Mesh;
 
 namespace MeshImporter
 {

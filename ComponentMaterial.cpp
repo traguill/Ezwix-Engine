@@ -2,7 +2,6 @@
 #include "ComponentMaterial.h"
 #include "imgui\imgui.h"
 #include "Data.h"
-#include "ModuleMeshes.h"
 
 ComponentMaterial::ComponentMaterial(ComponentType type, GameObject* game_object) : Component(type, game_object)
 {}
@@ -41,5 +40,5 @@ void ComponentMaterial::Load(Data & conf)
 	active = conf.GetBool("active");
 
 	file_path = conf.GetString("path");
-	texture_id = App->meshes->LoadTexture(file_path.data()); //TODO: Change it for a resource method
+	//texture_id = App->meshes->LoadTexture(file_path.data()); //TODO: Change it for a resource method
 }

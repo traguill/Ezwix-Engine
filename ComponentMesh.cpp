@@ -1,11 +1,10 @@
 #include "ComponentMesh.h"
 #include "Application.h"
-#include "ModuleMeshes.h"
+#include "MeshImporter.h"
 #include "imgui\imgui.h"
 #include "GameObject.h"
 #include "ComponentTransform.h"
 #include "ComponentMaterial.h"
-#include "MeshImporter.h"
 #include "ComponentCamera.h"
 
 ComponentMesh::ComponentMesh(ComponentType type, GameObject* game_object) : Component(type, game_object)

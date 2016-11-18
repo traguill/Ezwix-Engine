@@ -13,7 +13,6 @@
 #include "ModuleCamera3D.h"
 #include "ModulePhysics3D.h"
 #include "Editor.h"
-#include "ModuleMeshes.h"
 #include "ModuleFileSystem.h"
 #include "ModuleGOManager.h"
 #include "ModuleResourceManager.h"
@@ -70,7 +69,6 @@ public:
 	ModuleRenderer3D* renderer3D;
 	ModuleCamera3D* camera;
 	ModulePhysics3D* physics;
-	ModuleMeshes* meshes;
 	ModuleFileSystem* file_system;
 	ModuleGOManager* go_manager;
 	ModuleResourceManager* resource_manager;

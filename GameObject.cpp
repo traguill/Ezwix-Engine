@@ -5,7 +5,7 @@
 #include "ComponentMesh.h"
 #include "ComponentMaterial.h"
 #include "ComponentCamera.h"
-#include "ModuleMeshes.h"
+#include "MeshImporter.h"
 #include "RaycastHit.h"
 
 GameObject::GameObject()

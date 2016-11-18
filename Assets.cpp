@@ -125,8 +125,8 @@ void Assets::Init()
 
 	current_dir = root;
 
-	folder_id = App->meshes->LoadTexture("Resources/folder.png");
-	file_id = App->meshes->LoadTexture("Resources/file.png");
+	//folder_id = App->meshes->LoadTexture("Resources/folder.png"); TODO: Best way to load icons?
+	//file_id = App->meshes->LoadTexture("Resources/file.png");
 }
 
 void Assets::FillDirectoriesRecursive(Directory* root_dir)

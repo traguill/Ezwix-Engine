@@ -21,7 +21,6 @@ Application::Application()
 	renderer3D = new ModuleRenderer3D("renderer");
 	camera = new ModuleCamera3D("camera");
 	physics = new ModulePhysics3D("physics");
-	meshes = new ModuleMeshes("meshes");
 	editor = new Editor("editor");
 	file_system = new ModuleFileSystem("file_system");
 	go_manager = new ModuleGOManager("go_manager");
@@ -39,7 +38,6 @@ Application::Application()
 	AddModule(camera);
 	AddModule(input);
 	AddModule(g_Debug);
-	AddModule(meshes);
 	AddModule(audio);
 	AddModule(physics);
 	AddModule(go_manager);

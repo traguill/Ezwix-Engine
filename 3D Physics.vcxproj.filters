@@ -360,9 +360,6 @@
     <ClInclude Include="Profiler.h">
       <Filter>Sources\Profiler</Filter>
     </ClInclude>
-    <ClInclude Include="ModuleMeshes.h">
-      <Filter>Sources\Modules</Filter>
-    </ClInclude>
     <ClInclude Include="ModuleFileSystem.h">
       <Filter>Sources\Modules</Filter>
     </ClInclude>
@@ -628,9 +625,6 @@
     </ClCompile>
     <ClCompile Include="Profiler.cpp">
       <Filter>Sources\Profiler</Filter>
-    </ClCompile>
-    <ClCompile Include="ModuleMeshes.cpp">
-      <Filter>Sources\Modules</Filter>
     </ClCompile>
     <ClCompile Include="ModuleFileSystem.cpp">
       <Filter>Sources\Modules</Filter>

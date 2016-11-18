@@ -4,9 +4,9 @@
 #include "ComponentCamera.h"
 #include "Glew\include\glew.h"
 #include "SDL\include\SDL_opengl.h"
-#include "ModuleMeshes.h"
 #include "GameObject.h"
 #include "ModuleGOManager.h"
+#include "ComponentMesh.h"
 #include "Octree.h"
 #include <gl/GL.h>
 #include <gl/GLU.h>

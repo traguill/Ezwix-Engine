@@ -6,7 +6,6 @@
 #include "Assimp/include/scene.h"
 #include "Assimp/include/postprocess.h"
 #include "Assimp/include/cfileio.h"
-#include "ModuleMeshes.h"
 #pragma comment (lib, "Assimp/libx86/assimp.lib")
 
 #include "Glew\include\glew.h"
@@ -136,6 +135,8 @@ void MeshImporter::ImportNode(aiNode * node, const aiScene * scene, GameObject* 
 	c_transform->SetRotation(rot);
 	c_transform->SetScale(scale);
 
+	c_transform->Update(); //Force it to update the matrix
+
 	for (int i = 0; i < node->mNumMeshes; i++)
 	{
 		aiMesh* mesh_to_load = scene->mMeshes[node->mMeshes[i]];
@@ -148,7 +149,6 @@ void MeshImporter::ImportNode(aiNode * node, const aiScene * scene, GameObject* 
 			game_object = new GameObject(go_root);
 			game_object->AddComponent(C_TRANSFORM);
 			objects_created.push_back(game_object);
-
 		}
 		else
 		{
