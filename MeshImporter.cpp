@@ -37,6 +37,9 @@ bool MeshImporter::Import(const char * file, const char * path, const char* base
 		Data root_node;
 		root_node.AppendArray("GameObjects");
 
+		string file_mesh_directory = path;
+		file_mesh_directory = file_mesh_directory.substr(0, file_mesh_directory.find_last_of("\//") + 1);
+
 		aiNode* root = scene->mRootNode;
 		vector<GameObject*> objects_created;
 
@@ -51,7 +54,7 @@ bool MeshImporter::Import(const char * file, const char * path, const char* base
 			queue.pop();
 
 			if(tmp_node != root) //Do not load the root node(unnecessary)
-				MeshImporter::ImportNode(tmp_node, scene, NULL, base_path, objects_created, base_path);
+				MeshImporter::ImportNode(tmp_node, scene, NULL, file_mesh_directory, objects_created, base_path);
 
 			for (int i = 0; i < tmp_node->mNumChildren; i++)
 				queue.push(tmp_node->mChildren[i]);
@@ -86,7 +89,7 @@ bool MeshImporter::Import(const char * file, const char * path, const char* base
 	return ret;
 }
 
-void MeshImporter::ImportNode(aiNode * node, const aiScene * scene, GameObject* parent, const char * base_path, vector<GameObject*>& objects_created, string folder_path)
+void MeshImporter::ImportNode(aiNode * node, const aiScene * scene, GameObject* parent, string mesh_file_directory, vector<GameObject*>& objects_created, string folder_path)
 {
 	//Transformation ------------------------------------------------------------------------------------------------------------------
 	GameObject* go_root = new GameObject(parent);
@@ -173,7 +176,7 @@ void MeshImporter::ImportNode(aiNode * node, const aiScene * scene, GameObject* 
 
 		//Load Textures --------------------------------------------------------------------------------------------------------------------
 
-		/*aiMaterial* material = scene->mMaterials[mesh_to_load->mMaterialIndex];
+		aiMaterial* material = scene->mMaterials[mesh_to_load->mMaterialIndex];
 		//uint numTextures = material->GetTextureCount(aiTextureType_DIFFUSE);
 		if (material)
 		{
@@ -184,16 +187,21 @@ void MeshImporter::ImportNode(aiNode * node, const aiScene * scene, GameObject* 
 			{
 				ComponentMaterial* c_material = (ComponentMaterial*)game_object->AddComponent(C_MATERIAL);
 
-				string complete_path = base_path; //TODO:this base path is not from the texture where we have to open it.
-				complete_path += path.data;
+				string complete_path = path.data; 
+				
+				size_t found = complete_path.find_first_of('\\');
+				while (found != string::npos)
+				{
+					complete_path[found] = '/';
+					found = complete_path.find_first_of('\\', found + 1);
+				}
+				complete_path = mesh_file_directory + complete_path;
 
 				complete_path.erase(0, 1);
-
-				MaterialImporter::Import("texture", complete_path.data());
-				c_material->file_path = "texture"; //TODO: change texture for a valid path
+				c_material->file_path = App->resource_manager->FindFile(complete_path);
 			}
 
-		}*/
+		}
 
 	}
 }

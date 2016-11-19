@@ -1,7 +1,7 @@
 #include "Application.h"
 #include "MaterialImporter.h"
 #include "ModuleFileSystem.h"
-
+#include "ResourceFileTexture.h"
 #include "Devil/include/il.h"
 #include "Devil/include/ilut.h"
 #pragma comment ( lib, "Devil/libx86/DevIL.lib" )
@@ -38,6 +38,39 @@ bool MaterialImporter::Import(const char* file, const char * path)
 				ilDeleteImages(1, &id);
 			}
 		}
+	}
+
+	delete[] buffer;
+
+	return ret;
+}
+
+bool MaterialImporter::Load(ResourceFileTexture * res)
+{
+	bool ret = false;
+
+	char* buffer = nullptr;
+	unsigned int size = App->file_system->Load(res->GetFile(), &buffer);
+	
+	if (size > 0)
+	{
+		ILuint id;
+		ilGenImages(1, &id);
+		ilBindImage(id);
+		if (ilLoadL(IL_DDS, (const void*)buffer, size))
+		{
+			ILinfo info;
+			iluGetImageInfo(&info);
+
+			res->SetProperties(ilutGLBindTexImage(), info.Width, info.Height, info.Depth, info.NumMips, info.SizeOfData);
+
+			ilDeleteImages(1, &id);
+			ret = true;
+		}
+	}
+	else
+	{
+		LOG("Could load texture: %s", res->GetFile());
 	}
 
 	delete[] buffer;

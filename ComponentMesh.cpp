@@ -6,6 +6,7 @@
 #include "ComponentTransform.h"
 #include "ComponentMaterial.h"
 #include "ComponentCamera.h"
+#include "ResourceFileMesh.h"
 
 ComponentMesh::ComponentMesh(ComponentType type, GameObject* game_object) : Component(type, game_object)
 {
@@ -15,7 +16,7 @@ ComponentMesh::ComponentMesh(ComponentType type, GameObject* game_object) : Comp
 
 ComponentMesh::~ComponentMesh()
 {
-	delete mesh;
+	App->resource_manager->UnloadResource(mesh->file_path);
 	mesh = nullptr;
 }
 
@@ -124,7 +125,10 @@ void ComponentMesh::Load(Data & conf)
 	active = conf.GetBool("active");
 
 	const char* path = conf.GetString("path");
-	Mesh* mesh = MeshImporter::Load(path);
+
+	ResourceFileMesh* rc_mesh = (ResourceFileMesh*)App->resource_manager->LoadResource(path, ResourceFileType::RES_MESH);
+	rc_mesh->Load();
+	Mesh* mesh = rc_mesh->GetMesh(); 
 	if(mesh)
 		mesh->file_path = path;
 	SetMesh(mesh);

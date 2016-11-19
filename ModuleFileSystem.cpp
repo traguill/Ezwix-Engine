@@ -328,9 +328,9 @@ bool ModuleFileSystem::GenerateDirectory(const char * path) const
 
 void ModuleFileSystem::SearchResourceFolders()
 {
-	const char* folders[] = { ASSETS_FOLDER, LIBRARY_FOLDER, LIBRARY_TEXTURES_FOLDER, LIBRARY_MESHES_FOLDER }; //4 folders
+	const char* folders[] = { ASSETS_FOLDER, LIBRARY_FOLDER}; //2 folders
 
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < 2; i++)
 		if (PHYSFS_exists(folders[i]) == 0)
 			PHYSFS_mkdir(folders[i]);
 	

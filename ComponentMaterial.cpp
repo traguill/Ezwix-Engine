@@ -2,12 +2,14 @@
 #include "ComponentMaterial.h"
 #include "imgui\imgui.h"
 #include "Data.h"
-
+#include "ResourceFileTexture.h"
 ComponentMaterial::ComponentMaterial(ComponentType type, GameObject* game_object) : Component(type, game_object)
 {}
 
 ComponentMaterial::~ComponentMaterial()
-{}
+{
+	App->resource_manager->UnloadResource(file_path);
+}
 
 void ComponentMaterial::OnInspector()
 {
@@ -40,5 +42,7 @@ void ComponentMaterial::Load(Data & conf)
 	active = conf.GetBool("active");
 
 	file_path = conf.GetString("path");
-	//texture_id = App->meshes->LoadTexture(file_path.data()); //TODO: Change it for a resource method
+	ResourceFileTexture* rc_texture = (ResourceFileTexture*)App->resource_manager->LoadResource(file_path, ResourceFileType::RES_TEXTURE);
+	rc_texture->Load();
+	texture_id = rc_texture->GetTexture();
 }

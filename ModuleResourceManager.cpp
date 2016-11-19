@@ -4,7 +4,8 @@
 #include "MeshImporter.h"
 #include "Random.h"
 #include "Data.h"
-
+#include "ResourceFileMesh.h"
+#include "ResourceFileTexture.h"
 #include "Glew\include\glew.h"
 #include <gl\GL.h>
 
@@ -26,6 +27,9 @@ ModuleResourceManager::ModuleResourceManager(const char* name, bool start_enable
 
 ModuleResourceManager::~ModuleResourceManager()
 {
+	for (list<ResourceFile*>::iterator rc_file = resource_files.begin(); rc_file != resource_files.end(); ++rc_file)
+		delete *rc_file;
+	resource_files.clear();
 }
 
 bool ModuleResourceManager::Init(Data & config)
@@ -44,24 +48,32 @@ bool ModuleResourceManager::Init(Data & config)
 
 bool ModuleResourceManager::CleanUp()
 {
+	ilShutDown();
 	aiDetachAllLogStreams();
 	return true;
 }
 
-void ModuleResourceManager::FileDropped(const char * file_path)
+void ModuleResourceManager::FileDropped(const char * file_path, string base_dir, string base_library_dir)
 {
 	//Files extensions accepted
-	//Images: PNG
+	//Images: PNG TGA
 	//Meshes: FBX / OBJ
 	//Audio: PENDING
 
 	if (App->file_system->IsDirectoryOutside(file_path))
 	{
-		ImportFolder(file_path);
+		vector<tmp_mesh_file> mesh_files;
+		ImportFolder(file_path, mesh_files);
+
+		for (vector<tmp_mesh_file>::iterator tmp = mesh_files.begin(); tmp != mesh_files.end(); tmp++)
+		{
+			ImportFile(tmp->mesh_path.data(), tmp->assets_folder, tmp->library_folder);
+		}
+		mesh_files.clear();
 	}
 	else
 	{
-		ImportFile(file_path);
+		ImportFile(file_path, base_dir, base_library_dir);
 	}
 	
 }
@@ -71,28 +83,101 @@ void ModuleResourceManager::LoadFile(const string & library_path, const FileType
 	switch (type)
 	{
 	case MESH:
-		LoadMeshFile(library_path);
+		LoadPrefabFile(library_path);
 		break;
-	case IMAGE:
+	case PREFAB:
+		LoadPrefabFile(library_path);
 		break;
 	}
+}
+
+ResourceFile * ModuleResourceManager::LoadResource(const string & path, ResourceFileType type)
+{
+	ResourceFile* rc_file = nullptr;
+
+	string name = path.substr(path.find_last_of("/\\") + 1);
+	name = name.substr(0, name.find_last_of('.'));
+	unsigned int uuid = std::stoul(name);
+	rc_file = FindResourceByUUID(uuid);
+
+	if (rc_file == nullptr)
+	{
+		switch (type)
+		{
+		case RES_MESH:
+			rc_file = new ResourceFileMesh(type, path, uuid);
+			break;
+		case RES_TEXTURE:
+			rc_file = new ResourceFileTexture(type, path, uuid);
+			break;
+		}
+	}
+
+	return rc_file;
+}
+
+void ModuleResourceManager::UnloadResource(const string & path)
+{
+	ResourceFile* rc_file = nullptr;
+
+	string name = path.substr(path.find_last_of("/\\") + 1);
+	name = name.substr(0, name.find_last_of('.'));
+	unsigned int uuid = std::stoul(name);
+	rc_file = FindResourceByUUID(uuid);
+
+	if (rc_file != nullptr)
+	{
+		rc_file->Unload();
+	}
+}
+
+ResourceFile * ModuleResourceManager::FindResourceByUUID(unsigned int uuid)
+{
+	for (list<ResourceFile*>::iterator rc_file = resource_files.begin(); rc_file != resource_files.end(); ++rc_file)
+		if ((*rc_file)->GetUUID() == uuid)
+			return *rc_file;
+
+	return nullptr;
+}
+
+string ModuleResourceManager::FindFile(const string & assets_file_path)
+{
+	string ret;
+
+	string meta = assets_file_path.substr(0, assets_file_path.length() - 4);
+	meta += ".meta";
+
+	char* buffer = nullptr;
+	int size = App->file_system->Load(meta.data(), &buffer);
+	if (size > 0)
+	{
+		Data data(buffer);
+		ret = data.GetString("library_path");
+	}
+	else
+	{
+		LOG("Could not find file %s", assets_file_path.data());
+	}
+	delete[] buffer;
+
+	return ret;
 }
 
 ///Given a path returns if the file is one of the valid extensions to import.
 FileTypes ModuleResourceManager::GetFileExtension(const char * path) const
 {
 	char* mesh_extensions[] = { "fbx", "FBX", "obj", "OBJ"};
-	char* image_extensions[] = {"png", "PNG" };
+	char* image_extensions[] = {"png", "PNG", "tga", "TGA"};
 	string name = path;
 	string extension = name.substr(name.find_last_of(".") + 1);
 
 	for (int i = 0; i < 4; i++)
 		if (extension.compare(mesh_extensions[i]) == 0)
-			return MESH;
+			return FileTypes::MESH;
 
-	for (int i = 0; i < 2; i++)
+	for (int i = 0; i < 4; i++)
 		if (extension.compare(image_extensions[i]) == 0)
-			return IMAGE;
+			return FileTypes::IMAGE;
 	
 	return NONE;
 }
@@ -109,12 +194,13 @@ string ModuleResourceManager::CopyOutsideFileToAssetsCurrentDir(const char * pat
 	return current_dir;
 }
 
-void ModuleResourceManager::GenerateMetaFile(const char * path, FileTypes type, uint uuid, bool is_file)const
+void ModuleResourceManager::GenerateMetaFile(const char * path, FileTypes type, uint uuid, string library_path, bool is_file)const
 {
 	Data root;
 	root.AppendUInt("Type", static_cast<unsigned int>(type));
 	root.AppendUInt("UUID", uuid);
 	root.AppendDouble("time_mod", App->file_system->GetLastModificationTime(path));
+	root.AppendString("library_path", library_path.data());
 
 	char* buf;
 	size_t size = root.Serialize(&buf);
@@ -129,7 +215,7 @@ void ModuleResourceManager::GenerateMetaFile(const char * path, FileTypes type, 
 	delete[] buf;
 }
 
-void ModuleResourceManager::ImportFolder(const char * path, string base_dir, string base_library_dir) const
+void ModuleResourceManager::ImportFolder(const char * path, vector<tmp_mesh_file>& list_meshes, string base_dir, string base_library_dir) const
 {
 	vector<string> files, folders;
 	App->file_system->GetFilesAndDirectoriesOutside(path, folders, files);
@@ -138,21 +224,22 @@ void ModuleResourceManager::ImportFolder(const char * path, string base_dir, str
 	//Create Folder metadata
 	uint uuid = App->rnd->RandomInt();
 	string folder_assets_path;
-	if(base_dir.size() == 0)
+	if (base_dir.size() == 0)
 		folder_assets_path = App->editor->GetAssetsCurrentDir() + App->file_system->GetNameFromPath(path);
 	else
 		folder_assets_path = base_dir + App->file_system->GetNameFromPath(path);
 	App->file_system->GenerateDirectory(folder_assets_path.data());
-	GenerateMetaFile(folder_assets_path.data(), FOLDER, uuid, false);
-
-	//Create Folder at Library
 	string library_path;
 	if (base_library_dir.size() == 0)
 		library_path = LIBRARY_FOLDER;
 	else
 		library_path = base_library_dir;
+
+	//Create Folder at Library
 	library_path += std::to_string(uuid);
 	App->file_system->GenerateDirectory(library_path.data());
+
+	GenerateMetaFile(folder_assets_path.data(), FOLDER, uuid, library_path, false);
 
 	directory_path += "/"; //Add folder ending manually
 	folder_assets_path += "/";
@@ -163,7 +250,19 @@ void ModuleResourceManager::ImportFolder(const char * path, string base_dir, str
 	for (vector<string>::const_iterator file = files.begin(); file != files.end(); ++file)
 	{
 		file_path = directory_path + (*file);
-		ImportFile(file_path.data(), folder_assets_path, library_path);
+		if (GetFileExtension(file->data()) == MESH)
+		{
+			tmp_mesh_file tmp_file;
+			tmp_file.mesh_path = file_path;
+			tmp_file.assets_folder = folder_assets_path;
+			tmp_file.library_folder = library_path;
+
+			list_meshes.push_back(tmp_file);
+		}
+		else
+		{
+			ImportFile(file_path.data(), folder_assets_path, library_path);
+		}
 	}
 
 	//Import folders
@@ -171,7 +270,7 @@ void ModuleResourceManager::ImportFolder(const char * path, string base_dir, str
 	for (vector<string>::const_iterator folder = folders.begin(); folder != folders.end(); ++folder)
 	{
 		folder_path = directory_path + (*folder);
-		ImportFolder(folder_path.data(), folder_assets_path, library_path);
+		ImportFolder(folder_path.data(), list_meshes, folder_assets_path, library_path);
 	}
 }
 
@@ -195,7 +294,6 @@ void ModuleResourceManager::ImageDropped(const char* path, string base_dir, stri
 {
 	string file_assets_path = CopyOutsideFileToAssetsCurrentDir(path, base_dir);
 	uint uuid = App->rnd->RandomInt();
-	GenerateMetaFile(file_assets_path.data(), IMAGE, uuid);
 
 	string final_image_path;
 	if (base_library_dir.size() == 0)
@@ -208,6 +306,8 @@ void ModuleResourceManager::ImageDropped(const char* path, string base_dir, stri
 	final_image_path += std::to_string(uuid);
 	final_image_path += ".dds";
 
+	GenerateMetaFile(file_assets_path.data(), IMAGE, uuid, final_image_path);
+
 	MaterialImporter::Import(final_image_path.data(), file_assets_path.data());
 }
 
@@ -216,7 +316,6 @@ void ModuleResourceManager::MeshDropped(const char * path, string base_dir, stri
 	//Create a copy and a .meta inside the Assets folder
 	string file_assets_path = CopyOutsideFileToAssetsCurrentDir(path, base_dir);
 	uint uuid = App->rnd->RandomInt();
-	GenerateMetaFile(file_assets_path.data(), MESH, uuid);
 
 	//Create the link to Library
 	string final_mesh_path;
@@ -230,10 +329,11 @@ void ModuleResourceManager::MeshDropped(const char * path, string base_dir, stri
 	string library_dir = final_mesh_path;
 	final_mesh_path += std::to_string(uuid) + ".inf";
 
+	GenerateMetaFile(file_assets_path.data(), FileTypes::MESH, uuid, final_mesh_path);
 	MeshImporter::Import(final_mesh_path.data(), file_assets_path.data(), library_dir.data());
 }
 
-void ModuleResourceManager::LoadMeshFile(const string & library_path)
+void ModuleResourceManager::LoadPrefabFile(const string & library_path)
 {
 	string library_path_extension = library_path + ".inf";
 	
@@ -241,7 +341,7 @@ void ModuleResourceManager::LoadMeshFile(const string & library_path)
 	uint size = App->file_system->Load(library_path_extension.data(), &buffer);
 	if (size == 0)
 	{
-		LOG("Error while loading Mesh: %s", library_path_extension.data());
+		LOG("Error while loading: %s", library_path_extension.data());
 		if (buffer)
 			delete[] buffer;
 		return;
@@ -255,12 +355,12 @@ void ModuleResourceManager::LoadMeshFile(const string & library_path)
 	{
 		for (int i = 0; i < scene.GetArraySize("GameObjects"); i++)
 		{
-			App->go_manager->LoadMeshGameObject(scene.GetArray("GameObjects", i));
+			App->go_manager->LoadPrefabGameObject(scene.GetArray("GameObjects", i));
 		}
 	}
 	else
 	{
-		LOG("The Mesh %s is not a valid mesh file", library_path_extension.data());
+		LOG("The %s is not a valid mesh/prefab file", library_path_extension.data());
 	}
 
 	delete[] buffer;

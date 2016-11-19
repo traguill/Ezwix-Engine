@@ -386,7 +386,7 @@ GameObject * ModuleGOManager::LoadGameObject(const Data & go_data)
 	return go;
 }
 
-void ModuleGOManager::LoadMeshGameObject(const Data & go_data)
+void ModuleGOManager::LoadPrefabGameObject(const Data & go_data)
 {
 	const char* name = go_data.GetString("name");
 	unsigned int uuid = go_data.GetUInt("UUID");
