@@ -54,14 +54,11 @@ bool MeshImporter::Import(const char * file, const char * path, const char* base
 			queue.pop();
 
 			if(tmp_node != root) //Do not load the root node(unnecessary)
-				MeshImporter::ImportNode(tmp_node, scene, NULL, file_mesh_directory, objects_created, base_path);
+				MeshImporter::ImportNode(tmp_node, scene, NULL, file_mesh_directory, objects_created, base_path, root_node);
 
 			for (int i = 0; i < tmp_node->mNumChildren; i++)
 				queue.push(tmp_node->mChildren[i]);
 		}
-
-		for (vector<GameObject*>::iterator go = objects_created.begin(); go != objects_created.end(); ++go)
-			(*go)->Save(root_node);
 		
 		for (vector<GameObject*>::iterator go = objects_created.begin(); go != objects_created.end(); ++go)
 			delete (*go);
@@ -89,7 +86,7 @@ bool MeshImporter::Import(const char * file, const char * path, const char* base
 	return ret;
 }
 
-void MeshImporter::ImportNode(aiNode * node, const aiScene * scene, GameObject* parent, string mesh_file_directory, vector<GameObject*>& objects_created, string folder_path)
+void MeshImporter::ImportNode(aiNode * node, const aiScene * scene, GameObject* parent, string mesh_file_directory, vector<GameObject*>& objects_created, string folder_path, Data& root_data_node)
 {
 	//Transformation ------------------------------------------------------------------------------------------------------------------
 	GameObject* go_root = new GameObject(parent);
@@ -145,34 +142,46 @@ void MeshImporter::ImportNode(aiNode * node, const aiScene * scene, GameObject* 
 		aiMesh* mesh_to_load = scene->mMeshes[node->mMeshes[i]];
 
 		GameObject* game_object;
-		Data data;
+		ComponentTransform* go_transform;
 		//Transform
 		if (node->mNumMeshes > 1)
 		{
 			game_object = new GameObject(go_root);
-			game_object->AddComponent(C_TRANSFORM);
+			go_transform = (ComponentTransform*)game_object->AddComponent(C_TRANSFORM);
 			objects_created.push_back(game_object);
 		}
 		else
 		{
 			game_object = go_root;
+			go_transform = c_transform;
 		}
 
 		if (node->mName.length > 0)
 			game_object->name = node->mName.C_Str();
 
+		//Save GameObject basic info + Transform comopnent
+		Data data;
+		data.AppendString("name", game_object->name.data());
+		data.AppendUInt("UUID", game_object->GetUUID());
+		if (game_object->GetParent() == nullptr)
+			data.AppendUInt("parent", 0);
+		else
+			data.AppendUInt("parent", game_object->GetParent()->GetUUID());
+		data.AppendBool("active", true);
+		data.AppendBool("static", false);
+		data.AppendArray("components");
+
+		go_transform->Save(data);
 
 		//Mesh --------------------------------------------------------------------------------------------------------------------------------
-
-		ComponentMesh* c_mesh = (ComponentMesh*)game_object->AddComponent(C_MESH);
-
 		string mesh_path;
-
 		bool ret = MeshImporter::ImportMesh(mesh_to_load, folder_path.data(), mesh_path); 
-
-		Mesh* mesh = MeshImporter::Load(mesh_path.data());
-
-		c_mesh->SetMesh(mesh);
+		Data mesh_data;
+		mesh_data.AppendInt("type", ComponentType::C_MESH);
+		mesh_data.AppendUInt("UUID", (unsigned int)App->rnd->RandomInt());
+		mesh_data.AppendBool("active", true);
+		mesh_data.AppendString("path", mesh_path.data());
+		data.AppendArrayValue(mesh_data);
 
 		//Load Textures --------------------------------------------------------------------------------------------------------------------
 
@@ -185,8 +194,6 @@ void MeshImporter::ImportNode(aiNode * node, const aiScene * scene, GameObject* 
 
 			if (path.length > 0)
 			{
-				ComponentMaterial* c_material = (ComponentMaterial*)game_object->AddComponent(C_MATERIAL);
-
 				string complete_path = path.data; 
 				
 				size_t found = complete_path.find_first_of('\\');
@@ -196,13 +203,19 @@ void MeshImporter::ImportNode(aiNode * node, const aiScene * scene, GameObject* 
 					found = complete_path.find_first_of('\\', found + 1);
 				}
 				complete_path = mesh_file_directory + complete_path;
-
 				complete_path.erase(0, 1);
-				c_material->file_path = App->resource_manager->FindFile(complete_path);
-			}
 
+				//c_material->file_path = App->resource_manager->FindFile(complete_path);
+				Data tex_data;
+				tex_data.AppendInt("type", ComponentType::C_MATERIAL);
+				tex_data.AppendUInt("UUID", (unsigned int)App->rnd->RandomInt());
+				tex_data.AppendBool("active", true);
+				tex_data.AppendString("path", App->resource_manager->FindFile(complete_path).data());
+				data.AppendArrayValue(tex_data);
+			}
 		}
 
+		root_data_node.AppendArrayValue(data);
 	}
 }
 
