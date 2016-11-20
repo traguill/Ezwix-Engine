@@ -55,6 +55,12 @@ string Editor::GetAssetsCurrentDir() const
 	return assets->CurrentDirectory();
 }
 
+void Editor::RefreshAssets() const
+{
+	if (assets)
+		assets->Refresh();
+}
+
 update_status Editor::Update()
 {
 	PROFILE("Editor::Update()");

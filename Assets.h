@@ -6,13 +6,18 @@
 #include "ModuleResourceManager.h"
 #include <vector>
 
+struct Directory;
+
 struct AssetFile
 {
 	FileTypes type;
 	std::string name; //To display
 	std::string file_path;
 	std::string content_path;
+	std::string original_file;
+	unsigned int uuid;
 	int time_mod;
+	Directory* directory = nullptr;
 };
 
 struct Directory
@@ -32,6 +37,7 @@ public:
 	~Assets();
 
 	void Draw();
+	void Refresh();
 	string CurrentDirectory()const;
 
 private:
@@ -44,16 +50,20 @@ private:
 	bool IsMeshExtension(const std::string& file_name)const;
 	bool IsSceneExtension(const std::string& file_name)const;
 
-	void Refresh();
 	void OpenInExplorer(const std::string* file = NULL)const;
 
-	void MeshFileOptions()const;
-	void SceneFileOptions()const;
+	void MeshFileOptions();
+	void SceneFileOptions();
+	void DirectoryOptions();
+
+	void DeleteAssetDirectory(Directory* directory);
+	void DeleteAssetFile(AssetFile* file);
 
 private:
 	Directory* root = nullptr; //Assets directory
 
 	Directory* current_dir = root;
+	Directory* dir_selected = nullptr;
 	AssetFile* file_selected = nullptr;
 	//Icons
 	uint folder_id;

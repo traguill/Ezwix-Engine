@@ -31,7 +31,7 @@ public:
 	bool Init(Data& config);
 	bool CleanUp();
 
-	void FileDropped(const char* file_path, string base_dir = string(), string base_library_dir = string());
+	void FileDropped(const char* file_path);
 	void LoadFile(const string& library_path, const FileTypes& type);
 
 	ResourceFile* LoadResource(const string& path, ResourceFileType type);

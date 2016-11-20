@@ -28,6 +28,7 @@ public:
 	bool CleanUp();
 
 	string GetAssetsCurrentDir()const;
+	void RefreshAssets()const;
 
 private:
 	//Game Simulation Options

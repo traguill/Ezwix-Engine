@@ -227,7 +227,7 @@ bool ModuleFileSystem::GetEnumerateFiles(const char * dir, std::vector<std::stri
 	return (ef != NULL) ? true : false;
 }
 
-void ModuleFileSystem::GetFilesAndDirectories(const char * dir, std::vector<string>& folders, std::vector<string>& files, bool only_meta_files)
+void ModuleFileSystem::GetFilesAndDirectories(const char * dir, std::vector<string>& folders, std::vector<string>& files, bool only_meta_files) const
 {
 	char** ef = PHYSFS_enumerateFiles(dir);
 
@@ -324,6 +324,27 @@ double ModuleFileSystem::GetLastModificationTime(const char * file_path) const
 bool ModuleFileSystem::GenerateDirectory(const char * path) const
 {
 	return PHYSFS_mkdir(path);
+}
+
+bool ModuleFileSystem::Delete(string filename) const
+{
+	int ret; 
+	vector<string> directories, files;
+	if (IsDirectory(filename.data()))
+	{
+		GetFilesAndDirectories(filename.data(), directories, files);
+		for (vector<string>::const_iterator directory = directories.begin(); directory != directories.end(); ++directory)
+		{
+			string directory_name = filename + *directory + "/";
+			Delete(directory_name.data());
+		}
+			
+		for (vector<string>::const_iterator file = files.begin(); file != files.end(); ++file)
+			PHYSFS_delete((filename + '/' + (*file)).data());
+	}
+	ret = PHYSFS_delete(filename.data());
+	
+	return (ret) ? true : false;
 }
 
 void ModuleFileSystem::SearchResourceFolders()

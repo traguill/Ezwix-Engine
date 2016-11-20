@@ -19,24 +19,6 @@ void Assets::Draw()
 
 	ImGui::Begin("Assets", &active);
 
-	if(ImGui::IsMouseHoveringWindow())
-		if (ImGui::IsMouseClicked(1))
-			ImGui::OpenPopup("AssetsOptions");
-	
-
-	if (ImGui::BeginPopup("AssetsOptions"))
-	{
-		if (ImGui::Selectable("Refresh"))
-		{
-			Refresh();
-		}
-		if (ImGui::Selectable("Open in Explorer"))
-		{
-			OpenInExplorer();
-		}
-		ImGui::EndPopup();
-	}
-
 	ImGui::Text(current_dir->path.data());
 
 	//Back folder
@@ -59,8 +41,8 @@ void Assets::Draw()
 		
 		if (ImGui::Selectable((*dir)->name.data()))
 		{
-			current_dir = (*dir);
-			break;
+			ImGui::OpenPopup("DirectoryOptions");
+			dir_selected = (*dir);
 		}
 	}
 
@@ -98,10 +80,8 @@ void Assets::Draw()
 
 	//PopUps File type options --------------------------------------------------
 
-	//Open Meshes
+	DirectoryOptions();
 	MeshFileOptions();
-
-	//Open Scenes
 	SceneFileOptions();
 	
 	ImGui::End();
@@ -168,8 +148,11 @@ void Assets::FillDirectoriesRecursive(Directory* root_dir)
 			a_file->type = type;
 			a_file->name = (*file).substr(0, (*file).length() - 5); //Substract extension (.meta)
 			a_file->file_path = root_dir->path + (*file);
-			a_file->content_path = root_dir->library_path + std::to_string(meta.GetUInt("UUID")) + "/" + std::to_string(meta.GetUInt("UUID"));
+			a_file->uuid = meta.GetUInt("UUID");
+			a_file->content_path = root_dir->library_path + std::to_string(a_file->uuid) + "/" + std::to_string(a_file->uuid);
 			a_file->time_mod = meta.GetInt("time_mod");
+			a_file->original_file = meta.GetString("original_file");
+			a_file->directory = root_dir;
 			root_dir->files.push_back(a_file);
 		}
 		delete[] buffer;
@@ -194,6 +177,8 @@ bool Assets::IsMeshExtension(const std::string& fn)const
 
 void Assets::CleanUp()
 {
+	file_selected = nullptr;
+	dir_selected = nullptr;
 	DeleteDirectoriesRecursive(root);
 }
 
@@ -232,6 +217,7 @@ void Assets::Refresh()
 {
 	DeleteDirectoriesRecursive(current_dir, true);
 	file_selected = nullptr;
+	dir_selected = nullptr;
 	FillDirectoriesRecursive(current_dir);
 }
 
@@ -253,7 +239,7 @@ void Assets::OpenInExplorer(const std::string* file_name)const
 	SDL_free(base_path);
 }
 
-void Assets::MeshFileOptions() const
+void Assets::MeshFileOptions() 
 {
 	if (ImGui::BeginPopup("FileMeshOptions"))
 	{
@@ -262,15 +248,30 @@ void Assets::MeshFileOptions() const
 			App->resource_manager->LoadFile(file_selected->content_path, MESH);
 		}
 
+		if (ImGui::Selectable("Remove"))
+		{
+			DeleteAssetFile(file_selected);
+		}
+
 		if (ImGui::Selectable("Open"))
 		{
 			OpenInExplorer(&file_selected->file_path);
 		}
+
+		if (ImGui::Selectable("Refresh"))
+		{
+			Refresh();
+		}
+		if (ImGui::Selectable("Open in Explorer"))
+		{
+			OpenInExplorer();
+		}
+
 		ImGui::EndPopup();
 	}
 }
 
-void Assets::SceneFileOptions()const
+void Assets::SceneFileOptions()
 {
 	if (ImGui::BeginPopup("FileSceneOptions"))
 	{
@@ -280,4 +281,55 @@ void Assets::SceneFileOptions()const
 		}
 		ImGui::EndPopup();
 	}
+}
+
+void Assets::DirectoryOptions()
+{
+	if (ImGui::BeginPopup("DirectoryOptions"))
+	{
+		if (ImGui::Selectable("Open"))
+		{
+			current_dir = dir_selected;
+			dir_selected = nullptr;
+		}
+		if (ImGui::Selectable("Remove"))
+		{
+			DeleteAssetDirectory(dir_selected);
+			dir_selected = nullptr;
+		}
+		ImGui::EndPopup();
+	}
+}
+
+void Assets::DeleteAssetDirectory(Directory * directory)
+{
+	if (directory == nullptr)
+		return;
+	App->file_system->Delete(directory->library_path);
+	App->file_system->Delete(directory->path);
+	string meta_file = directory->parent->path + directory->name + ".meta";
+	App->file_system->Delete(meta_file);
+
+	Directory* parent = directory->parent;
+	parent->directories.erase(std::remove(parent->directories.begin(), parent->directories.end(), directory), parent->directories.end());
+	delete directory;
+	directory = nullptr;
+}
+
+void Assets::DeleteAssetFile(AssetFile * file)
+{
+	if (file == nullptr)
+		return;
+	
+	//TODO: If the file is being used don't delete it
+	string library_folder = file->content_path.substr(0, file->content_path.find_last_of("\//"));
+	
+	App->file_system->Delete(library_folder.data());
+	App->file_system->Delete(file->file_path.data());
+	App->file_system->Delete(file->original_file.data());
+
+	Directory* dir = file->directory;
+	dir->files.erase(std::remove(dir->files.begin(), dir->files.end(), file), dir->files.end());
+	delete file;
+	file = nullptr;
 }

@@ -53,7 +53,7 @@ bool ModuleResourceManager::CleanUp()
 	return true;
 }
 
-void ModuleResourceManager::FileDropped(const char * file_path, string base_dir, string base_library_dir)
+void ModuleResourceManager::FileDropped(const char * file_path)
 {
 	//Files extensions accepted
 	//Images: PNG TGA
@@ -71,11 +71,7 @@ void ModuleResourceManager::FileDropped(const char * file_path, string base_dir,
 		}
 		mesh_files.clear();
 	}
-	else
-	{
-		ImportFile(file_path, base_dir, base_library_dir);
-	}
-	
+	App->editor->RefreshAssets();
 }
 
 void ModuleResourceManager::LoadFile(const string & library_path, const FileTypes & type)
@@ -201,6 +197,7 @@ void ModuleResourceManager::GenerateMetaFile(const char * path, FileTypes type, 
 	root.AppendUInt("UUID", uuid);
 	root.AppendDouble("time_mod", App->file_system->GetLastModificationTime(path));
 	root.AppendString("library_path", library_path.data());
+	root.AppendString("original_file", path);
 
 	char* buf;
 	size_t size = root.Serialize(&buf);

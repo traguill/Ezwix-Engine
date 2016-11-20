@@ -41,13 +41,14 @@ public:
 	bool SaveUnique(const char* file, const void* buffer, unsigned int size, const char* path, const char* extension,std::string& output_name);
 
 	bool GetEnumerateFiles(const char* dir, std::vector<std::string>& buffer);
-	void GetFilesAndDirectories(const char* dir, std::vector<string>& folders, std::vector<string>& files, bool only_meta_files = false);
+	void GetFilesAndDirectories(const char* dir, std::vector<string>& folders, std::vector<string>& files, bool only_meta_files = false)const;
 	void GetFilesAndDirectoriesOutside(const char* dir, std::vector<string>& folders, std::vector<string>& files);
 	bool CopyFromOutsideFile(const char* from_path, const char* to_path)const;
 
 	string GetNameFromPath(const string& path)const;
 	double GetLastModificationTime(const char* file_path)const;
 	bool GenerateDirectory(const char* path)const;
+	bool Delete(string filename)const;
 
 private:
 
