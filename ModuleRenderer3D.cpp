@@ -152,7 +152,7 @@ update_status ModuleRenderer3D::PostUpdate()
 	ComponentCamera* current_cam = App->camera->GetCurrentCamera();
 	//Draw Static GO
 	vector<GameObject*> static_objects;
-	App->go_manager->octree.Intersect(static_objects, current_cam); //Culling for static objects
+	App->go_manager->octree.Intersect(static_objects, *current_cam); //Culling for static objects
 
 	for (vector<GameObject*>::iterator obj = static_objects.begin(); obj != static_objects.end(); ++obj)
 	{
