@@ -466,7 +466,11 @@ GameObject * ModuleGOManager::Raycast(const Ray & ray) const
 	GameObject* ret = nullptr;
 
 	vector<GameObject*> collisions;
-	FillIntersectionList(root, ray, collisions); //with AABBs
+	octree.Intersect(collisions, ray);
+	for (list<GameObject*>::const_iterator dyn_go = dynamic_gameobjects.begin(); dyn_go != dynamic_gameobjects.end(); dyn_go++)
+		if((*dyn_go)->bounding_box)
+			if (ray.Intersects(*(*dyn_go)->bounding_box))
+				collisions.push_back((*dyn_go));
 
 	std::sort(collisions.begin(), collisions.end(), CompareAABB);
 
@@ -483,23 +487,6 @@ GameObject * ModuleGOManager::Raycast(const Ray & ray) const
 	}
 
 	return ret;
-}
-
-void ModuleGOManager::FillIntersectionList(GameObject * obj, const Ray & ray, vector<GameObject*>& list) const
-{
-	if (obj->bounding_box) 
-	{
-		if (ray.Intersects(*obj->bounding_box))
-		{
-			list.push_back(obj);
-		}
-	}
-
-	const vector<GameObject*>* childs = obj->GetChilds();
-	for (vector<GameObject*>::const_iterator child = childs->begin(); child != childs->end(); child++)
-	{
-		FillIntersectionList(*child, ray, list);
-	}
 }
 
 void ModuleGOManager::HierarchyWindow()
