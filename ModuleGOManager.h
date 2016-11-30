@@ -62,7 +62,6 @@ private:
 	GameObject* FindGameObjectByUUID(GameObject* start, unsigned int uuid)const; //Should be a public method?
 
 	GameObject* Raycast(const Ray& ray)const;
-	void FillIntersectionList(GameObject* obj, const Ray& ray, vector<GameObject*>& list)const;
 
 private:
 	GameObject* root = nullptr;
