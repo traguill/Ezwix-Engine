@@ -27,8 +27,6 @@ public:
 	void SetNearPlane(float value);
 	void SetFarPlane(float value);
 	void SetFOV(float value);
-	void SetFront(const math::float3& value);
-	void SetUp(const math::float3& value);
 	void LookAt(const math::float3& point);
 	void SetBackgroundColor(const math::float3 color);
 	bool Intersects(const math::AABB& box)const;

@@ -178,26 +178,14 @@ void ModuleCamera3D::EditorCameraMovement(float dt)
 		int dx = -App->input->GetMouseXMotion();
 		int dy = -App->input->GetMouseYMotion();
 
-		if (dx != 0)
-		{
-			float delta_x = (float)dx * sensivity;
-			Quat quaternion = Quat::RotateAxisAngle(vec(0.0f, 1.0f, 0.0f), delta_x);
-			editor_cam->SetFront(quaternion.Mul(editor_cam->GetFront()).Normalized());
-			editor_cam->SetUp(quaternion.Mul(editor_cam->GetUp()).Normalized());
-		}
+		float delta_x = (float)dx * sensivity;
+		float delta_y = (float)dy * sensivity;
+		
+		Quat quaternion, quaternion2; 
+		quaternion.SetFromAxisAngle(world_y, delta_x);
+		quaternion2.SetFromAxisAngle(quaternion * world_x, -delta_y);
 
-		if (dy != 0)
-		{
-			float delta_y = (float)dy * sensivity;
-			Quat quaternion2 = Quat::RotateAxisAngle(editor_cam->GetWorldRight(), delta_y);
-			float3 up = quaternion2.Mul(editor_cam->GetUp()).Normalized();
-
-			if (up.y > 0.0f)
-			{
-				editor_cam->SetUp(up);
-				editor_cam->SetFront(quaternion2.Mul(editor_cam->GetFront()).Normalized());
-			}
-		}
+		cam_transform->SetRotation(quaternion2 * quaternion * cam_transform->GetRotation());
 	}
 
 	//Update Transform component manually

@@ -159,16 +159,6 @@ void ComponentCamera::SetFOV(float value)
 	properties_modified = true;
 }
 
-void ComponentCamera::SetFront(const math::float3& value)
-{
-	frustum.SetFront(value);
-}
-
-void ComponentCamera::SetUp(const math::float3& value)
-{
-	frustum.SetUp(value);
-}
-
 void ComponentCamera::LookAt(const math::float3 & point)
 {
 	math::float3 look_direction = point - frustum.Pos();
