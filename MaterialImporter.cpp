@@ -77,3 +77,31 @@ bool MaterialImporter::Load(ResourceFileTexture * res)
 
 	return ret;
 }
+
+int MaterialImporter::LoadSimpleFile(const char * name)
+{
+	int ret = -1;
+
+	char* buffer = nullptr;
+	unsigned int size = App->file_system->Load(name, &buffer);
+
+	if (size > 0)
+	{
+		ILuint id;
+		ilGenImages(1, &id);
+		ilBindImage(id);
+		if (ilLoadL(IL_DDS, (const void*)buffer, size))
+		{
+			ret = ilutGLBindTexImage();
+			ilDeleteImages(1, &id);			
+		}
+	}
+	else
+	{
+		LOG("Could load texture: %s", name);
+	}
+
+	delete[] buffer;
+
+	return ret;
+}

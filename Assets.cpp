@@ -1,6 +1,7 @@
 #include "Application.h"
 #include "Assets.h"
 #include "ModuleFileSystem.h"
+#include "MaterialImporter.h"
 
 Assets::Assets()
 {
@@ -52,12 +53,11 @@ void Assets::Draw()
 	{
 		if ((*file)->type != FOLDER)
 		{
-			ImGui::Image((ImTextureID)file_id, ImVec2(15, 15)); //Same image for every type of file for now
-			ImGui::SameLine();
-
 			switch ((*file)->type)
 			{
 			case IMAGE:
+				ImGui::Image((ImTextureID)file_id, ImVec2(15, 15)); 
+				ImGui::SameLine();
 				if (ImGui::Selectable((*file)->name.data()))
 				{
 					file_selected = (*file);
@@ -65,6 +65,8 @@ void Assets::Draw()
 				}
 				break;
 			case MESH:
+				ImGui::Image((ImTextureID)mesh_id, ImVec2(15, 15));
+				ImGui::SameLine();
 				if (ImGui::Selectable((*file)->name.data()))
 				{
 					file_selected = (*file);
@@ -72,6 +74,8 @@ void Assets::Draw()
 				}
 				break;
 			case SCENE:
+				ImGui::Image((ImTextureID)scene_id, ImVec2(15, 15));
+				ImGui::SameLine();
 				if (ImGui::Selectable((*file)->name.data()))
 				{
 					file_selected = (*file);
@@ -115,8 +119,10 @@ void Assets::Init()
 
 	current_dir = root;
 
-	//folder_id = App->meshes->LoadTexture("Resources/folder.png"); TODO: Best way to load icons?
-	//file_id = App->meshes->LoadTexture("Resources/file.png");
+	folder_id = MaterialImporter::LoadSimpleFile("Resources/folder.dds"); 
+	file_id = MaterialImporter::LoadSimpleFile("Resources/file.dds");
+	mesh_id = MaterialImporter::LoadSimpleFile("Resources/mesh.dds");
+	scene_id = MaterialImporter::LoadSimpleFile("Resources/scene.dds");
 }
 
 void Assets::FillDirectoriesRecursive(Directory* root_dir)

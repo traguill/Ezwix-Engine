@@ -69,6 +69,8 @@ private:
 	//Icons
 	uint folder_id;
 	uint file_id;
+	uint mesh_id;
+	uint scene_id;
 
 };
 
