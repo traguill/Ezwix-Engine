@@ -29,7 +29,6 @@ public:
 
 	void GetAllCameras(std::vector<ComponentCamera*>& list, GameObject* from = nullptr) const;
 
-	void SaveScene()const;
 	bool LoadScene(const char* file_path); //Removes the current scene
 	void LoadEmptyScene();
 	void LoadPrefabGameObject(const Data& go_data);
@@ -64,8 +63,6 @@ private:
 	GameObject* Raycast(const Ray& ray)const;
 
 private:
-	GameObject* root = nullptr;
-
 	GameObject* selected_GO = nullptr;
 	vector<GameObject*> go_to_remove;
 
@@ -75,6 +72,8 @@ public:
 	//GameObjects TODO:Add functionallity to make it private
 	Octree<GameObject*> octree; //Static
 	list<GameObject*> dynamic_gameobjects;
+
+	GameObject* root = nullptr;
 
 };
 

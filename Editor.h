@@ -43,7 +43,8 @@ private:
 	void WindowsMenu();
 	void EditMenu();
 
-	bool QuitWindow()const;
+	bool QuitWindow();
+	void SaveSceneWindow();
 
 private:
 
@@ -55,6 +56,9 @@ private:
 	HardwareInfo* hardware_win = nullptr;
 	Assets* assets = nullptr;
 	CameraWindow* camera_win = nullptr;
+
+	bool save_scene_win = false;
+	string scene_name_to_save;
 };
 
 #endif

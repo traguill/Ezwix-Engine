@@ -78,7 +78,7 @@ update_status Editor::Update()
 
 	//Shortcut to save. TODO: Do a better implementation of the shortcuts
 	if (App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN)
-		App->go_manager->SaveScene();
+		save_scene_win = true;
 
 	//Handle Quit event
 	bool quit = false;
@@ -164,6 +164,7 @@ update_status Editor::EditorWindows()
 		++win;
 	}
 
+	SaveSceneWindow();
 	
 	return ret;
 }
@@ -249,7 +250,7 @@ void Editor::EditMenu()
 	}
 }
 
-bool Editor::QuitWindow() const
+bool Editor::QuitWindow()
 {
 	bool ret = false;
 
@@ -293,8 +294,7 @@ bool Editor::QuitWindow() const
 	switch (buttonid)
 	{
 	case 0: //Save
-		App->go_manager->SaveScene();
-		ret = true;
+		save_scene_win = true;
 		break;
 	case 1: //Quit
 		ret = true;
@@ -305,4 +305,25 @@ bool Editor::QuitWindow() const
 	}
 
 	return ret;
+}
+
+void Editor::SaveSceneWindow()
+{
+	if (save_scene_win)
+	{
+		ImGui::SetNextWindowPos(ImVec2(SCREEN_WIDTH / 2 - 150, SCREEN_HEIGHT / 2 - 50));
+		ImGui::SetNextWindowSize(ImVec2(300, 100));
+		if (ImGui::Begin("Save Scene", &save_scene_win))
+		{
+			ImGui::InputText("", scene_name_to_save._Myptr(), scene_name_to_save.capacity());
+			if (ImGui::Button("Save ##save_scene_button"))
+			{
+				string scene = scene_name_to_save.data();
+				scene = assets->CurrentDirectory() + scene;
+				App->resource_manager->SaveScene(scene.data(), assets->CurrentLibraryDirectory());
+				save_scene_win = false;
+			}
+			ImGui::End();
+		}
+	}
 }

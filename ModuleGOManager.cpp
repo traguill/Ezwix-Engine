@@ -158,60 +158,6 @@ void ModuleGOManager::GetAllCameras(std::vector<ComponentCamera*>& list, GameObj
 		GetAllCameras(list, (*child));
 }
 
-void ModuleGOManager::SaveScene()const
-{
-	//Prompt Save Window  TODO: put all this code inside a Windows class or a method.
-	char file_name_final[512];
-	OPENFILENAME sfn;
-
-	ZeroMemory(&sfn, sizeof(sfn));
-	sfn.lStructSize = sizeof(sfn);
-	sfn.hwndOwner = NULL;
-	sfn.lpstrFile = file_name_final;
-	sfn.lpstrFile[0] = '\0';
-	sfn.nMaxFile = sizeof(file_name_final);
-	sfn.lpstrFilter = "(*.json)";
-	sfn.Flags = OFN_PATHMUSTEXIST | OFN_OVERWRITEPROMPT | OFN_EXPLORER | OFN_ENABLEHOOK;
-
-	char* base_path = SDL_GetBasePath();
-	std::string base = base_path;
-	//Remove /Debug/ and replace it for/Game/
-	#if _DEBUG
-	base.erase(base.length() - 7, base.length());
-	base.append("\\Game\\");
-	#endif
-	base.append("Assets\\");
-	sfn.lpstrInitialDir = base.data();
-	SDL_free(base_path);
-
-	if (GetSaveFileName(&sfn))
-	{
-		string name_to_save = sfn.lpstrFile;
-		if (name_to_save.find(base, 0) != string::npos) //User selected a directory inside the assets folder
-		{
-			name_to_save.erase(0, base.length()); //Remove the directory from C://User//etc... Name_to_save starts from Assets folder
-		}
-
-		//Save the scene ---------------------------------------------------------------------------------------------------
-		Data root_node;
-		root_node.AppendArray("GameObjects");
-
-		root->Save(root_node);
-
-		char* buf;
-		size_t size = root_node.Serialize(&buf);
-
-		//Add extension if doesn't have it yet
-		if(name_to_save.find(".json", name_to_save.length() - 6) == string::npos)
-			name_to_save += ".json";
-
-		App->file_system->Save(name_to_save.data(), buf, size);
-
-		delete[] buf;
-		//------------------------------------------------------------------------------------------------------------------
-	}
-}
-
 bool ModuleGOManager::LoadScene(const char * file_path) 
 {
 	bool ret = false;

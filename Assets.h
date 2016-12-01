@@ -39,6 +39,7 @@ public:
 	void Draw();
 	void Refresh();
 	string CurrentDirectory()const;
+	string CurrentLibraryDirectory()const;
 
 private:
 

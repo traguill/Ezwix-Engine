@@ -71,6 +71,12 @@ void Assets::Draw()
 					ImGui::OpenPopup("FileMeshOptions");
 				}
 				break;
+			case SCENE:
+				if (ImGui::Selectable((*file)->name.data()))
+				{
+					file_selected = (*file);
+				}
+					break;
 			}
 
 				//ImGui::OpenPopup("FileSceneOptions");
@@ -90,6 +96,11 @@ void Assets::Draw()
 string Assets::CurrentDirectory() const
 {
 	return current_dir->path;
+}
+
+string Assets::CurrentLibraryDirectory() const
+{
+	return current_dir->library_path;
 }
 
 void Assets::Init()
@@ -207,8 +218,7 @@ bool Assets::IsSceneExtension(const std::string& file_name) const
 {
 	string extension = file_name.substr(file_name.find_last_of(".") + 1);
 
-	//TODO: improve this approach
-	const char* ext = "json";
+	const char* ext = "ezx";
 
 	return (extension.compare(ext) == 0) ? true : false;
 }

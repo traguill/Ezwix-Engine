@@ -6,6 +6,8 @@
 #include "Data.h"
 #include "ResourceFileMesh.h"
 #include "ResourceFileTexture.h"
+#include "ModuleGOManager.h"
+#include "GameObject.h"
 #include "Glew\include\glew.h"
 #include <gl\GL.h>
 
@@ -136,6 +138,45 @@ ResourceFile * ModuleResourceManager::FindResourceByUUID(unsigned int uuid)
 	return nullptr;
 }
 
+void ModuleResourceManager::SaveScene(const char * file_name, string base_library_path)
+{
+	string name_to_save = file_name;
+
+	Data root_node;
+	root_node.AppendArray("GameObjects");
+
+	App->go_manager->root->Save(root_node);
+	
+	char* buf;
+	size_t size = root_node.Serialize(&buf);
+
+	//Add extension if doesn't have it yet
+	if (name_to_save.find(".ezx", name_to_save.length() - 4) == string::npos)
+		name_to_save += ".ezx";
+
+	App->file_system->Save(name_to_save.data(), buf, size);
+	
+
+	string meta_file = name_to_save.substr(0, name_to_save.length() - 4) + ".meta";
+	if (App->file_system->Exists(meta_file.data()))
+	{
+		//Refresh
+		LOG("The scene already exists");
+	}
+	else
+	{
+		unsigned int uuid = App->rnd->RandomInt();
+		string library_dir = base_library_path + "/" + std::to_string(uuid) + "/";
+		App->file_system->GenerateDirectory(library_dir.data());
+		GenerateMetaFile(name_to_save.data(), FileTypes::SCENE, uuid, library_dir.data());
+		string library_filename = library_dir + std::to_string(uuid) + ".ezx";
+		App->file_system->Save(name_to_save.data(), buf, size); //Duplicate the file in library
+	}
+
+	delete[] buf;
+	App->editor->RefreshAssets();
+}
+
 string ModuleResourceManager::FindFile(const string & assets_file_path)
 {
 	string ret;
@@ -164,6 +205,7 @@ FileTypes ModuleResourceManager::GetFileExtension(const char * path) const
 {
 	char* mesh_extensions[] = { "fbx", "FBX", "obj", "OBJ"};
 	char* image_extensions[] = {"png", "PNG", "tga", "TGA"};
+	char* scene_extension = "ezx";
 	string name = path;
 	string extension = name.substr(name.find_last_of(".") + 1);
 
@@ -174,6 +216,9 @@ FileTypes ModuleResourceManager::GetFileExtension(const char * path) const
 	for (int i = 0; i < 4; i++)
 		if (extension.compare(image_extensions[i]) == 0)
 			return FileTypes::IMAGE;
+
+	if (extension.compare(scene_extension) == 0)
+		return FileTypes::SCENE;
 	
 	return NONE;
 }

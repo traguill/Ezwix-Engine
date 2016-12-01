@@ -38,6 +38,8 @@ public:
 	void UnloadResource(const string& path);
 	ResourceFile* FindResourceByUUID(unsigned int uuid);
 
+	void SaveScene(const char* file_name, string base_library_path);
+
 	//Returns the path of the file in library
 	string FindFile(const string& assets_file_path);
 
