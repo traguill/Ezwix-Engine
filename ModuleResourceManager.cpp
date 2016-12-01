@@ -22,6 +22,7 @@
 #pragma comment ( lib, "Devil/libx86/DevIL.lib" )
 #pragma comment ( lib, "Devil/libx86/ILU.lib" )
 #pragma comment ( lib, "Devil/libx86/ILUT.lib" )
+#include "MemLeaks.h"
 
 ModuleResourceManager::ModuleResourceManager(const char* name, bool start_enabled) : Module(name, start_enabled)
 {

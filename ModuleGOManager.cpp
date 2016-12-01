@@ -7,6 +7,7 @@
 #include "ComponentMesh.h"
 #include "RaycastHit.h"
 #include <algorithm>
+#include "MemLeaks.h"
 
 ModuleGOManager::ModuleGOManager(const char* name, bool start_enabled) : Module(name, start_enabled)
 {}

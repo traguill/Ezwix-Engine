@@ -429,6 +429,9 @@
     <ClInclude Include="ResourceFileTexture.h">
       <Filter>Sources\Resources</Filter>
     </ClInclude>
+    <ClInclude Include="MemLeaks.h">
+      <Filter>Sources\Tools</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
