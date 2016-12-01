@@ -29,7 +29,6 @@ public:
 
 	void GetAllCameras(std::vector<ComponentCamera*>& list, GameObject* from = nullptr) const;
 
-	bool LoadScene(const char* file_path); //Removes the current scene
 	void LoadEmptyScene();
 	void LoadPrefabGameObject(const Data& go_data);
 
@@ -39,6 +38,9 @@ public:
 
 	void SaveSceneBeforeRunning();//Saves the scene before running the game
 	void LoadSceneBeforeRunning();
+	void ClearScene(); //Removes the current scene
+	GameObject* LoadGameObject(const Data& go_data);
+	void SetCurrentScenePath(const char* scene_path);
 
 	//Handles the insertion / remove of the octree and dynamic gameobjects list. TODO: Rename the methods. Look confusing.
 	bool InsertGameObjectInOctree(GameObject* go);
@@ -54,10 +56,6 @@ private:
 	void UpdateGameObjects(float dt, GameObject* obj);
 	void PreUpdateGameObjects(GameObject* obj);
 
-	void ClearScene(); //Removes the current scene
-
-	GameObject* LoadGameObject(const Data& go_data);
-
 	GameObject* FindGameObjectByUUID(GameObject* start, unsigned int uuid)const; //Should be a public method?
 
 	GameObject* Raycast(const Ray& ray)const;
@@ -65,9 +63,7 @@ private:
 private:
 	GameObject* selected_GO = nullptr;
 	vector<GameObject*> go_to_remove;
-
 	string current_scene_path = "";
-
 public: 
 	//GameObjects TODO:Add functionallity to make it private
 	Octree<GameObject*> octree; //Static

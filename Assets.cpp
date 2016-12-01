@@ -75,11 +75,10 @@ void Assets::Draw()
 				if (ImGui::Selectable((*file)->name.data()))
 				{
 					file_selected = (*file);
+					ImGui::OpenPopup("FileSceneOptions");
 				}
 					break;
 			}
-
-				//ImGui::OpenPopup("FileSceneOptions");
 			
 		}
 	}
@@ -287,7 +286,12 @@ void Assets::SceneFileOptions()
 	{
 		if (ImGui::Selectable("Load to scene"))
 		{
-			//App->go_manager->LoadScene(file_selected.data()); TODO:Load scenes in new format
+			string library_filename = file_selected->content_path + ".ezx";
+			App->resource_manager->LoadScene(library_filename.data()); 
+		}
+		if (ImGui::Selectable("Remove"))
+		{
+			DeleteAssetFile(file_selected);
 		}
 		ImGui::EndPopup();
 	}

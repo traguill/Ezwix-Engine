@@ -170,11 +170,55 @@ void ModuleResourceManager::SaveScene(const char * file_name, string base_librar
 		App->file_system->GenerateDirectory(library_dir.data());
 		GenerateMetaFile(name_to_save.data(), FileTypes::SCENE, uuid, library_dir.data());
 		string library_filename = library_dir + std::to_string(uuid) + ".ezx";
-		App->file_system->Save(name_to_save.data(), buf, size); //Duplicate the file in library
+		App->file_system->Save(library_filename.data(), buf, size); //Duplicate the file in library
 	}
 
 	delete[] buf;
 	App->editor->RefreshAssets();
+}
+
+bool ModuleResourceManager::LoadScene(const char * file_name)
+{
+	bool ret = false;
+	//TODO: Now the current scene is destroyed. Ask the user if wants to save the changes.
+
+	char* buffer = nullptr;
+	uint size = App->file_system->Load(file_name, &buffer);
+	if (size == 0)
+	{
+		LOG("Error while loading Scene: %s", file_name);
+		if (buffer)
+			delete[] buffer;
+		return false;
+	}
+
+	Data scene(buffer);
+	Data root_objects;
+	root_objects = scene.GetArray("GameObjects", 0);
+
+	if (root_objects.IsNull() == false)
+	{
+		//Remove the current scene
+		App->go_manager->ClearScene();
+
+		for (int i = 0; i < scene.GetArraySize("GameObjects"); i++)
+		{
+			if (i == 0)
+				App->go_manager->root = App->go_manager->LoadGameObject(scene.GetArray("GameObjects", i));
+			else
+				App->go_manager->LoadGameObject(scene.GetArray("GameObjects", i));
+		}
+		App->go_manager->SetCurrentScenePath(file_name);
+		ret = true;
+	}
+	else
+	{
+		LOG("The scene %s is not a valid scene file", file_name);
+	}
+
+	delete[] buffer;
+
+	return ret;
 }
 
 string ModuleResourceManager::FindFile(const string & assets_file_path)

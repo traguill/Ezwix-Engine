@@ -48,7 +48,7 @@ bool ModuleGOManager::Start()
 	//Load last scene 
 	if (root == nullptr)
 	{
-		if (LoadScene(current_scene_path.data()) == false)
+		if (App->resource_manager->LoadScene(current_scene_path.data()) == false)
 		{
 			LoadEmptyScene();
 		}
@@ -158,51 +158,6 @@ void ModuleGOManager::GetAllCameras(std::vector<ComponentCamera*>& list, GameObj
 		GetAllCameras(list, (*child));
 }
 
-bool ModuleGOManager::LoadScene(const char * file_path) 
-{
-	bool ret = false;
-	//TODO: Now the current scene is destroyed. Ask the user if wants to save the changes.
-
-	char* buffer = nullptr;
-	uint size = App->file_system->Load(file_path, &buffer);
-	if (size == 0)
-	{
-		LOG("Error while loading Scene: %s", file_path);
-		if(buffer)
-			delete[] buffer;
-		return false;
-	}
-
-	Data scene(buffer);
-	Data root_objects;
-	root_objects = scene.GetArray("GameObjects", 0);
-
-	if (root_objects.IsNull() == false)
-	{
-		//Remove the current scene
-		ClearScene();
-		
-		for (int i = 0; i < scene.GetArraySize("GameObjects"); i++)
-		{
-			if(i == 0) 
-				root = LoadGameObject(scene.GetArray("GameObjects", i)); 
-			else
-				LoadGameObject(scene.GetArray("GameObjects", i));
-		}	
-		current_scene_path = file_path;
-		ret = true;
-	}
-	else
-	{
-		LOG("The scene %s is not a valid scene file", file_path);
-		
-	}
-
-	delete[] buffer;
-
-	return ret;
-}
-
 void ModuleGOManager::LoadEmptyScene()
 {
 	ClearScene();
@@ -253,7 +208,7 @@ void ModuleGOManager::SaveSceneBeforeRunning()
 
 void ModuleGOManager::LoadSceneBeforeRunning()
 {
-	LoadScene("Library/current_scene.json");
+	App->resource_manager->LoadScene("Library/current_scene.json");
 }
 
 bool ModuleGOManager::InsertGameObjectInOctree(GameObject * go)
@@ -330,6 +285,11 @@ GameObject * ModuleGOManager::LoadGameObject(const Data & go_data)
 		dynamic_gameobjects.push_back(go);
 
 	return go;
+}
+
+void ModuleGOManager::SetCurrentScenePath(const char * scene_path)
+{
+	current_scene_path = scene_path;
 }
 
 void ModuleGOManager::LoadPrefabGameObject(const Data & go_data)
