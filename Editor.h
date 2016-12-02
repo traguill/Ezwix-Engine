@@ -46,6 +46,9 @@ private:
 	bool QuitWindow();
 	void SaveSceneWindow();
 
+public:
+	Assets* assets = nullptr;
+
 private:
 
 	vector<Window*> windows;
@@ -54,7 +57,6 @@ private:
 	FPSGraph* fps_graph_win = nullptr;
 	WindowOptions* winoptions_win = nullptr;
 	HardwareInfo* hardware_win = nullptr;
-	Assets* assets = nullptr;
 	CameraWindow* camera_win = nullptr;
 
 	bool save_scene_win = false;

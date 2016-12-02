@@ -41,12 +41,17 @@ public:
 	string CurrentDirectory()const;
 	string CurrentLibraryDirectory()const;
 
+	void DeleteAssetFile(AssetFile* file);
+	void DeleteMetaAndLibraryFile(AssetFile* file);
+
 private:
 
 	void Init();
 	void CleanUp();
 	void FillDirectoriesRecursive(Directory* root_dir);
 	void DeleteDirectoriesRecursive(Directory* root_dir, bool keep_root = false);
+	Directory* FindDirectory(const string& dir);
+	AssetFile* FindAssetFile(const string& file);
 
 	bool IsMeshExtension(const std::string& file_name)const;
 	bool IsSceneExtension(const std::string& file_name)const;
@@ -58,11 +63,10 @@ private:
 	void DirectoryOptions();
 
 	void DeleteAssetDirectory(Directory* directory);
-	void DeleteAssetFile(AssetFile* file);
 
-private:
+public:
 	Directory* root = nullptr; //Assets directory
-
+private:
 	Directory* current_dir = root;
 	Directory* dir_selected = nullptr;
 	AssetFile* file_selected = nullptr;

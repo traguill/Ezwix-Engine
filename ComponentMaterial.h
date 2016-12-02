@@ -4,6 +4,7 @@
 #include "Component.h"
 #include <string>
 
+class ResourceFileTexture;
 class ComponentMaterial : public Component
 {
 public:
@@ -11,12 +12,14 @@ public:
 	~ComponentMaterial();
 
 	void OnInspector();
+	void Update();
 
 	void Save(Data& file)const;
 	void Load(Data& conf);
 
 public:
-	size_t texture_id = 0;
 	std::string file_path; 
+	ResourceFileTexture* rc_texture = nullptr;
+
 };
 #endif // !__COMPONENT_MATERIAL_H__

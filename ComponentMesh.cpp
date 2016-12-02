@@ -27,11 +27,7 @@ void ComponentMesh::Update()
 		return;
 	if (mesh)
 	{
-		GameObject* go = GetGameObject();
-		ComponentMaterial* material = (ComponentMaterial*)GetGameObject()->GetComponent(C_MATERIAL);
-		if (material)
-			go->texture_to_draw = material->texture_id;
-		go->mesh_to_draw = mesh;
+		game_object->mesh_to_draw = mesh;
 
 		App->renderer3D->AddToDraw(GetGameObject());
 	}

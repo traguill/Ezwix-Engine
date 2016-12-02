@@ -8,6 +8,7 @@
 #include "ResourceFileTexture.h"
 #include "ModuleGOManager.h"
 #include "GameObject.h"
+#include "Assets.h"
 #include "Glew\include\glew.h"
 #include <gl\GL.h>
 
@@ -49,6 +50,20 @@ bool ModuleResourceManager::Init(Data & config)
 	return true;
 }
 
+update_status ModuleResourceManager::Update()
+{
+	//TODO:Only do this in editor mode. NOT in game
+	modification_timer += time->RealDeltaTime();
+
+	if (modification_timer >= CHECK_MOD_TIME)
+	{
+		CheckDirectoryModification(App->editor->assets->root);
+		modification_timer = 0.0f;
+		App->editor->assets->Refresh();
+	}
+	return UPDATE_CONTINUE;
+}
+
 bool ModuleResourceManager::CleanUp()
 {
 	ilShutDown();
@@ -73,6 +88,10 @@ void ModuleResourceManager::FileDropped(const char * file_path)
 			ImportFile(tmp->mesh_path.data(), tmp->assets_folder, tmp->library_folder);
 		}
 		mesh_files.clear();
+	}
+	else
+	{
+		ImportFile(file_path, App->editor->assets->CurrentDirectory(), App->editor->assets->CurrentLibraryDirectory());
 	}
 	App->editor->RefreshAssets();
 }
@@ -110,6 +129,8 @@ ResourceFile * ModuleResourceManager::LoadResource(const string & path, Resource
 			rc_file = new ResourceFileTexture(type, path, uuid);
 			break;
 		}
+
+		resource_files.push_back(rc_file);
 	}
 
 	return rc_file;
@@ -139,6 +160,15 @@ ResourceFile * ModuleResourceManager::FindResourceByUUID(unsigned int uuid)
 	return nullptr;
 }
 
+ResourceFile * ModuleResourceManager::FindResourceByLibraryPath(const string & library)
+{
+	string name = library.substr(library.find_last_of("/\\") + 1);
+	name = name.substr(0, name.find_last_of('.'));
+	unsigned int uuid = std::stoul(name);
+
+	return FindResourceByUUID(uuid);
+}
+
 void ModuleResourceManager::SaveScene(const char * file_name, string base_library_path)
 {
 	string name_to_save = file_name;
@@ -161,7 +191,7 @@ void ModuleResourceManager::SaveScene(const char * file_name, string base_librar
 	string meta_file = name_to_save.substr(0, name_to_save.length() - 4) + ".meta";
 	if (App->file_system->Exists(meta_file.data()))
 	{
-		//Refresh
+		//Refresh TODO:
 		LOG("The scene already exists");
 	}
 	else
@@ -169,8 +199,8 @@ void ModuleResourceManager::SaveScene(const char * file_name, string base_librar
 		unsigned int uuid = App->rnd->RandomInt();
 		string library_dir = base_library_path + "/" + std::to_string(uuid) + "/";
 		App->file_system->GenerateDirectory(library_dir.data());
-		GenerateMetaFile(name_to_save.data(), FileTypes::SCENE, uuid, library_dir.data());
 		string library_filename = library_dir + std::to_string(uuid) + ".ezx";
+		GenerateMetaFile(name_to_save.data(), FileTypes::SCENE, uuid, library_filename.data());
 		App->file_system->Save(library_filename.data(), buf, size); //Duplicate the file in library
 	}
 
@@ -361,7 +391,7 @@ void ModuleResourceManager::ImportFolder(const char * path, vector<tmp_mesh_file
 	}
 }
 
-void ModuleResourceManager::ImportFile(const char * path, string base_dir, string base_library_dir) const
+void ModuleResourceManager::ImportFile(const char * path, string base_dir, string base_library_dir, unsigned int uuid) const
 {
 	//1-Make a copy of the file
 	//2-Import to own file
@@ -369,18 +399,23 @@ void ModuleResourceManager::ImportFile(const char * path, string base_dir, strin
 	switch (type)
 	{
 	case IMAGE:
-		ImageDropped(path, base_dir, base_library_dir);
+		ImageDropped(path, base_dir, base_library_dir, uuid);
 		break;
 	case MESH:
-		MeshDropped(path, base_dir, base_library_dir);
+		MeshDropped(path, base_dir, base_library_dir, uuid);
 		break;
 	}
 }
 
-void ModuleResourceManager::ImageDropped(const char* path, string base_dir, string base_library_dir) const
+void ModuleResourceManager::ImageDropped(const char* path, string base_dir, string base_library_dir, unsigned int id) const
 {
-	string file_assets_path = CopyOutsideFileToAssetsCurrentDir(path, base_dir);
-	uint uuid = App->rnd->RandomInt();
+	string file_assets_path;
+	if (App->file_system->Exists(path) == false)
+		file_assets_path = CopyOutsideFileToAssetsCurrentDir(path, base_dir);
+	else
+		file_assets_path = path;
+
+	uint uuid = (id == 0) ? App->rnd->RandomInt() : id;
 
 	string final_image_path;
 	if (base_library_dir.size() == 0)
@@ -398,11 +433,15 @@ void ModuleResourceManager::ImageDropped(const char* path, string base_dir, stri
 	MaterialImporter::Import(final_image_path.data(), file_assets_path.data());
 }
 
-void ModuleResourceManager::MeshDropped(const char * path, string base_dir, string base_library_dir) const
+void ModuleResourceManager::MeshDropped(const char * path, string base_dir, string base_library_dir, unsigned int id) const
 {
-	//Create a copy and a .meta inside the Assets folder
-	string file_assets_path = CopyOutsideFileToAssetsCurrentDir(path, base_dir);
-	uint uuid = App->rnd->RandomInt();
+	string file_assets_path;
+	if (App->file_system->Exists(path) == false)
+		file_assets_path = CopyOutsideFileToAssetsCurrentDir(path, base_dir);
+	else
+		file_assets_path = path;
+
+	uint uuid = (id == 0) ? App->rnd->RandomInt() : id;
 
 	//Create the link to Library
 	string final_mesh_path;
@@ -422,13 +461,11 @@ void ModuleResourceManager::MeshDropped(const char * path, string base_dir, stri
 
 void ModuleResourceManager::LoadPrefabFile(const string & library_path)
 {
-	string library_path_extension = library_path + ".inf";
-	
 	char* buffer = nullptr;
-	uint size = App->file_system->Load(library_path_extension.data(), &buffer);
+	uint size = App->file_system->Load(library_path.data(), &buffer);
 	if (size == 0)
 	{
-		LOG("Error while loading: %s", library_path_extension.data());
+		LOG("Error while loading: %s", library_path.data());
 		if (buffer)
 			delete[] buffer;
 		return;
@@ -447,8 +484,45 @@ void ModuleResourceManager::LoadPrefabFile(const string & library_path)
 	}
 	else
 	{
-		LOG("The %s is not a valid mesh/prefab file", library_path_extension.data());
+		LOG("The %s is not a valid mesh/prefab file", library_path.data());
 	}
 
 	delete[] buffer;
+}
+
+void ModuleResourceManager::CheckDirectoryModification(Directory * directory)
+{
+	vector<string> files_to_replace;
+	vector<AssetFile*> files_to_remove;
+	vector<unsigned int>uuids;
+	for (vector<AssetFile*>::iterator file = directory->files.begin(); file != directory->files.end(); ++file)
+	{
+		int mod_time = App->file_system->GetLastModificationTime((*file)->original_file.data());
+		if (mod_time != (*file)->time_mod)
+		{
+			files_to_replace.push_back((*file)->original_file);
+			files_to_remove.push_back(*file);
+			uuids.push_back((*file)->uuid);
+		}
+	}
+
+
+	for (vector<AssetFile*>::iterator file = files_to_remove.begin(); file != files_to_remove.end(); ++file)
+		App->editor->assets->DeleteMetaAndLibraryFile((*file));
+
+	for (int i = 0; i < files_to_replace.size(); i++)
+	{
+		ImportFile(files_to_replace[i].data(), directory->path, directory->library_path, uuids[i]);
+		ResourceFile* rc = FindResourceByUUID(uuids[i]);
+		if (rc)
+		{
+			rc->UnLoadAll();
+			rc->Reload();
+		}
+	}
+	
+	for (vector<Directory*>::iterator dir = directory->directories.begin(); dir != directory->directories.end(); ++dir)
+	{
+		CheckDirectoryModification(*dir);
+	}
 }

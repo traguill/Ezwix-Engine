@@ -20,6 +20,8 @@ public:
 	ResourceFileType GetType()const;
 	void Load();
 	void Unload();
+	void UnLoadAll();
+	void Reload();
 
 private:
 	virtual void LoadInMemory();

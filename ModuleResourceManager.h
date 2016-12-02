@@ -5,6 +5,8 @@
 #include <list>
 #include "ResourceFile.h"
 
+#define CHECK_MOD_TIME 3
+
 enum FileTypes
 {
 	NONE,
@@ -22,6 +24,8 @@ struct tmp_mesh_file
 	string library_folder;
 };
 
+struct Directory;
+
 class ModuleResourceManager : public Module
 {
 public:
@@ -29,6 +33,7 @@ public:
 	~ModuleResourceManager();
 
 	bool Init(Data& config);
+	update_status Update();
 	bool CleanUp();
 
 	void FileDropped(const char* file_path);
@@ -37,6 +42,7 @@ public:
 	ResourceFile* LoadResource(const string& path, ResourceFileType type);
 	void UnloadResource(const string& path);
 	ResourceFile* FindResourceByUUID(unsigned int uuid);
+	ResourceFile* FindResourceByLibraryPath(const string& library);
 
 	void SaveScene(const char* file_name, string base_library_path);
 	bool LoadScene(const char* file_name);
@@ -52,14 +58,17 @@ private:
 	void GenerateMetaFile(const char* path, FileTypes type, uint uuid, string library_path, bool is_file = true)const;
 
 	void ImportFolder(const char* path, vector<tmp_mesh_file>& list_meshes, string base_dir = string(), string base_library_dir = string())const;
-	void ImportFile(const char* path, string base_dir = string(), string base_library_dir = string())const;
-	void ImageDropped(const char* path, string base_dir = string(), string base_library_dir = string())const;
-	void MeshDropped(const char* path, string base_dir = string(), string base_library_dir = string())const;
+	void ImportFile(const char* path, string base_dir = string(), string base_library_dir = string(), unsigned int uuid = 0)const;
+	void ImageDropped(const char* path, string base_dir = string(), string base_library_dir = string(), unsigned int uuid = 0)const;
+	void MeshDropped(const char* path, string base_dir = string(), string base_library_dir = string(), unsigned int uuid = 0)const;
 
 	void LoadPrefabFile(const string& library_path);
 
+	void CheckDirectoryModification(Directory* directory);
+
 private:
 	list<ResourceFile*> resource_files;
+	float modification_timer = 0.0f;
 
 };
 #endif // !__MODULE_RESOURCE_MANAGER_H__

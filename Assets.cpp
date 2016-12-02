@@ -165,7 +165,7 @@ void Assets::FillDirectoriesRecursive(Directory* root_dir)
 			a_file->name = (*file).substr(0, (*file).length() - 5); //Substract extension (.meta)
 			a_file->file_path = root_dir->path + (*file);
 			a_file->uuid = meta.GetUInt("UUID");
-			a_file->content_path = root_dir->library_path + std::to_string(a_file->uuid) + "/" + std::to_string(a_file->uuid);
+			a_file->content_path = meta.GetString("library_path");
 			a_file->time_mod = meta.GetInt("time_mod");
 			a_file->original_file = meta.GetString("original_file");
 			a_file->directory = root_dir;
@@ -219,6 +219,101 @@ void Assets::DeleteDirectoriesRecursive(Directory* root_dir, bool keep_root)
 
 }
 
+Directory * Assets::FindDirectory(const string & dir)
+{
+	string dir_part;
+	vector<string> dir_splitted;
+	dir_part = root->path;
+	while (dir_part != dir)
+	{
+		string tmp = dir.substr(dir_part.length(), dir.length());
+		size_t pos = tmp.find_first_of("/\\");
+		if (pos != string::npos)
+		{
+			dir_part.append(tmp, 0, pos+1);
+			dir_splitted.push_back(dir_part);
+		}
+		else
+			break;
+	}
+
+	Directory* found = root;
+	bool path_found = false;
+	for (vector<string>::iterator split = dir_splitted.begin(); split != dir_splitted.end(); ++split)
+	{
+		path_found = false;
+		for (vector<Directory*>::iterator directory = found->directories.begin(); directory != found->directories.end(); ++directory)
+		{
+			if ((*directory)->path == (*split))
+			{
+				found = (*directory);
+				path_found = true;
+				break;
+			}
+		}
+		if (!path_found)
+			break;
+	}
+
+	return (path_found) ? found : nullptr;
+}
+
+AssetFile * Assets::FindAssetFile(const string & file)
+{
+	string dir_part;
+	vector<string> dir_splitted;
+	dir_part = root->path;
+	while (dir_part != file)
+	{
+		string tmp = file.substr(dir_part.length(), file.length());
+		size_t pos = tmp.find_first_of("/\\");
+		if (pos != string::npos)
+		{
+			dir_part.append(tmp, 0, pos + 1);
+			dir_splitted.push_back(dir_part);
+		}
+		else
+		{
+			dir_part.append(tmp, 0, tmp.length());
+			dir_splitted.push_back(dir_part);
+			break;
+		}
+	}
+
+	Directory* found = root;
+	bool path_found = false;
+	AssetFile* ret = nullptr;
+	for (vector<string>::iterator split = dir_splitted.begin(); split != dir_splitted.end(); ++split)
+	{
+		path_found = false;
+		if ((*split) == *dir_splitted.rbegin())
+		{
+			for (vector<AssetFile*>::iterator asset = found->files.begin(); asset != found->files.end(); ++asset)
+			{
+				if ((*asset)->original_file == (*split))
+				{
+					ret = (*asset);
+					break;
+				}
+			}
+			break;
+		}
+		for (vector<Directory*>::iterator directory = found->directories.begin(); directory != found->directories.end(); ++directory)
+		{
+			if ((*directory)->path == (*split))
+			{
+				found = (*directory);
+				path_found = true;
+				break;
+			}
+		}
+		if (!path_found)
+			break;
+	}
+
+	return ret;
+}
+
 bool Assets::IsSceneExtension(const std::string& file_name) const
 {
 	string extension = file_name.substr(file_name.find_last_of(".") + 1);
@@ -230,10 +325,22 @@ bool Assets::IsSceneExtension(const std::string& file_name) const
 
 void Assets::Refresh()
 {
-	DeleteDirectoriesRecursive(current_dir, true);
-	file_selected = nullptr;
-	dir_selected = nullptr;
-	FillDirectoriesRecursive(current_dir);
+	string file, dir, current;
+	file = (file_selected) ? file_selected->original_file : "";
+	dir = (dir_selected) ? dir_selected->path : "";
+	current = (current_dir) ? current_dir->path : "";
+	DeleteDirectoriesRecursive(root, true);
+	FillDirectoriesRecursive(root);
+	
+	if (file.length() > 0)
+		file_selected = FindAssetFile(file);
+	if (dir.length() > 0)
+		dir_selected = FindDirectory(dir);
+	current_dir = nullptr;
+	if (current.length() > 0)
+		current_dir = FindDirectory(current);
+	if(current_dir == nullptr)
+		current_dir = root;
 }
 
 void Assets::OpenInExplorer(const std::string* file_name)const
@@ -292,8 +399,7 @@ void Assets::SceneFileOptions()
 	{
 		if (ImGui::Selectable("Load to scene"))
 		{
-			string library_filename = file_selected->content_path + ".ezx";
-			App->resource_manager->LoadScene(library_filename.data()); 
+			App->resource_manager->LoadScene(file_selected->content_path.data()); 
 		}
 		if (ImGui::Selectable("Remove"))
 		{
@@ -341,7 +447,7 @@ void Assets::DeleteAssetFile(AssetFile * file)
 	if (file == nullptr)
 		return;
 	
-	//TODO: If the file is being used don't delete it
+	//TODO: check if the file is being used
 	string library_folder = file->content_path.substr(0, file->content_path.find_last_of("\//"));
 	
 	App->file_system->Delete(library_folder.data());
@@ -352,4 +458,15 @@ void Assets::DeleteAssetFile(AssetFile * file)
 	dir->files.erase(std::remove(dir->files.begin(), dir->files.end(), file), dir->files.end());
 	delete file;
 	file = nullptr;
+}
+
+void Assets::DeleteMetaAndLibraryFile(AssetFile * file)
+{
+	if (file == nullptr)
+		return;
+
+	string library_folder = file->content_path.substr(0, file->content_path.find_last_of("\//"));
+
+	App->file_system->Delete(library_folder.data());
+	App->file_system->Delete(file->file_path.data());
 }

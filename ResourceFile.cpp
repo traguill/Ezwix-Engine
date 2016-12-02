@@ -38,6 +38,16 @@ void ResourceFile::Unload()
 		UnloadInMemory();
 }
 
+void ResourceFile::UnLoadAll()
+{
+	UnloadInMemory();
+}
+
+void ResourceFile::Reload()
+{
+	LoadInMemory();
+}
+
 void ResourceFile::LoadInMemory()
 {}
 

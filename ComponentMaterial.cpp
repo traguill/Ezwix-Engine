@@ -1,5 +1,6 @@
 #include "Application.h"
 #include "ComponentMaterial.h"
+#include "GameObject.h"
 #include "imgui\imgui.h"
 #include "Data.h"
 #include "ResourceFileTexture.h"
@@ -15,14 +16,19 @@ void ComponentMaterial::OnInspector()
 {
 	if (ImGui::CollapsingHeader("Material"))
 	{
-		ImGui::Text("Texture id: %d", texture_id);
-		ImGui::Image((ImTextureID)texture_id, ImVec2(250, 250));
+		ImGui::Text("Texture id: %d", rc_texture->GetTexture());
+		ImGui::Image((ImTextureID)rc_texture->GetTexture(), ImVec2(250, 250));
 
 		if (ImGui::Button("Remove ###mat_rem"))
 		{
 			Remove();
 		}
 	}
+}
+
+void ComponentMaterial::Update()
+{
+	game_object->texture_to_draw = rc_texture->GetTexture();
 }
 
 void ComponentMaterial::Save(Data & file)const
@@ -42,7 +48,6 @@ void ComponentMaterial::Load(Data & conf)
 	active = conf.GetBool("active");
 
 	file_path = conf.GetString("path");
-	ResourceFileTexture* rc_texture = (ResourceFileTexture*)App->resource_manager->LoadResource(file_path, ResourceFileType::RES_TEXTURE);
+	rc_texture = (ResourceFileTexture*)App->resource_manager->LoadResource(file_path, ResourceFileType::RES_TEXTURE);
 	rc_texture->Load();
-	texture_id = rc_texture->GetTexture();
 }
