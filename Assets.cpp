@@ -446,7 +446,8 @@ void Assets::DeleteAssetFile(AssetFile * file)
 {
 	if (file == nullptr)
 		return;
-	
+	if (file == file_selected)
+		file_selected = nullptr;
 	//TODO: check if the file is being used
 	string library_folder = file->content_path.substr(0, file->content_path.find_last_of("\//"));
 	

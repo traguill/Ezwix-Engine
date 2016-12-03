@@ -16,19 +16,27 @@ void ComponentMaterial::OnInspector()
 {
 	if (ImGui::CollapsingHeader("Material"))
 	{
-		ImGui::Text("Texture id: %d", rc_texture->GetTexture());
-		ImGui::Image((ImTextureID)rc_texture->GetTexture(), ImVec2(250, 250));
-
-		if (ImGui::Button("Remove ###mat_rem"))
+		if (rc_texture)
 		{
-			Remove();
+			ImGui::Text("Texture id: %d", rc_texture->GetTexture());
+			ImGui::Image((ImTextureID)rc_texture->GetTexture(), ImVec2(250, 250));
+
+			if (ImGui::Button("Remove ###mat_rem"))
+			{
+				Remove();
+			}
+		}
+		else
+		{
+			ImGui::TextColored(ImVec4(1, 0, 0, 1), "Texture %s missing", file_path.data());
 		}
 	}
 }
 
 void ComponentMaterial::Update()
 {
-	game_object->texture_to_draw = rc_texture->GetTexture();
+
+	game_object->texture_to_draw = (rc_texture) ? rc_texture->GetTexture() : 0;
 }
 
 void ComponentMaterial::Save(Data & file)const
@@ -49,7 +57,12 @@ void ComponentMaterial::Load(Data & conf)
 
 	file_path = conf.GetString("path");
 	rc_texture = (ResourceFileTexture*)App->resource_manager->LoadResource(file_path, ResourceFileType::RES_TEXTURE);
-	rc_texture->Load();
-
-	game_object->texture_to_draw = rc_texture->GetTexture();
+	if (rc_texture)
+	{
+		rc_texture->Load();
+		game_object->texture_to_draw = rc_texture->GetTexture();
+	}
+	else
+		game_object->texture_to_draw = 0;
+	
 }

@@ -115,6 +115,9 @@ ResourceFile * ModuleResourceManager::LoadResource(const string & path, Resource
 
 	string name = path.substr(path.find_last_of("/\\") + 1);
 	name = name.substr(0, name.find_last_of('.'));
+	if (name.length() == 0)
+		return nullptr;
+
 	unsigned int uuid = std::stoul(name);
 	rc_file = FindResourceByUUID(uuid);
 
