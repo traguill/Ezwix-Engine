@@ -42,6 +42,7 @@ private:
 	void HelpMenu();
 	void WindowsMenu();
 	void EditMenu();
+	void DebugMenu();
 
 	bool QuitWindow();
 	void SaveSceneWindow();

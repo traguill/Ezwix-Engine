@@ -104,7 +104,8 @@ update_status ModuleGOManager::Update()
 		}
 	}
 
-	octree.Draw();
+	if(draw_octree)
+		octree.Draw();
 
 	return UPDATE_CONTINUE;
 }

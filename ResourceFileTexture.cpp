@@ -1,3 +1,5 @@
+#include "Application.h"
+#include "ModuleRenderer3D.h"
 #include "ResourceFileTexture.h"
 #include "MaterialImporter.h"
 
@@ -31,5 +33,5 @@ void ResourceFileTexture::LoadInMemory()
 
 void ResourceFileTexture::UnloadInMemory()
 {
-	//TODO: unload texture
+	App->renderer3D->RemoveBuffer(texture_id);
 }

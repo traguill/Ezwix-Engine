@@ -265,3 +265,8 @@ void ModuleRenderer3D::SetClearColor(const math::float3 & color) const
 {
 	glClearColor(color.x, color.y, color.z, 1.0f);
 }
+
+void ModuleRenderer3D::RemoveBuffer(unsigned int id)
+{
+	glDeleteBuffers(1, (GLuint*)&id);
+}

@@ -148,6 +148,11 @@ update_status Editor::EditorWindows()
 			HelpMenu();
 			ImGui::EndMenu();
 		}
+		if (ImGui::BeginMenu("Debug"))
+		{
+			DebugMenu();
+			ImGui::EndMenu();
+		}
 		if (ImGui::MenuItem("Quit", NULL))
 		{
 			ret = UPDATE_STOP;
@@ -247,6 +252,14 @@ void Editor::EditMenu()
 	if (ImGui::MenuItem("Camera"))
 	{
 		camera_win->SetActive(true);
+	}
+}
+
+void Editor::DebugMenu()
+{
+	if (ImGui::MenuItem("Show/Hide Octree"))
+	{
+		App->go_manager->draw_octree = !App->go_manager->draw_octree;
 	}
 }
 

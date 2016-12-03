@@ -1,3 +1,5 @@
+#include "Application.h"
+#include "ModuleRenderer3D.h"
 #include "ResourceFileMesh.h"
 #include "ComponentMesh.h"
 #include "MeshImporter.h"
@@ -7,7 +9,7 @@ ResourceFileMesh::ResourceFileMesh(ResourceFileType type, const std::string& fil
 
 ResourceFileMesh::~ResourceFileMesh()
 {
-	mesh = nullptr;
+	delete mesh;
 }
 
 Mesh * ResourceFileMesh::GetMesh() const
@@ -22,5 +24,7 @@ void ResourceFileMesh::LoadInMemory()
 
 void ResourceFileMesh::UnloadInMemory()
 {
-	//TODO: Unload a mesh
+	App->renderer3D->RemoveBuffer(mesh->id_vertices);
+	App->renderer3D->RemoveBuffer(mesh->id_indices);
+	App->renderer3D->RemoveBuffer(mesh->id_uvs);
 }

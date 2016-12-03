@@ -30,6 +30,7 @@ public:
 	void AddToDraw(GameObject* obj);
 
 	void SetClearColor(const math::float3& color)const;
+	void RemoveBuffer(unsigned int id);
 
 private:
 

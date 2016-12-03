@@ -10,7 +10,7 @@
 class GameObject;
 class ComponentCamera;
 
-#define OCTREE_SIZE 50
+#define OCTREE_SIZE 800
 
 class ModuleGOManager : public Module
 {
@@ -68,7 +68,7 @@ public:
 	//GameObjects TODO:Add functionallity to make it private
 	Octree<GameObject*> octree; //Static
 	list<GameObject*> dynamic_gameobjects;
-
+	bool draw_octree = false;
 	GameObject* root = nullptr;
 
 };
