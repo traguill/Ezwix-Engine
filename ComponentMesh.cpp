@@ -91,6 +91,7 @@ bool ComponentMesh::SetMesh(Mesh * mesh)
 
 		aabb.Enclose((float3*)mesh->vertices, mesh->num_vertices);
 		RecalculateBoundingBox();
+		game_object->mesh_to_draw = this->mesh;
 		ret = true;
 	}
 		

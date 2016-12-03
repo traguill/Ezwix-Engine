@@ -171,9 +171,9 @@ void ModuleCamera3D::EditorCameraMovement(float dt)
 		cam_transform->SetPosition(position);
 	}
 
-	if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)
+	if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)
 	{
-		float sensivity = 0.025f;
+		float sensivity = 0.005f;
 
 		int dx = -App->input->GetMouseXMotion();
 		int dy = -App->input->GetMouseYMotion();
@@ -182,10 +182,13 @@ void ModuleCamera3D::EditorCameraMovement(float dt)
 		float delta_y = (float)dy * sensivity;
 		
 		Quat quaternion, quaternion2; 
-		quaternion.SetFromAxisAngle(world_y, delta_x);
-		quaternion2.SetFromAxisAngle(quaternion * world_x, -delta_y);
+		quaternion = quaternion.FromEulerXYZ(0.0f, delta_x, 0.0f);
+		quaternion2 = quaternion2.FromEulerXYZ(-delta_y, 0.0f, 0.0f);
 
-		cam_transform->SetRotation(quaternion2 * quaternion * cam_transform->GetRotation());
+		Quat result = cam_transform->GetRotation();
+		result = result.Mul(quaternion);
+		result = result.Mul(quaternion2);
+		cam_transform->SetRotation(result);
 	}
 
 	//Update Transform component manually

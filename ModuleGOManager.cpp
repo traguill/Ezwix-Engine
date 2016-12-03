@@ -185,7 +185,7 @@ bool ModuleGOManager::IsRoot(const GameObject * go) const
 
 void ModuleGOManager::PickObjects()
 {
-	if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_UP)
+	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_UP && App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)
 	{
 		Ray ray = App->camera->GetCurrentCamera()->CastCameraRay(float2(App->input->GetMouseX(), App->input->GetMouseY()));
 		selected_GO = Raycast(ray);

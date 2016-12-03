@@ -50,4 +50,6 @@ void ComponentMaterial::Load(Data & conf)
 	file_path = conf.GetString("path");
 	rc_texture = (ResourceFileTexture*)App->resource_manager->LoadResource(file_path, ResourceFileType::RES_TEXTURE);
 	rc_texture->Load();
+
+	game_object->texture_to_draw = rc_texture->GetTexture();
 }
