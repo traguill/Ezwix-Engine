@@ -11,6 +11,7 @@
 #include "DebugDraw.h"
 #include "CameraWindow.h"
 #include "Time.h"
+#include "ResourcesWindow.h"
 
 Editor::Editor(const char* name, bool start_enabled) : Module(name, start_enabled)
 {
@@ -38,6 +39,7 @@ bool Editor::Start()
 	windows.push_back(hardware_win = new HardwareInfo());
 	windows.push_back(assets = new Assets());
 	windows.push_back(camera_win = new CameraWindow());
+	windows.push_back(resource_win = new ResourcesWindow());
 	
 
 	return ret;
@@ -46,6 +48,15 @@ bool Editor::Start()
 bool Editor::CleanUp()
 {
 	LOG("Clean Up Editor");
+
+	delete fps_graph_win;
+	delete winoptions_win;
+	delete hardware_win;
+	delete assets;
+	delete camera_win;
+	delete resource_win;
+
+	windows.clear();
 
 	return true;
 }

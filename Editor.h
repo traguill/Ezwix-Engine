@@ -14,6 +14,7 @@ class HardwareInfo;
 class Console;
 class Assets;
 class CameraWindow;
+class ResourcesWindow;
 
 class Editor : public Module
 {
@@ -59,6 +60,7 @@ private:
 	WindowOptions* winoptions_win = nullptr;
 	HardwareInfo* hardware_win = nullptr;
 	CameraWindow* camera_win = nullptr;
+	ResourcesWindow* resource_win = nullptr;
 
 	bool save_scene_win = false;
 	string scene_name_to_save;

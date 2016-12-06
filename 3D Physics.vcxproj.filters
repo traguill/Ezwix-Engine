@@ -432,6 +432,9 @@
     <ClInclude Include="MemLeaks.h">
       <Filter>Sources\Tools</Filter>
     </ClInclude>
+    <ClInclude Include="ResourcesWindow.h">
+      <Filter>Sources\Editor\Windows</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -703,6 +706,9 @@
     </ClCompile>
     <ClCompile Include="ResourceFileTexture.cpp">
       <Filter>Sources\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourcesWindow.cpp">
+      <Filter>Sources\Editor\Windows</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
