@@ -9,7 +9,11 @@ ComponentMaterial::ComponentMaterial(ComponentType type, GameObject* game_object
 
 ComponentMaterial::~ComponentMaterial()
 {
-	App->resource_manager->UnloadResource(file_path);
+	if (rc_texture)
+	{
+		rc_texture->Unload();
+		rc_texture = nullptr;
+	}
 }
 
 void ComponentMaterial::OnInspector()
@@ -59,7 +63,6 @@ void ComponentMaterial::Load(Data & conf)
 	rc_texture = (ResourceFileTexture*)App->resource_manager->LoadResource(file_path, ResourceFileType::RES_TEXTURE);
 	if (rc_texture)
 	{
-		rc_texture->Load();
 		game_object->texture_to_draw = rc_texture->GetTexture();
 	}
 	else

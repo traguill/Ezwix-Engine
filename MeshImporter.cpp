@@ -407,7 +407,7 @@ Mesh * MeshImporter::Load(const char * path)
 		memcpy(mesh->uvs, cursor, bytes);
 
 		//Vertices ------------------------------------------------------------------------------------------------------
-
+		
 		//Load buffer to VRAM
 		glGenBuffers(1, (GLuint*)&(mesh->id_vertices));
 		glBindBuffer(GL_ARRAY_BUFFER, mesh->id_vertices);

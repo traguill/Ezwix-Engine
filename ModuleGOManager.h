@@ -26,6 +26,7 @@ public:
 
 	GameObject* CreateGameObject(GameObject* parent);
 	bool RemoveGameObject(GameObject* object);
+	bool FastRemoveGameObject(GameObject* object); //Doesn't remove the GameObject from the parent list.
 
 	void GetAllCameras(std::vector<ComponentCamera*>& list, GameObject* from = nullptr) const;
 

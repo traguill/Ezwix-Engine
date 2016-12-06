@@ -147,6 +147,20 @@ bool ModuleGOManager::RemoveGameObject(GameObject* object)
 	return ret;
 }
 
+bool ModuleGOManager::FastRemoveGameObject(GameObject * object)
+{
+	bool ret = false;
+
+	if (object)
+	{
+		object->RemoveAllChilds();
+		go_to_remove.push_back(object);
+		ret = true;
+	}
+
+	return ret;
+}
+
 void ModuleGOManager::GetAllCameras(std::vector<ComponentCamera*>& list, GameObject* from) const
 {
 	GameObject* go = (from) ? from : root;

@@ -18,6 +18,7 @@ public:
 	const char* GetFile()const;
 	unsigned int GetUUID()const;
 	ResourceFileType GetType()const;
+	unsigned int GetBytes()const;
 	void Load();
 	void Unload();
 	void UnLoadAll();
@@ -32,7 +33,7 @@ protected:
 	ResourceFileType type;
 	std::string file_path;
 	unsigned int uuid = 0;
-
+	unsigned int bytes = 0;
 };
 
 #endif // !__RESOURCEFILE_H__

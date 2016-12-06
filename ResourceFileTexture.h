@@ -23,7 +23,6 @@ private:
 	unsigned int height = 0;
 	unsigned int depth = 0;
 	unsigned int mips = 0;
-	unsigned int bytes = 0;
 };
 
 #endif // !__RESOURCEFILETEXTURE_H__

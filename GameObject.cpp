@@ -112,7 +112,7 @@ void GameObject::RemoveAllChilds()
 {
 	for (int i = 0; i < childs.size(); i++)
 	{
-		App->go_manager->RemoveGameObject(childs[i]);
+		App->go_manager->FastRemoveGameObject(childs[i]);
 	}
 
 	childs.clear();

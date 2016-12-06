@@ -256,6 +256,11 @@ void Editor::WindowsMenu()
 	{
 		assets->SetActive(true);
 	}
+
+	if (ImGui::MenuItem("Resources"))
+	{
+		resource_win->SetActive(true);
+	}
 }
 
 void Editor::EditMenu()

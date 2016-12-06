@@ -127,13 +127,24 @@ ResourceFile * ModuleResourceManager::LoadResource(const string & path, Resource
 		{
 		case RES_MESH:
 			rc_file = new ResourceFileMesh(type, path, uuid);
+			rc_file->Load();
+			mesh_bytes += rc_file->GetBytes();
+			num_meshes++;
 			break;
 		case RES_TEXTURE:
 			rc_file = new ResourceFileTexture(type, path, uuid);
+			rc_file->Load();
+			texture_bytes += rc_file->GetBytes();
+			num_textures++;
 			break;
 		}
 
 		resource_files.push_back(rc_file);
+		bytes_in_memory += rc_file->GetBytes();
+	}
+	else
+	{
+		rc_file->Load();
 	}
 
 	return rc_file;
@@ -151,6 +162,27 @@ void ModuleResourceManager::UnloadResource(const string & path)
 	if (rc_file != nullptr)
 	{
 		rc_file->Unload();
+	}
+}
+
+void ModuleResourceManager::RemoveResourceFromList(ResourceFile * file)
+{
+	if (file)
+	{
+		switch (file->GetType())
+		{
+		case ResourceFileType::RES_MESH:
+			--num_meshes;
+			mesh_bytes -= file->GetBytes();
+			break;
+		case ResourceFileType::RES_TEXTURE:
+			--num_textures;
+			texture_bytes -= file->GetBytes();
+			break;
+		}
+		resource_files.remove(file);
+		bytes_in_memory -= file->GetBytes();
+		delete file;
 	}
 }
 
@@ -276,6 +308,36 @@ string ModuleResourceManager::FindFile(const string & assets_file_path)
 	delete[] buffer;
 
 	return ret;
+}
+
+int ModuleResourceManager::GetNumberResources() const
+{
+	return resource_files.size();
+}
+
+int ModuleResourceManager::GetNumberTexures() const
+{
+	return num_textures;
+}
+
+int ModuleResourceManager::GetNumberMeshes() const
+{
+	return num_meshes;
+}
+
+int ModuleResourceManager::GetTotalBytesInMemory() const
+{
+	return bytes_in_memory;
+}
+
+int ModuleResourceManager::GetTextureBytes() const
+{
+	return texture_bytes;
+}
+
+int ModuleResourceManager::GetMeshBytes() const
+{
+	return mesh_bytes;
 }
 
 ///Given a path returns if the file is one of the valid extensions to import.

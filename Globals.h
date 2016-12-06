@@ -12,6 +12,10 @@ void log(const char file[], int line, const char* format, ...);
 #define RADTODEG 57.295779513082320876f
 #define HAVE_M_PI
 
+#define KILOBYTE 1024
+#define MEGABYTE 1048576
+#define GIGABYTE 1073741824
+
 typedef unsigned int uint;
 
 enum update_status

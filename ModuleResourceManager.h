@@ -40,7 +40,9 @@ public:
 	void LoadFile(const string& library_path, const FileTypes& type);
 
 	ResourceFile* LoadResource(const string& path, ResourceFileType type);
+	//Deprecated
 	void UnloadResource(const string& path);
+	void RemoveResourceFromList(ResourceFile* file);
 	ResourceFile* FindResourceByUUID(unsigned int uuid);
 	ResourceFile* FindResourceByLibraryPath(const string& library);
 
@@ -49,6 +51,13 @@ public:
 
 	//Returns the path of the file in library
 	string FindFile(const string& assets_file_path);
+
+	int GetNumberResources()const;
+	int GetNumberTexures()const;
+	int GetNumberMeshes()const;
+	int GetTotalBytesInMemory()const;
+	int GetTextureBytes()const;
+	int GetMeshBytes()const;
 
 private:
 
@@ -69,6 +78,13 @@ private:
 private:
 	list<ResourceFile*> resource_files;
 	float modification_timer = 0.0f;
+
+	unsigned int num_textures = 0;
+	unsigned int num_meshes = 0;
+	unsigned int bytes_in_memory = 0;
+	unsigned int texture_bytes = 0;
+	unsigned int mesh_bytes = 0;
+
 
 };
 #endif // !__MODULE_RESOURCE_MANAGER_H__

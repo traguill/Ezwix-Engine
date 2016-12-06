@@ -20,6 +20,10 @@ Mesh * ResourceFileMesh::GetMesh() const
 void ResourceFileMesh::LoadInMemory()
 {
 	mesh = MeshImporter::Load(file_path.data());
+
+	bytes += sizeof(float) * 3 * mesh->num_vertices;
+	bytes += sizeof(uint) * mesh->num_indices;
+	bytes += sizeof(float) * 2 * mesh->num_uvs, mesh->uvs;
 }
 
 void ResourceFileMesh::UnloadInMemory()
@@ -27,4 +31,5 @@ void ResourceFileMesh::UnloadInMemory()
 	App->renderer3D->RemoveBuffer(mesh->id_vertices);
 	App->renderer3D->RemoveBuffer(mesh->id_indices);
 	App->renderer3D->RemoveBuffer(mesh->id_uvs);
+	App->resource_manager->RemoveResourceFromList(this);
 }

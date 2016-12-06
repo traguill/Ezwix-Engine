@@ -30,6 +30,8 @@ struct Mesh
 	std::string file_path;
 };
 
+class ResourceFileMesh;
+
 class ComponentMesh : public Component
 {
 public:
@@ -50,6 +52,7 @@ public:
 	const Mesh* GetMesh()const;
 
 private:
+	ResourceFileMesh* rc_mesh = nullptr;
 	Mesh* mesh = nullptr;
 	math::AABB aabb; //Local one
 	math::AABB bounding_box; //In the world position

@@ -16,7 +16,11 @@ ComponentMesh::ComponentMesh(ComponentType type, GameObject* game_object) : Comp
 
 ComponentMesh::~ComponentMesh()
 {
-	App->resource_manager->UnloadResource(mesh->file_path);
+	if (rc_mesh)
+	{
+		rc_mesh->Unload();
+		rc_mesh = nullptr;
+	}
 	mesh = nullptr;
 }
 
@@ -63,6 +67,10 @@ void ComponentMesh::OnInspector()
 				ImGui::Text("Has Colors: yes");
 			else
 				ImGui::Text("Has Colors: no");
+
+			ImGui::Text("Vertices id: %i", mesh->id_vertices);
+			ImGui::Text("Indices id: %i", mesh->id_indices);
+			ImGui::Text("UVs id: %i", mesh->id_uvs);
 		}
 		else
 		{
@@ -123,8 +131,7 @@ void ComponentMesh::Load(Data & conf)
 
 	const char* path = conf.GetString("path");
 
-	ResourceFileMesh* rc_mesh = (ResourceFileMesh*)App->resource_manager->LoadResource(path, ResourceFileType::RES_MESH);
-	rc_mesh->Load();
+	rc_mesh = (ResourceFileMesh*)App->resource_manager->LoadResource(path, ResourceFileType::RES_MESH);
 	Mesh* mesh = rc_mesh->GetMesh(); 
 	if(mesh)
 		mesh->file_path = path;

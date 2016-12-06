@@ -23,6 +23,11 @@ ResourceFileType ResourceFile::GetType() const
 	return type;
 }
 
+unsigned int ResourceFile::GetBytes() const
+{
+	return bytes;
+}
+
 void ResourceFile::Load()
 {
 	if (used == 0)
