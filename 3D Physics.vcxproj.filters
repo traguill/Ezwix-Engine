@@ -61,6 +61,9 @@
     <Filter Include="Sources\Resources">
       <UniqueIdentifier>{c03a93bb-de7c-4a47-8923-d286ffd6f167}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Modules\EventSystem">
+      <UniqueIdentifier>{2f2d6e60-e9b5-4335-a5bc-d2f4be9a4c98}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -435,6 +438,15 @@
     <ClInclude Include="ResourcesWindow.h">
       <Filter>Sources\Editor\Windows</Filter>
     </ClInclude>
+    <ClInclude Include="Observer.h">
+      <Filter>Sources\Modules\EventSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Events.h">
+      <Filter>Sources\Modules\EventSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Subject.h">
+      <Filter>Sources\Modules\EventSystem</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -709,6 +721,12 @@
     </ClCompile>
     <ClCompile Include="ResourcesWindow.cpp">
       <Filter>Sources\Editor\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="Observer.cpp">
+      <Filter>Sources\Modules\EventSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Subject.cpp">
+      <Filter>Sources\Modules\EventSystem</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -6,6 +6,7 @@
 #include "MathGeoLib\include\MathGeoLib.h"
 #include "Light.h"
 #include <vector>
+#include "Subject.h"
 
 #define MAX_LIGHTS 8
 
@@ -14,7 +15,7 @@ using namespace math;
 class Mesh;
 class GameObject;
 
-class ModuleRenderer3D : public Module
+class ModuleRenderer3D : public Module, public Subject
 {
 public:
 	ModuleRenderer3D(const char* name, bool start_enabled = true);

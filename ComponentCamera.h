@@ -3,8 +3,9 @@
 
 #include "Component.h"
 #include "MathGeoLib\include\MathGeoLib.h"
+#include "Observer.h"
 
-class ComponentCamera : public Component
+class ComponentCamera : public Component, public Observer
 {
 public:
 	ComponentCamera(ComponentType type, GameObject* game_object);
@@ -14,6 +15,7 @@ public:
 
 	void OnInspector();
 	void OnTransformModified();
+	void OnNotify(void* entity, Event event);
 
 	float GetNearPlane()const;
 	float GetFarPlane()const;
@@ -46,9 +48,7 @@ private:
 	float near_plane = 0.3f;
 	float far_plane = 1000.0f;
 	float fov = 60;
-	float ratio_x = 5;
-	float ratio_y = 4;
-	float aspect_ratio = 1.25f;
+	float aspect_ratio;
 	math::Frustum frustum;
 	math::float3 color; 
 

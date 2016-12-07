@@ -27,8 +27,6 @@ bool ModuleWindow::Init(Data& config)
 	else
 	{
 		//Create window
-		int width = SCREEN_WIDTH * SCREEN_SIZE;
-		int height = SCREEN_HEIGHT * SCREEN_SIZE;
 		Uint32 flags = SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN;
 
 		//Use OpenGL 2.1
@@ -123,6 +121,22 @@ void ModuleWindow::SetFullDesktop(bool value)
 		flag = 0;
 
 	SDL_SetWindowFullscreen(window, flag);
+}
+
+int ModuleWindow::GetScreenWidth() const
+{
+	return width;
+}
+
+int ModuleWindow::GetScreenHeight() const
+{
+	return height;
+}
+
+void ModuleWindow::SetScreenSize(int width, int height)
+{
+	this->width = width;
+	this->height = height;
 }
 
 void ModuleWindow::SetResizable(bool value)

@@ -104,7 +104,7 @@ update_status Editor::Update()
 
 void Editor::GameOptions() const
 {
-	ImGui::SetNextWindowPos(ImVec2(SCREEN_WIDTH/2, 30)); //TODO: change this for real screen size.
+	ImGui::SetNextWindowPos(ImVec2(App->window->GetScreenWidth()/2, 30));
 	bool open = true;
 	ImGui::Begin("##GameOptions", &open, ImVec2(0, 0), 0.3f, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoSavedSettings);
 
@@ -340,7 +340,7 @@ void Editor::SaveSceneWindow()
 {
 	if (save_scene_win)
 	{
-		ImGui::SetNextWindowPos(ImVec2(SCREEN_WIDTH / 2 - 150, SCREEN_HEIGHT / 2 - 50));
+		ImGui::SetNextWindowPos(ImVec2(App->window->GetScreenWidth() / 2 - 150, App->window->GetScreenHeight() / 2 - 50));
 		ImGui::SetNextWindowSize(ImVec2(300, 100));
 		if (ImGui::Begin("Save Scene", &save_scene_win))
 		{

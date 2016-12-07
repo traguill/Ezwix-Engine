@@ -8,6 +8,7 @@
 ComponentCamera::ComponentCamera(ComponentType type, GameObject* game_object) : Component(type, game_object)
 {
 	//Init frustrum
+	aspect_ratio = (float)App->window->GetScreenWidth() / (float)App->window->GetScreenHeight();
 	float vertical_fov = DegToRad(fov);
 	float horizontal_fov = 2.0f*atanf(tanf(vertical_fov / 2.0f) * aspect_ratio);
 
@@ -21,10 +22,14 @@ ComponentCamera::ComponentCamera(ComponentType type, GameObject* game_object) : 
 	frustum.SetVerticalFovAndAspectRatio(DegToRad(fov), aspect_ratio);
 
 	color = float3(0, 0, 0); //Black to clear the screen by default
+
+	App->renderer3D->AddObserver(this);
 }
 
 ComponentCamera::~ComponentCamera()
-{}
+{
+	App->renderer3D->RemoveObserver(this);
+}
 
 void ComponentCamera::Update()
 {
@@ -53,7 +58,7 @@ void ComponentCamera::OnInspector()
 		if (ImGui::SliderFloat("##fov", &fov_value, 0, 180))
 			SetFOV(fov_value);
 
-		ImGui::Text("Aspect ratio: "); ImGui::SameLine(); ImGui::TextColored(ImVec4(0, 0, 1, 1), "%d:%d", ratio_x, ratio_y);
+		ImGui::Text("Aspect ratio: "); ImGui::SameLine(); ImGui::TextColored(ImVec4(0, 0, 1, 1), "&0.2f", aspect_ratio);
 
 		ImGui::Text("Background color: "); ImGui::SameLine();
 		float3 color = this->color;
@@ -86,6 +91,15 @@ void ComponentCamera::OnTransformModified()
 	else
 		LOG("Error: Component Camera is trying to update it's matrix but it is not attached to any game object.");
 
+}
+
+void ComponentCamera::OnNotify(void * entity, Event event)
+{
+	if (event == Event::WINDOW_RESIZE)
+	{
+		aspect_ratio = (float)App->window->GetScreenWidth() / (float)App->window->GetScreenHeight();
+		frustum.SetVerticalFovAndAspectRatio(DegToRad(fov), aspect_ratio);
+	}
 }
 
 float ComponentCamera::GetNearPlane() const
@@ -254,8 +268,8 @@ math::Ray ComponentCamera::CastCameraRay(math::float2 screen_pos)
 	//TODO: Change this for the actual screen widht and height
 	float2 pos = screen_pos;
 
-	pos.x = 2.0f * pos.x / SCREEN_WIDTH - 1.0f;
-	pos.y = 1.0f - 2.0f * pos.y / SCREEN_HEIGHT;
+	pos.x = 2.0f * pos.x / (float)App->window->GetScreenWidth() - 1.0f;
+	pos.y = 1.0f - 2.0f * pos.y / (float)App->window->GetScreenHeight();
 	
 	Ray ray = frustum.UnProjectFromNearPlane(pos.x, pos.y);
  

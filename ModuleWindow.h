@@ -25,12 +25,19 @@ public:
 	void SetBorderless(bool value);
 	void SetFullDesktop(bool value);
 
+	int GetScreenWidth()const;
+	int GetScreenHeight()const;
+	void SetScreenSize(int width, int height);
+
 public:
 	//The window we'll be rendering to
 	SDL_Window* window;
 
 	//The surface contained by the window
 	SDL_Surface* screen_surface;
+private:
+	int width = 1270;
+	int height = 860;
 };
 
 #endif // __ModuleWindow_H__

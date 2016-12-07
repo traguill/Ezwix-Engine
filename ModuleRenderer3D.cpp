@@ -119,7 +119,7 @@ bool ModuleRenderer3D::Init(Data& config)
 	LOG("Glew Version: %s", glewGetString(GLEW_VERSION));
 
 	// Projection matrix for
-	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT, 60.0f);
+	OnResize(App->window->GetScreenWidth(), App->window->GetScreenHeight(), 60.0f);
 
 	ImGui_ImplSdlGL3_Init(App->window->window);
 	
@@ -210,6 +210,9 @@ void ModuleRenderer3D::OnResize(int width, int height, float fovy)
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
+
+	App->window->SetScreenSize(width, height);
+	SendEvent(this, Event::WINDOW_RESIZE);
 }
 
 void ModuleRenderer3D::SetPerspective(const math::float4x4 & perspective)
