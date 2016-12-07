@@ -26,6 +26,7 @@ public:
 	bool RemoveChild(GameObject* child); //Breaks the link with the parent but does not delete the child.
 	void RemoveAllChilds();
 	GameObject* GetParent()const;
+	void SetParent(GameObject* parent);
 	const std::vector<GameObject*>* GetChilds();
 	size_t ChildCount();
 

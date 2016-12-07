@@ -51,11 +51,11 @@ void Assets::Draw()
 	std::vector<AssetFile*>::iterator file = current_dir->files.begin();
 	for (file; file != current_dir->files.end(); file++)
 	{
-		if ((*file)->type != FOLDER)
+		if ((*file)->type != FileType::FOLDER)
 		{
 			switch ((*file)->type)
 			{
-			case IMAGE:
+			case FileType::IMAGE:
 				ImGui::Image((ImTextureID)file_id, ImVec2(15, 15)); 
 				ImGui::SameLine();
 				if (ImGui::Selectable((*file)->name.data()))
@@ -64,7 +64,7 @@ void Assets::Draw()
 					//imgui open popup fileimageoptions TODO
 				}
 				break;
-			case MESH:
+			case FileType::MESH:
 				ImGui::Image((ImTextureID)mesh_id, ImVec2(15, 15));
 				ImGui::SameLine();
 				if (ImGui::Selectable((*file)->name.data()))
@@ -73,7 +73,7 @@ void Assets::Draw()
 					ImGui::OpenPopup("FileMeshOptions");
 				}
 				break;
-			case SCENE:
+			case FileType::SCENE:
 				ImGui::Image((ImTextureID)scene_id, ImVec2(15, 15));
 				ImGui::SameLine();
 				if (ImGui::Selectable((*file)->name.data()))
@@ -82,6 +82,15 @@ void Assets::Draw()
 					ImGui::OpenPopup("FileSceneOptions");
 				}
 					break;
+			case FileType::PREFAB:
+				ImGui::Image((ImTextureID)prefab_id, ImVec2(15, 15));
+				ImGui::SameLine();
+				if (ImGui::Selectable((*file)->name.data()))
+				{
+					file_selected = (*file);
+					ImGui::OpenPopup("FilePrefabOptions");
+				}
+				break;
 			}
 			
 		}
@@ -92,6 +101,7 @@ void Assets::Draw()
 	DirectoryOptions();
 	MeshFileOptions();
 	SceneFileOptions();
+	PrefabFileOptions();
 	
 	ImGui::End();
 }
@@ -123,6 +133,7 @@ void Assets::Init()
 	file_id = MaterialImporter::LoadSimpleFile("Resources/file.dds");
 	mesh_id = MaterialImporter::LoadSimpleFile("Resources/mesh.dds");
 	scene_id = MaterialImporter::LoadSimpleFile("Resources/scene.dds");
+	prefab_id = MaterialImporter::LoadSimpleFile("Resources/prefab.dds");
 }
 
 void Assets::FillDirectoriesRecursive(Directory* root_dir)
@@ -144,7 +155,7 @@ void Assets::FillDirectoriesRecursive(Directory* root_dir)
 		}
 		Data meta(buffer);
 
-		FileTypes type = static_cast<FileTypes>(meta.GetInt("Type"));
+		FileType type = static_cast<FileType>(meta.GetInt("Type"));
 
 		if (type == FOLDER)
 		{
@@ -423,6 +434,38 @@ void Assets::DirectoryOptions()
 			DeleteAssetDirectory(dir_selected);
 			dir_selected = nullptr;
 		}
+		ImGui::EndPopup();
+	}
+}
+
+void Assets::PrefabFileOptions()
+{
+	if (ImGui::BeginPopup("FilePrefabOptions"))
+	{
+		if (ImGui::Selectable("Load to scene"))
+		{
+			App->resource_manager->LoadFile(file_selected->content_path, PREFAB);
+		}
+
+		if (ImGui::Selectable("Remove"))
+		{
+			DeleteAssetFile(file_selected);
+		}
+
+		if (ImGui::Selectable("Open"))
+		{
+			OpenInExplorer(&file_selected->file_path);
+		}
+
+		if (ImGui::Selectable("Refresh"))
+		{
+			Refresh();
+		}
+		if (ImGui::Selectable("Open in Explorer"))
+		{
+			OpenInExplorer();
+		}
+
 		ImGui::EndPopup();
 	}
 }

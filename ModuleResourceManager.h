@@ -7,7 +7,7 @@
 
 #define CHECK_MOD_TIME 3
 
-enum FileTypes
+enum FileType
 {
 	NONE,
 	IMAGE,
@@ -37,7 +37,7 @@ public:
 	bool CleanUp();
 
 	void FileDropped(const char* file_path);
-	void LoadFile(const string& library_path, const FileTypes& type);
+	void LoadFile(const string& library_path, const FileType& type);
 
 	ResourceFile* LoadResource(const string& path, ResourceFileType type);
 	//Deprecated
@@ -48,6 +48,7 @@ public:
 
 	void SaveScene(const char* file_name, string base_library_path);
 	bool LoadScene(const char* file_name);
+	void SavePrefab(GameObject* gameobject);
 
 	//Returns the path of the file in library
 	string FindFile(const string& assets_file_path);
@@ -61,10 +62,10 @@ public:
 
 private:
 
-	FileTypes GetFileExtension(const char* path)const;
+	FileType GetFileExtension(const char* path)const;
 	string CopyOutsideFileToAssetsCurrentDir(const char* path, string base_dir = string())const;
 
-	void GenerateMetaFile(const char* path, FileTypes type, uint uuid, string library_path, bool is_file = true)const;
+	void GenerateMetaFile(const char* path, FileType type, uint uuid, string library_path, bool is_file = true)const;
 
 	void ImportFolder(const char* path, vector<tmp_mesh_file>& list_meshes, string base_dir = string(), string base_library_dir = string())const;
 	void ImportFile(const char* path, string base_dir = string(), string base_library_dir = string(), unsigned int uuid = 0)const;

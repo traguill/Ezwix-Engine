@@ -123,6 +123,11 @@ GameObject* GameObject::GetParent()const
 	return parent;
 }
 
+void GameObject::SetParent(GameObject * parent)
+{
+	this->parent = parent;
+}
+
 const std::vector<GameObject*>* GameObject::GetChilds()
 {
 	return &childs;

@@ -10,7 +10,7 @@ struct Directory;
 
 struct AssetFile
 {
-	FileTypes type;
+	FileType type;
 	std::string name; //To display
 	std::string file_path;
 	std::string content_path;
@@ -61,6 +61,7 @@ private:
 	void MeshFileOptions();
 	void SceneFileOptions();
 	void DirectoryOptions();
+	void PrefabFileOptions();
 
 	void DeleteAssetDirectory(Directory* directory);
 
@@ -75,6 +76,7 @@ private:
 	uint file_id;
 	uint mesh_id;
 	uint scene_id;
+	uint prefab_id;
 
 };
 

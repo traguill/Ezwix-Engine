@@ -5,6 +5,7 @@
 #include <vector>
 #include <list>
 #include <string>
+#include <map>
 #include "Octree.h"
 
 class GameObject;
@@ -31,7 +32,7 @@ public:
 	void GetAllCameras(std::vector<ComponentCamera*>& list, GameObject* from = nullptr) const;
 
 	void LoadEmptyScene();
-	void LoadPrefabGameObject(const Data& go_data);
+	void LoadPrefabGameObject(const Data& go_data, map<unsigned int, unsigned int>& uuids);
 
 	bool IsRoot(const GameObject* go)const;
 

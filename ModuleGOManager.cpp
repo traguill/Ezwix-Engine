@@ -308,11 +308,16 @@ void ModuleGOManager::SetCurrentScenePath(const char * scene_path)
 	current_scene_path = scene_path;
 }
 
-void ModuleGOManager::LoadPrefabGameObject(const Data & go_data)
+void ModuleGOManager::LoadPrefabGameObject(const Data & go_data, map<unsigned int, unsigned int>& uuids)
 {
 	const char* name = go_data.GetString("name");
-	unsigned int uuid = go_data.GetUInt("UUID");
-	unsigned int uuid_parent = go_data.GetUInt("parent");
+	unsigned int uuid = App->rnd->RandomInt();
+	uuids.insert(pair<unsigned int, unsigned int>(go_data.GetUInt("UUID"), uuid));
+	map<unsigned int, unsigned int>::iterator parent_old_uuid = uuids.find(go_data.GetUInt("parent"));
+	unsigned int uuid_parent = 0;
+	if (parent_old_uuid != uuids.end())
+		uuid_parent = parent_old_uuid->second;
+	
 	bool active = go_data.GetBool("active");
 	bool is_static = go_data.GetBool("static");
 
@@ -441,6 +446,14 @@ void ModuleGOManager::HierarchyWindow()
 				selected_GO = nullptr;
 			}
 		}
+		if (ImGui::Selectable("Create Prefab"))
+		{
+			if (selected_GO != nullptr)
+			{
+				App->resource_manager->SavePrefab(selected_GO);
+			}
+		}
+
 		ImGui::EndPopup();
 	}
 

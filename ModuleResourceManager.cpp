@@ -9,6 +9,7 @@
 #include "ModuleGOManager.h"
 #include "GameObject.h"
 #include "Assets.h"
+
 #include "Glew\include\glew.h"
 #include <gl\GL.h>
 
@@ -24,6 +25,7 @@
 #pragma comment ( lib, "Devil/libx86/ILU.lib" )
 #pragma comment ( lib, "Devil/libx86/ILUT.lib" )
 #include "MemLeaks.h"
+#include <map>
 
 ModuleResourceManager::ModuleResourceManager(const char* name, bool start_enabled) : Module(name, start_enabled)
 {
@@ -96,7 +98,7 @@ void ModuleResourceManager::FileDropped(const char * file_path)
 	App->editor->RefreshAssets();
 }
 
-void ModuleResourceManager::LoadFile(const string & library_path, const FileTypes & type)
+void ModuleResourceManager::LoadFile(const string & library_path, const FileType & type)
 {
 	switch (type)
 	{
@@ -235,7 +237,7 @@ void ModuleResourceManager::SaveScene(const char * file_name, string base_librar
 		string library_dir = base_library_path + "/" + std::to_string(uuid) + "/";
 		App->file_system->GenerateDirectory(library_dir.data());
 		string library_filename = library_dir + std::to_string(uuid) + ".ezx";
-		GenerateMetaFile(name_to_save.data(), FileTypes::SCENE, uuid, library_filename.data());
+		GenerateMetaFile(name_to_save.data(), FileType::SCENE, uuid, library_filename.data());
 		App->file_system->Save(library_filename.data(), buf, size); //Duplicate the file in library
 	}
 
@@ -285,6 +287,44 @@ bool ModuleResourceManager::LoadScene(const char * file_name)
 	delete[] buffer;
 
 	return ret;
+}
+
+void ModuleResourceManager::SavePrefab(GameObject * gameobject)
+{
+	//Create the file
+	//Create the meta
+	//Duplicate file in assets
+
+	Data root_node;
+	root_node.AppendArray("GameObjects");
+	GameObject* parent = gameobject->GetParent();
+	gameobject->SetParent(nullptr);
+	gameobject->Save(root_node);
+	char* buf;
+	size_t size = root_node.Serialize(&buf);
+
+	string name = App->editor->assets->CurrentDirectory() + gameobject->name;
+	name += ".pfb";
+	App->file_system->Save(name.data(), buf, size);
+
+	string meta_file = name.substr(0, name.length() - 4) + ".meta";
+	if (App->file_system->Exists(meta_file.data()))
+	{
+		//Refresh TODO:
+		LOG("The prefab already exists");
+	}
+	else
+	{
+		unsigned int uuid = App->rnd->RandomInt();
+		string library_dir = App->editor->assets->CurrentLibraryDirectory() + "/" + std::to_string(uuid) + "/";
+		App->file_system->GenerateDirectory(library_dir.data());
+		string library_filename = library_dir + std::to_string(uuid) + ".pfb";
+		GenerateMetaFile(name.data(), FileType::PREFAB, uuid, library_filename.data());
+		App->file_system->Save(library_filename.data(), buf, size); 
+	}
+
+	delete[] buf;
+	gameobject->SetParent(parent);
 }
 
 string ModuleResourceManager::FindFile(const string & assets_file_path)
@@ -341,7 +381,7 @@ int ModuleResourceManager::GetMeshBytes() const
 }
 
 ///Given a path returns if the file is one of the valid extensions to import.
-FileTypes ModuleResourceManager::GetFileExtension(const char * path) const
+FileType ModuleResourceManager::GetFileExtension(const char * path) const
 {
 	char* mesh_extensions[] = { "fbx", "FBX", "obj", "OBJ"};
 	char* image_extensions[] = {"png", "PNG", "tga", "TGA"};
@@ -351,14 +391,14 @@ FileTypes ModuleResourceManager::GetFileExtension(const char * path) const
 
 	for (int i = 0; i < 4; i++)
 		if (extension.compare(mesh_extensions[i]) == 0)
-			return FileTypes::MESH;
+			return FileType::MESH;
 
 	for (int i = 0; i < 4; i++)
 		if (extension.compare(image_extensions[i]) == 0)
-			return FileTypes::IMAGE;
+			return FileType::IMAGE;
 
 	if (extension.compare(scene_extension) == 0)
-		return FileTypes::SCENE;
+		return FileType::SCENE;
 	
 	return NONE;
 }
@@ -375,7 +415,7 @@ string ModuleResourceManager::CopyOutsideFileToAssetsCurrentDir(const char * pat
 	return current_dir;
 }
 
-void ModuleResourceManager::GenerateMetaFile(const char * path, FileTypes type, uint uuid, string library_path, bool is_file)const
+void ModuleResourceManager::GenerateMetaFile(const char * path, FileType type, uint uuid, string library_path, bool is_file)const
 {
 	Data root;
 	root.AppendUInt("Type", static_cast<unsigned int>(type));
@@ -460,7 +500,7 @@ void ModuleResourceManager::ImportFile(const char * path, string base_dir, strin
 {
 	//1-Make a copy of the file
 	//2-Import to own file
-	FileTypes type = GetFileExtension(path);
+	FileType type = GetFileExtension(path);
 	switch (type)
 	{
 	case IMAGE:
@@ -520,7 +560,7 @@ void ModuleResourceManager::MeshDropped(const char * path, string base_dir, stri
 	string library_dir = final_mesh_path;
 	final_mesh_path += std::to_string(uuid) + ".inf";
 
-	GenerateMetaFile(file_assets_path.data(), FileTypes::MESH, uuid, final_mesh_path);
+	GenerateMetaFile(file_assets_path.data(), FileType::MESH, uuid, final_mesh_path);
 	MeshImporter::Import(final_mesh_path.data(), file_assets_path.data(), library_dir.data());
 }
 
@@ -539,12 +579,12 @@ void ModuleResourceManager::LoadPrefabFile(const string & library_path)
 	Data scene(buffer);
 	Data root_objects;
 	root_objects = scene.GetArray("GameObjects", 0);
-
+	map<unsigned int, unsigned int> uuids;
 	if (root_objects.IsNull() == false)
 	{
 		for (int i = 0; i < scene.GetArraySize("GameObjects"); i++)
 		{
-			App->go_manager->LoadPrefabGameObject(scene.GetArray("GameObjects", i));
+			App->go_manager->LoadPrefabGameObject(scene.GetArray("GameObjects", i), uuids);
 		}
 	}
 	else
