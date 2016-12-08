@@ -180,7 +180,6 @@ void ModuleGOManager::LoadEmptyScene()
 
 	//Empty scene
 	root = new GameObject();
-	root->AddComponent(C_TRANSFORM);
 	root->name = "Root";
 	current_scene_path = "";
 }
@@ -290,8 +289,11 @@ GameObject * ModuleGOManager::LoadGameObject(const Data & go_data)
 		component = go_data.GetArray("components", i);
 
 		int type = component.GetInt("type");
-
-		Component* go_component = go->AddComponent(static_cast<ComponentType>(type));
+		Component* go_component;
+		if(type != (int)ComponentType::C_TRANSFORM)
+			go_component = go->AddComponent(static_cast<ComponentType>(type));
+		else
+			go_component = (Component*)go->GetComponent(C_TRANSFORM);
 		go_component->Load(component);
 	}
 
@@ -342,8 +344,11 @@ void ModuleGOManager::LoadPrefabGameObject(const Data & go_data, map<unsigned in
 		component = go_data.GetArray("components", i);
 
 		int type = component.GetInt("type");
-
-		Component* go_component = go->AddComponent(static_cast<ComponentType>(type));
+		Component* go_component;
+		if (type != (int)ComponentType::C_TRANSFORM)
+			go_component = go->AddComponent(static_cast<ComponentType>(type));
+		else
+			go_component = (Component*)go->GetComponent(C_TRANSFORM);
 		go_component->Load(component);
 	}
 

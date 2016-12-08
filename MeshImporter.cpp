@@ -91,7 +91,7 @@ void MeshImporter::ImportNode(aiNode * node, const aiScene * scene, GameObject* 
 	//Transformation ------------------------------------------------------------------------------------------------------------------
 	GameObject* go_root = new GameObject(parent);
 	objects_created.push_back(go_root);
-	ComponentTransform* c_transform = (ComponentTransform*)go_root->AddComponent(C_TRANSFORM);
+	ComponentTransform* c_transform = (ComponentTransform*)go_root->GetComponent(C_TRANSFORM);
 
 	aiVector3D translation;
 	aiVector3D scaling;
@@ -147,7 +147,7 @@ void MeshImporter::ImportNode(aiNode * node, const aiScene * scene, GameObject* 
 		if (node->mNumMeshes > 1)
 		{
 			game_object = new GameObject(go_root);
-			go_transform = (ComponentTransform*)game_object->AddComponent(C_TRANSFORM);
+			go_transform = (ComponentTransform*)game_object->GetComponent(C_TRANSFORM);
 			objects_created.push_back(game_object);
 		}
 		else

@@ -13,6 +13,7 @@ GameObject::GameObject()
 	name.resize(30);
 	name = "Empty GameObject";
 	uuid = App->rnd->RandomInt();
+	AddComponent(C_TRANSFORM);
 }
 
 GameObject::GameObject(GameObject* parent) : parent(parent)
@@ -20,10 +21,13 @@ GameObject::GameObject(GameObject* parent) : parent(parent)
 	name.resize(30);
 	name = "Empty GameObject";
 	uuid = App->rnd->RandomInt();
+	AddComponent(C_TRANSFORM);
 }
 
 GameObject::GameObject(const char* name, unsigned int uuid, GameObject* parent, bool active, bool is_static) : name(name), uuid(uuid), parent(parent), active(active), is_static(is_static)
-{}
+{
+	AddComponent(C_TRANSFORM);
+}
 
 GameObject::~GameObject()
 {

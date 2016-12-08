@@ -17,7 +17,7 @@ bool ModuleCamera3D::Init(Data & config)
 {
 	go_cam = new GameObject();
 	go_cam->name = "Editor Camera";
-	cam_transform = (ComponentTransform*)go_cam->AddComponent(C_TRANSFORM);
+	cam_transform = (ComponentTransform*)go_cam->GetComponent(C_TRANSFORM);
 	editor_cam = (ComponentCamera*)go_cam->AddComponent(C_CAMERA);
 
 	current_camera = editor_cam;
