@@ -60,7 +60,7 @@ void ResourcesWindow::Draw()
 	}
 	else
 	{
-		ImGui::Text("Total Texture: %i texture_bytes", texture_bytes);
+		ImGui::Text("Total Texture: %i bytes", texture_bytes);
 	}
 
 	int mesh_bytes = App->resource_manager->GetMeshBytes();
@@ -81,7 +81,7 @@ void ResourcesWindow::Draw()
 	}
 	else
 	{
-		ImGui::Text("Total Mesh: %i mesh_bytes", mesh_bytes);
+		ImGui::Text("Total Mesh: %i bytes", mesh_bytes);
 	}
 
 
