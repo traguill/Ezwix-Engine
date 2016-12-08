@@ -228,8 +228,21 @@ void ModuleResourceManager::SaveScene(const char * file_name, string base_librar
 	string meta_file = name_to_save.substr(0, name_to_save.length() - 4) + ".meta";
 	if (App->file_system->Exists(meta_file.data()))
 	{
-		//Refresh TODO:
-		LOG("The scene already exists");
+		char* meta_buf;
+		int meta_size = App->file_system->Load(meta_file.data(), &meta_buf);
+
+		if (meta_size > 0)
+		{
+			Data meta_data(meta_buf);
+			string library_path = meta_data.GetString("library_path");
+			App->file_system->Save(library_path.data(), buf, size);
+		}
+		else
+		{
+			LOG("Error while opening the meta file(%s) of %s", meta_file.data(), name_to_save.data());
+		}
+
+		delete[] meta_buf;
 	}
 	else
 	{
@@ -311,8 +324,21 @@ void ModuleResourceManager::SavePrefab(GameObject * gameobject)
 	string meta_file = name.substr(0, name.length() - 4) + ".meta";
 	if (App->file_system->Exists(meta_file.data()))
 	{
-		//Refresh TODO:
-		LOG("The prefab already exists");
+		char* meta_buf;
+		int meta_size = App->file_system->Load(meta_file.data(), &meta_buf);
+
+		if (meta_size > 0)
+		{
+			Data meta_data(meta_buf);
+			string library_path = meta_data.GetString("library_path");
+			App->file_system->Save(library_path.data(), buf, size);
+		}
+		else
+		{
+			LOG("Error while opening the meta file(%s) of %s", meta_file.data(), name.data());
+		}
+
+		delete[] meta_buf;
 	}
 	else
 	{
@@ -598,13 +624,14 @@ void ModuleResourceManager::LoadPrefabFile(const string & library_path)
 
 void ModuleResourceManager::CheckDirectoryModification(Directory * directory)
 {
+	//Note: only working for textures. Meshes, prefabs and scenes are ignored
 	vector<string> files_to_replace;
 	vector<AssetFile*> files_to_remove;
 	vector<unsigned int>uuids;
 	for (vector<AssetFile*>::iterator file = directory->files.begin(); file != directory->files.end(); ++file)
 	{
 		int mod_time = App->file_system->GetLastModificationTime((*file)->original_file.data());
-		if (mod_time != (*file)->time_mod)
+		if (mod_time != (*file)->time_mod && (*file)->type == FileType::IMAGE)
 		{
 			files_to_replace.push_back((*file)->original_file);
 			files_to_remove.push_back(*file);
