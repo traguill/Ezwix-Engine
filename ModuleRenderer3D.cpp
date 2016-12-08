@@ -271,5 +271,7 @@ void ModuleRenderer3D::SetClearColor(const math::float3 & color) const
 
 void ModuleRenderer3D::RemoveBuffer(unsigned int id)
 {
-	glDeleteBuffers(1, (GLuint*)&id);
+	//Patch for issue (https://github.com/traguill/Ezwix-Engine/issues/13). TODO: Solve the issue!
+	if(id != 9)
+		glDeleteBuffers(1, (GLuint*)&id);
 }

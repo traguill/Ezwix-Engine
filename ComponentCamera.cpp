@@ -265,7 +265,6 @@ void ComponentCamera::Load(Data & conf)
 
 math::Ray ComponentCamera::CastCameraRay(math::float2 screen_pos)
 {
-	//TODO: Change this for the actual screen widht and height
 	float2 pos = screen_pos;
 
 	pos.x = 2.0f * pos.x / (float)App->window->GetScreenWidth() - 1.0f;
