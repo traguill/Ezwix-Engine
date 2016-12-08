@@ -299,11 +299,12 @@ void ModuleResourceManager::SavePrefab(GameObject * gameobject)
 	root_node.AppendArray("GameObjects");
 	GameObject* parent = gameobject->GetParent();
 	gameobject->SetParent(nullptr);
+	gameobject->SetAsPrefab();
 	gameobject->Save(root_node);
 	char* buf;
 	size_t size = root_node.Serialize(&buf);
 
-	string name = App->editor->assets->CurrentDirectory() + gameobject->name;
+	string name = App->editor->assets->CurrentDirectory() + gameobject->name.data();
 	name += ".pfb";
 	App->file_system->Save(name.data(), buf, size);
 

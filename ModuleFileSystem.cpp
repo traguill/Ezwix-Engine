@@ -246,7 +246,7 @@ void ModuleFileSystem::GetFilesAndDirectories(const char * dir, std::vector<stri
 			else
 			{
 				file_name = (*i);
-				if (file_name.length() > 6)
+				if (file_name.length() >= 6)
 				{
 					file_name = file_name.substr(file_name.length() - 4, 4);
 					if (file_name.compare("meta") == 0)

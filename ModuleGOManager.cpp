@@ -267,7 +267,7 @@ GameObject * ModuleGOManager::LoadGameObject(const Data & go_data)
 	unsigned int uuid_parent = go_data.GetUInt("parent");
 	bool active = go_data.GetBool("active");
 	bool is_static = go_data.GetBool("static");
-
+	bool is_prefab = go_data.GetBool("is_prefab");
 	//Find parent GameObject reference
 	GameObject* parent = nullptr;
 	if (uuid_parent != 0 && root)
@@ -276,8 +276,8 @@ GameObject * ModuleGOManager::LoadGameObject(const Data & go_data)
 	}
 
 	//Basic GameObject properties
-	GameObject* go = new GameObject(name, uuid, parent, active, is_static);
-
+	GameObject* go = new GameObject(name, uuid, parent, active, is_static, is_prefab);
+	go->local_uuid = go_data.GetUInt("local_UUID");
 	if(parent)
 		parent->AddChild(go);
 	
@@ -318,10 +318,13 @@ void ModuleGOManager::LoadPrefabGameObject(const Data & go_data, map<unsigned in
 	map<unsigned int, unsigned int>::iterator parent_old_uuid = uuids.find(go_data.GetUInt("parent"));
 	unsigned int uuid_parent = 0;
 	if (parent_old_uuid != uuids.end())
+	{
 		uuid_parent = parent_old_uuid->second;
+	}
 	
 	bool active = go_data.GetBool("active");
 	bool is_static = go_data.GetBool("static");
+	bool is_prefab = go_data.GetBool("is_prefab");
 
 	//Find parent GameObject reference
 	GameObject* parent = nullptr;
@@ -331,7 +334,10 @@ void ModuleGOManager::LoadPrefabGameObject(const Data & go_data, map<unsigned in
 		parent = root;
 
 	//Basic GameObject properties
-	GameObject* go = new GameObject(name, uuid, parent, active, is_static);
+	GameObject* go = new GameObject(name, uuid, parent, active, is_static, is_prefab);
+
+	if(is_prefab)
+		go->local_uuid = go_data.GetUInt("UUID");
 
 	if (parent)
 		parent->AddChild(go);
@@ -504,8 +510,12 @@ void ModuleGOManager::InspectorWindow()
 {
 	ImGui::Begin("Inspector");
 
+	ImGui::Text("Debug: "); ImGui::SameLine(); ImGui::Checkbox("##debug_inspector", &debug_inspector);
+	ImGui::Separator();
+
 	if (selected_GO)
 	{
+
 		//Active
 		bool is_active = selected_GO->IsActive();
 		if (ImGui::Checkbox("", &is_active))
@@ -525,6 +535,17 @@ void ModuleGOManager::InspectorWindow()
 		if (ImGui::Checkbox("###static_option", &is_static))
 		{
 			selected_GO->SetStatic(is_static);
+		}
+
+		if (selected_GO->IsPrefab())
+		{
+			ImGui::TextColored(ImVec4(0, 0.5f, 1, 1), "Prefab: ");
+		}
+
+		if (debug_inspector)
+		{
+			ImGui::Text("UUID: %u", (int)selected_GO->GetUUID());
+			ImGui::Text("Local UUID: %u", (int)selected_GO->local_uuid);
 		}
 
 		//Components

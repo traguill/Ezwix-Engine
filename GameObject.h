@@ -16,7 +16,7 @@ class GameObject
 public:
 	GameObject();
 	GameObject(GameObject* parent);
-	GameObject(const char* name, unsigned int uuid, GameObject* parent, bool active, bool is_static);
+	GameObject(const char* name, unsigned int uuid, GameObject* parent, bool active, bool is_static, bool is_prefab);
 	~GameObject();
 
 	void PreUpdate();
@@ -34,6 +34,8 @@ public:
 	void SetActive(bool value);
 	bool IsStatic()const;
 	void SetStatic(bool value);
+	void SetAsPrefab();
+	bool IsPrefab()const;
 
 	Component* AddComponent(ComponentType type);
 	const std::vector<Component*>* GetComponents();
@@ -56,7 +58,8 @@ public:
 	unsigned int texture_to_draw = 0; //Texture to draw in one frame 
 
 	AABB* bounding_box = nullptr; //Only mesh component can Set this.
-
+	//UUID of the equal GameObject inside the prefab. It's 0 if the GameObject is not a prefab
+	unsigned int local_uuid = 0;
 private:
 	GameObject* parent = NULL;
 	std::vector<GameObject*> childs;
@@ -67,7 +70,7 @@ private:
 	std::vector<Component*> components_to_remove;
 
 	float4x4* global_matrix = nullptr;
-
+	bool is_prefab = false;
 	unsigned int uuid = 0;
 };
 

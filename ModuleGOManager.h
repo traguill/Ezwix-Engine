@@ -66,6 +66,8 @@ private:
 	GameObject* selected_GO = nullptr;
 	vector<GameObject*> go_to_remove;
 	string current_scene_path = "";
+
+	bool debug_inspector = false;
 public: 
 	//GameObjects TODO:Add functionallity to make it private
 	Octree<GameObject*> octree; //Static
