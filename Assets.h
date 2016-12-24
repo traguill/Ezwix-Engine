@@ -77,6 +77,8 @@ private:
 	uint mesh_id;
 	uint scene_id;
 	uint prefab_id;
+	uint vertex_id;
+	uint fragment_id;
 
 };
 

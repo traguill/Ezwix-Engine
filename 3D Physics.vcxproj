@@ -196,6 +196,7 @@
     <ClInclude Include="ResourceFileMesh.h" />
     <ClInclude Include="ResourceFileTexture.h" />
     <ClInclude Include="ResourcesWindow.h" />
+    <ClInclude Include="ShaderComplier.h" />
     <ClInclude Include="StackAllocator.h" />
     <ClInclude Include="Subject.h" />
     <ClInclude Include="Time.h" />
@@ -291,6 +292,7 @@
     <ClCompile Include="ResourceFileMesh.cpp" />
     <ClCompile Include="ResourceFileTexture.cpp" />
     <ClCompile Include="ResourcesWindow.cpp" />
+    <ClCompile Include="ShaderCompiler.cpp" />
     <ClCompile Include="StackAllocator.cpp" />
     <ClCompile Include="Subject.cpp" />
     <ClCompile Include="Time.cpp" />

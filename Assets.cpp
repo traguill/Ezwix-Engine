@@ -91,6 +91,22 @@ void Assets::Draw()
 					ImGui::OpenPopup("FilePrefabOptions");
 				}
 				break;
+			case FileType::VERTEX:
+				ImGui::Image((ImTextureID)vertex_id, ImVec2(15, 15));
+				ImGui::SameLine();
+				if (ImGui::Selectable((*file)->name.data()))
+				{
+					file_selected = (*file);
+				}
+				break;
+			case FileType::FRAGMENT:
+				ImGui::Image((ImTextureID)fragment_id, ImVec2(15, 15));
+				ImGui::SameLine();
+				if (ImGui::Selectable((*file)->name.data()))
+				{
+					file_selected = (*file);
+				}
+				break;
 			}
 			
 		}
@@ -134,6 +150,8 @@ void Assets::Init()
 	mesh_id = MaterialImporter::LoadSimpleFile("Resources/mesh.dds");
 	scene_id = MaterialImporter::LoadSimpleFile("Resources/scene.dds");
 	prefab_id = MaterialImporter::LoadSimpleFile("Resources/prefab.dds");
+	vertex_id = MaterialImporter::LoadSimpleFile("Resources/vertex.dds");
+	fragment_id = MaterialImporter::LoadSimpleFile("Resources/fragment.dds");
 }
 
 void Assets::FillDirectoriesRecursive(Directory* root_dir)

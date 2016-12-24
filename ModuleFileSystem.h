@@ -49,6 +49,7 @@ public:
 	double GetLastModificationTime(const char* file_path)const;
 	bool GenerateDirectory(const char* path)const;
 	bool Delete(string filename)const;
+	bool DuplicateFile(const char* src, const char* dst)const;
 
 private:
 

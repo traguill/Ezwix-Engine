@@ -350,6 +350,24 @@ bool ModuleFileSystem::Delete(string filename) const
 	return (ret) ? true : false;
 }
 
+bool ModuleFileSystem::DuplicateFile(const char * src, const char * dst) const
+{
+	char* buffer;
+	int size = Load(src, &buffer);
+
+	if (size == 0)
+	{
+		delete[] buffer;
+		LOG("Couldn't duplicate %s file to %s", src, dst);
+		return false;
+	}
+	
+	int success = Save(dst, buffer, size);
+	delete[] buffer;
+
+	return (success != 0) ? true : false;
+}
+
 void ModuleFileSystem::SearchResourceFolders()
 {
 	const char* folders[] = { ASSETS_FOLDER, LIBRARY_FOLDER}; //2 folders

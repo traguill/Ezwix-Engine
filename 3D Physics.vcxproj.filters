@@ -447,6 +447,9 @@
     <ClInclude Include="Subject.h">
       <Filter>Sources\Modules\EventSystem</Filter>
     </ClInclude>
+    <ClInclude Include="ShaderComplier.h">
+      <Filter>Sources\Importer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -727,6 +730,9 @@
     </ClCompile>
     <ClCompile Include="Subject.cpp">
       <Filter>Sources\Modules\EventSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderCompiler.cpp">
+      <Filter>Sources\Importer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

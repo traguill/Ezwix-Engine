@@ -9,6 +9,7 @@
 #include "ModuleGOManager.h"
 #include "GameObject.h"
 #include "Assets.h"
+#include "ShaderComplier.h"
 
 #include "Glew\include\glew.h"
 #include <gl\GL.h>
@@ -413,6 +414,9 @@ FileType ModuleResourceManager::GetFileExtension(const char * path) const
 	char* mesh_extensions[] = { "fbx", "FBX", "obj", "OBJ"};
 	char* image_extensions[] = {"png", "PNG", "tga", "TGA"};
 	char* scene_extension = "ezx";
+	char* vertex_extension = "ver";
+	char* fragment_extension = "fra";
+
 	string name = path;
 	string extension = name.substr(name.find_last_of(".") + 1);
 
@@ -426,6 +430,12 @@ FileType ModuleResourceManager::GetFileExtension(const char * path) const
 
 	if (extension.compare(scene_extension) == 0)
 		return FileType::SCENE;
+
+	if (extension.compare(vertex_extension) == 0)
+		return FileType::VERTEX;
+
+	if (extension.compare(fragment_extension) == 0)
+		return FileType::FRAGMENT;
 	
 	return NONE;
 }
@@ -536,6 +546,12 @@ void ModuleResourceManager::ImportFile(const char * path, string base_dir, strin
 	case MESH:
 		MeshDropped(path, base_dir, base_library_dir, uuid);
 		break;
+	case VERTEX:
+		VertexDropped(path, base_dir, base_library_dir);
+		break;
+	case FRAGMENT:
+		FragmentDropped(path, base_dir, base_library_dir);
+		break;
 	}
 }
 
@@ -589,6 +605,52 @@ void ModuleResourceManager::MeshDropped(const char * path, string base_dir, stri
 
 	GenerateMetaFile(file_assets_path.data(), FileType::MESH, uuid, final_mesh_path);
 	MeshImporter::Import(final_mesh_path.data(), file_assets_path.data(), library_dir.data());
+}
+
+void ModuleResourceManager::VertexDropped(const char * path, string base_dir, string base_library_dir) const
+{
+	string file_assets_path;
+	if (App->file_system->Exists(path) == false)
+		file_assets_path = CopyOutsideFileToAssetsCurrentDir(path, base_dir);
+	else
+		file_assets_path = path;
+
+	uint uuid = App->rnd->RandomInt();
+	string final_fragment_path = base_library_dir;
+	final_fragment_path += std::to_string(uuid) + "/";
+	App->file_system->GenerateDirectory(final_fragment_path.data());
+
+	string library_dir = final_fragment_path;
+	final_fragment_path += std::to_string(uuid) + ".ver";
+
+	GenerateMetaFile(file_assets_path.data(), FileType::VERTEX, uuid, final_fragment_path);
+	App->file_system->DuplicateFile(file_assets_path.data(), final_fragment_path.data()); 
+	bool success = ShaderCompiler::TryCompileVertex(final_fragment_path.data());
+	if (success)
+		LOG("Vertex shader %s compiled correctly.", path);
+}
+
+void ModuleResourceManager::FragmentDropped(const char * path, string base_dir, string base_library_dir) const
+{
+	string file_assets_path;
+	if (App->file_system->Exists(path) == false)
+		file_assets_path = CopyOutsideFileToAssetsCurrentDir(path, base_dir);
+	else
+		file_assets_path = path;
+
+	uint uuid = App->rnd->RandomInt();
+	string final_fragment_path = base_library_dir;
+	final_fragment_path += std::to_string(uuid) + "/";
+	App->file_system->GenerateDirectory(final_fragment_path.data());
+
+	string library_dir = final_fragment_path;
+	final_fragment_path += std::to_string(uuid) + ".fra";
+
+	GenerateMetaFile(file_assets_path.data(), FileType::FRAGMENT, uuid, final_fragment_path);
+	App->file_system->DuplicateFile(file_assets_path.data(), final_fragment_path.data()); 
+	bool success = ShaderCompiler::TryCompileVertex(final_fragment_path.data());
+	if (success)
+		LOG("Fragment shader %s compiled correctly.", path);
 }
 
 void ModuleResourceManager::LoadPrefabFile(const string & library_path)

@@ -14,7 +14,9 @@ enum FileType
 	MESH,
 	FOLDER,
 	PREFAB,
-	SCENE
+	SCENE,
+	VERTEX,
+	FRAGMENT
 };
 
 struct tmp_mesh_file
@@ -71,6 +73,8 @@ private:
 	void ImportFile(const char* path, string base_dir = string(), string base_library_dir = string(), unsigned int uuid = 0)const;
 	void ImageDropped(const char* path, string base_dir = string(), string base_library_dir = string(), unsigned int uuid = 0)const;
 	void MeshDropped(const char* path, string base_dir = string(), string base_library_dir = string(), unsigned int uuid = 0)const;
+	void VertexDropped(const char* path, string base_dir = string(), string base_library_dir = string())const;
+	void FragmentDropped(const char* path, string base_dir = string(), string base_library_dir = string())const;
 
 	void LoadPrefabFile(const string& library_path);
 
