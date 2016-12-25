@@ -1,7 +1,7 @@
 #include "Application.h"
 #include "ModuleRenderer3D.h"
 #include "ResourceFileTexture.h"
-#include "MaterialImporter.h"
+#include "TextureImporter.h"
 
 ResourceFileTexture::ResourceFileTexture(ResourceFileType type, const std::string& file_path, unsigned int uuid) : ResourceFile(type, file_path, uuid)
 {
@@ -28,7 +28,7 @@ void ResourceFileTexture::SetProperties(unsigned int texture_id, unsigned int wi
 
 void ResourceFileTexture::LoadInMemory()
 {
-	MaterialImporter::Load(this);
+	TextureImporter::Load(this);
 }
 
 void ResourceFileTexture::UnloadInMemory()

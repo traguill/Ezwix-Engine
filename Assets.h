@@ -40,9 +40,12 @@ public:
 	void Refresh();
 	string CurrentDirectory()const;
 	string CurrentLibraryDirectory()const;
+	string FindLibraryDirectory(const string& assets_dir)const;
 
 	void DeleteAssetFile(AssetFile* file);
 	void DeleteMetaAndLibraryFile(AssetFile* file);
+	
+	void GetAllFilesByType(FileType type, vector<string>& result)const;
 
 private:
 
@@ -50,7 +53,7 @@ private:
 	void CleanUp();
 	void FillDirectoriesRecursive(Directory* root_dir);
 	void DeleteDirectoriesRecursive(Directory* root_dir, bool keep_root = false);
-	Directory* FindDirectory(const string& dir);
+	Directory* FindDirectory(const string& dir)const;
 	AssetFile* FindAssetFile(const string& file);
 
 	bool IsMeshExtension(const std::string& file_name)const;

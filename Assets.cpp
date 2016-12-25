@@ -1,7 +1,8 @@
 #include "Application.h"
 #include "Assets.h"
 #include "ModuleFileSystem.h"
-#include "MaterialImporter.h"
+#include "TextureImporter.h"
+#include <stack>
 
 Assets::Assets()
 {
@@ -132,6 +133,12 @@ string Assets::CurrentLibraryDirectory() const
 	return current_dir->library_path;
 }
 
+string Assets::FindLibraryDirectory(const string & assets_dir) const
+{
+	Directory* dir = FindDirectory(assets_dir);
+	return dir->library_path;
+}
+
 void Assets::Init()
 {
 	//start active
@@ -145,13 +152,13 @@ void Assets::Init()
 
 	current_dir = root;
 
-	folder_id = MaterialImporter::LoadSimpleFile("Resources/folder.dds"); 
-	file_id = MaterialImporter::LoadSimpleFile("Resources/file.dds");
-	mesh_id = MaterialImporter::LoadSimpleFile("Resources/mesh.dds");
-	scene_id = MaterialImporter::LoadSimpleFile("Resources/scene.dds");
-	prefab_id = MaterialImporter::LoadSimpleFile("Resources/prefab.dds");
-	vertex_id = MaterialImporter::LoadSimpleFile("Resources/vertex.dds");
-	fragment_id = MaterialImporter::LoadSimpleFile("Resources/fragment.dds");
+	folder_id = TextureImporter::LoadSimpleFile("Resources/folder.dds"); 
+	file_id = TextureImporter::LoadSimpleFile("Resources/file.dds");
+	mesh_id = TextureImporter::LoadSimpleFile("Resources/mesh.dds");
+	scene_id = TextureImporter::LoadSimpleFile("Resources/scene.dds");
+	prefab_id = TextureImporter::LoadSimpleFile("Resources/prefab.dds");
+	vertex_id = TextureImporter::LoadSimpleFile("Resources/vertex.dds");
+	fragment_id = TextureImporter::LoadSimpleFile("Resources/fragment.dds");
 }
 
 void Assets::FillDirectoriesRecursive(Directory* root_dir)
@@ -248,8 +255,13 @@ void Assets::DeleteDirectoriesRecursive(Directory* root_dir, bool keep_root)
 
 }
 
-Directory * Assets::FindDirectory(const string & dir)
+Directory * Assets::FindDirectory(const string & dir)const
 {
+	if (dir == root->path)
+	{
+		return root;
+	}
+
 	string dir_part;
 	vector<string> dir_splitted;
 	dir_part = root->path;
@@ -531,4 +543,32 @@ void Assets::DeleteMetaAndLibraryFile(AssetFile * file)
 
 	App->file_system->Delete(library_folder.data());
 	App->file_system->Delete(file->file_path.data());
+}
+
+void Assets::GetAllFilesByType(FileType type, vector<string>& result)const
+{
+	if (root == nullptr)
+		return;
+
+	stack<Directory*> stack;
+	Directory* current = root;
+
+	while (current != nullptr || stack.size() != 0)
+	{
+		if (current)
+		{
+			for (vector<AssetFile*>::iterator file = current->files.begin(); file != current->files.end(); ++file)
+				if ((*file)->type == type)
+					result.push_back((*file)->original_file);
+
+			for (vector<Directory*>::iterator dir = current->directories.begin(); dir != current->directories.end(); ++dir)
+				stack.push(*dir);
+			current = nullptr;
+		}
+		else
+		{
+			current = stack.top();
+			stack.pop();
+		}
+	}
 }

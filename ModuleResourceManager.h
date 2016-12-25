@@ -4,6 +4,7 @@
 #include "Module.h"
 #include <list>
 #include "ResourceFile.h"
+#include "Material.h"
 
 #define CHECK_MOD_TIME 3
 
@@ -16,7 +17,8 @@ enum FileType
 	PREFAB,
 	SCENE,
 	VERTEX,
-	FRAGMENT
+	FRAGMENT,
+	MATERIAL
 };
 
 struct tmp_mesh_file
@@ -51,6 +53,8 @@ public:
 	void SaveScene(const char* file_name, string base_library_path);
 	bool LoadScene(const char* file_name);
 	void SavePrefab(GameObject* gameobject);
+
+	void SaveMaterial(const Material& material, const char* path);
 
 	//Returns the path of the file in library
 	string FindFile(const string& assets_file_path);

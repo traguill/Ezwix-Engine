@@ -15,7 +15,7 @@
 #include "GameObject.h"
 #include "ComponentMesh.h"
 #include "ComponentMaterial.h"
-#include "MaterialImporter.h"
+#include "TextureImporter.h"
 
 bool MeshImporter::Import(const char * file, const char * path, const char* base_path)
 {

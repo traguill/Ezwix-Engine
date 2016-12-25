@@ -390,9 +390,6 @@
     <ClInclude Include="Assets.h">
       <Filter>Sources\Editor\Windows</Filter>
     </ClInclude>
-    <ClInclude Include="MaterialImporter.h">
-      <Filter>Sources\Importer</Filter>
-    </ClInclude>
     <ClInclude Include="MeshImporter.h">
       <Filter>Sources\Importer</Filter>
     </ClInclude>
@@ -449,6 +446,18 @@
     </ClInclude>
     <ClInclude Include="ShaderComplier.h">
       <Filter>Sources\Importer</Filter>
+    </ClInclude>
+    <ClInclude Include="MaterialCreatorWindow.h">
+      <Filter>Sources\Editor\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureImporter.h">
+      <Filter>Sources\Importer</Filter>
+    </ClInclude>
+    <ClInclude Include="MaterialImporter.h">
+      <Filter>Sources\Importer</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>Sources\Helpers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -683,9 +692,6 @@
     <ClCompile Include="Assets.cpp">
       <Filter>Sources\Editor\Windows</Filter>
     </ClCompile>
-    <ClCompile Include="MaterialImporter.cpp">
-      <Filter>Sources\Importer</Filter>
-    </ClCompile>
     <ClCompile Include="MeshImporter.cpp">
       <Filter>Sources\Importer</Filter>
     </ClCompile>
@@ -733,6 +739,18 @@
     </ClCompile>
     <ClCompile Include="ShaderCompiler.cpp">
       <Filter>Sources\Importer</Filter>
+    </ClCompile>
+    <ClCompile Include="MaterialCreatorWindow.cpp">
+      <Filter>Sources\Editor\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureImporter.cpp">
+      <Filter>Sources\Importer</Filter>
+    </ClCompile>
+    <ClCompile Include="MaterialImporter.cpp">
+      <Filter>Sources\Importer</Filter>
+    </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>Sources\Helpers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

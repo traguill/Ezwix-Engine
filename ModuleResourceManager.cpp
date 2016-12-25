@@ -1,6 +1,6 @@
 #include "Application.h"
 #include "ModuleResourceManager.h"
-#include "MaterialImporter.h"
+#include "TextureImporter.h"
 #include "MeshImporter.h"
 #include "Random.h"
 #include "Data.h"
@@ -355,6 +355,20 @@ void ModuleResourceManager::SavePrefab(GameObject * gameobject)
 	gameobject->SetParent(parent);
 }
 
+void ModuleResourceManager::SaveMaterial(const Material & material, const char * path)
+{
+	material.Save(path);
+	uint uuid = App->rnd->RandomInt();
+	string assets_folder = path;
+	assets_folder = assets_folder.substr(0, assets_folder.find_last_of("/\\")+1);
+	string library_path = App->editor->assets->FindLibraryDirectory(assets_folder);
+	library_path = library_path + "/" + std::to_string(uuid) + "/";
+	App->file_system->GenerateDirectory(library_path.data());
+	library_path = library_path + std::to_string(uuid) + ".mat";
+	GenerateMetaFile(path, FileType::MATERIAL, uuid, library_path);
+	material.Save(library_path.data());
+}
+
 string ModuleResourceManager::FindFile(const string & assets_file_path)
 {
 	string ret;
@@ -578,7 +592,7 @@ void ModuleResourceManager::ImageDropped(const char* path, string base_dir, stri
 
 	GenerateMetaFile(file_assets_path.data(), IMAGE, uuid, final_image_path);
 
-	MaterialImporter::Import(final_image_path.data(), file_assets_path.data());
+	TextureImporter::Import(final_image_path.data(), file_assets_path.data());
 }
 
 void ModuleResourceManager::MeshDropped(const char * path, string base_dir, string base_library_dir, unsigned int id) const

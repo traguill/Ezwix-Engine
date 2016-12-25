@@ -12,6 +12,7 @@
 #include "CameraWindow.h"
 #include "Time.h"
 #include "ResourcesWindow.h"
+#include "MaterialCreatorWindow.h"
 
 Editor::Editor(const char* name, bool start_enabled) : Module(name, start_enabled)
 {
@@ -40,7 +41,7 @@ bool Editor::Start()
 	windows.push_back(assets = new Assets());
 	windows.push_back(camera_win = new CameraWindow());
 	windows.push_back(resource_win = new ResourcesWindow());
-	
+	windows.push_back(material_creator_win = new MaterialCreatorWindow());
 
 	return ret;
 }
@@ -55,6 +56,7 @@ bool Editor::CleanUp()
 	delete assets;
 	delete camera_win;
 	delete resource_win;
+	delete material_creator_win;
 
 	windows.clear();
 
@@ -260,6 +262,11 @@ void Editor::WindowsMenu()
 	if (ImGui::MenuItem("Resources"))
 	{
 		resource_win->SetActive(true);
+	}
+
+	if (ImGui::MenuItem("Material Creator"))
+	{
+		material_creator_win->SetActive(true);
 	}
 }
 
