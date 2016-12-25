@@ -65,6 +65,7 @@ private:
 	void SceneFileOptions();
 	void DirectoryOptions();
 	void PrefabFileOptions();
+	void MaterialFileOptions();
 
 	void DeleteAssetDirectory(Directory* directory);
 
@@ -82,6 +83,7 @@ private:
 	uint prefab_id;
 	uint vertex_id;
 	uint fragment_id;
+	uint material_id;
 
 };
 

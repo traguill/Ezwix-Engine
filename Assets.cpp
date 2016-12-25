@@ -2,6 +2,7 @@
 #include "Assets.h"
 #include "ModuleFileSystem.h"
 #include "TextureImporter.h"
+#include "MaterialCreatorWindow.h"
 #include <stack>
 
 Assets::Assets()
@@ -108,6 +109,15 @@ void Assets::Draw()
 					file_selected = (*file);
 				}
 				break;
+			case FileType::MATERIAL:
+				ImGui::Image((ImTextureID)material_id, ImVec2(15, 15));
+				ImGui::SameLine();
+				if (ImGui::Selectable((*file)->name.data()))
+				{
+					file_selected = (*file);
+					ImGui::OpenPopup("MaterialOptions");
+				}
+				break;
 			}
 			
 		}
@@ -119,6 +129,7 @@ void Assets::Draw()
 	MeshFileOptions();
 	SceneFileOptions();
 	PrefabFileOptions();
+	MaterialFileOptions();
 	
 	ImGui::End();
 }
@@ -159,6 +170,7 @@ void Assets::Init()
 	prefab_id = TextureImporter::LoadSimpleFile("Resources/prefab.dds");
 	vertex_id = TextureImporter::LoadSimpleFile("Resources/vertex.dds");
 	fragment_id = TextureImporter::LoadSimpleFile("Resources/fragment.dds");
+	material_id = TextureImporter::LoadSimpleFile("Resources/material.dds");
 }
 
 void Assets::FillDirectoriesRecursive(Directory* root_dir)
@@ -494,6 +506,25 @@ void Assets::PrefabFileOptions()
 		if (ImGui::Selectable("Open in Explorer"))
 		{
 			OpenInExplorer();
+		}
+
+		ImGui::EndPopup();
+	}
+}
+
+void Assets::MaterialFileOptions()
+{
+	if (ImGui::BeginPopup("MaterialOptions"))
+	{
+		if (ImGui::Selectable("Edit"))
+		{
+			App->editor->material_creator_win->SetActive(true);
+			App->editor->material_creator_win->LoadToEdit(file_selected->content_path.data());
+		}
+
+		if (ImGui::Selectable("Remove"))
+		{
+			DeleteAssetFile(file_selected);
 		}
 
 		ImGui::EndPopup();

@@ -78,6 +78,14 @@ void MaterialCreatorWindow::Draw()
 	ImGui::End();
 }
 
+void MaterialCreatorWindow::LoadToEdit(const char * path)
+{
+	material.Load(path);
+	vertex = material.vertex_path.data();
+	fragment = material.fragment_path.data();
+	save_path = "Write again the save path";
+}
+
 void MaterialCreatorWindow::SetUniforms()
 {
 	ImGui::Separator();

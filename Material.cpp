@@ -58,6 +58,7 @@ bool Material::Save(const char * path) const
 
 	for (std::vector<Uniform*>::const_iterator uni = uniforms.begin(); uni != uniforms.end(); ++uni)
 	{
+		size += sizeof(int); //name length
 		size += (*uni)->name.size() * sizeof(char); //name
 		size += sizeof(int); //type
 		switch ((*uni)->type)
@@ -107,6 +108,11 @@ bool Material::Save(const char * path) const
 
 	for (std::vector<Uniform*>::const_iterator uni = uniforms.begin(); uni != uniforms.end(); ++uni)
 	{
+		bytes = sizeof(int);
+		int name_size = (*uni)->name.size();
+		memcpy(cursor, &name_size, bytes);
+		cursor += bytes;
+
 		bytes = (*uni)->name.size() * sizeof(char); //name
 		memcpy(cursor, (*uni)->name.c_str(), bytes);
 		cursor += bytes;
@@ -163,7 +169,64 @@ void Material::Load(const char * path)
 		cursor += bytes;
 
 		vertex_path.resize(header[0]);
+		bytes = sizeof(char) * header[0];
 		memcpy(vertex_path._Myptr(), cursor, bytes);
+		cursor += bytes;
+
+		fragment_path.resize(header[1]);
+		bytes = sizeof(char) * header[1];
+		memcpy(fragment_path._Myptr(), cursor, bytes);
+		cursor += bytes;
+
+		int num_uniforms = header[2];
+
+		for (int i = 0; i < num_uniforms; i++)
+		{
+			Uniform* uniform = new Uniform();
+			
+			int name_size;
+			bytes = sizeof(int);
+			memcpy(&name_size, cursor, bytes);
+			cursor += bytes;
+
+			bytes = sizeof(char) * name_size;
+			memcpy(uniform->name._Myptr(), cursor, bytes);
+			cursor += bytes;
+
+			bytes = sizeof(int);
+			memcpy(&uniform->type, cursor, bytes);
+			cursor += bytes;
+			
+			switch (uniform->type)
+			{
+			case U_BOOL:
+				bytes = sizeof(bool);
+				break;
+			case U_INT:
+				bytes = sizeof(int);
+				uniform->value = new char[bytes];
+				memcpy(uniform->value, cursor, bytes);
+				cursor += bytes;
+				break;
+			case U_FLOAT:
+				bytes = sizeof(float);
+				break;
+			case U_VEC2:
+				bytes = sizeof(float) * 2;
+				break;
+			case U_VEC3:
+				bytes = sizeof(float) * 3;
+				break;
+			case U_MAT4X4:
+				bytes = sizeof(float) * 16;
+				break;
+			case U_SAMPLER2D:
+				//TODO: know the size of the string. Try first value as int with the size of the string?
+				break;
+			}
+
+			uniforms.push_back(uniform);
+		}
 	}
 
 	if (buffer)

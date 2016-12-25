@@ -14,6 +14,7 @@ public:
 	~MaterialCreatorWindow();
 
 	void Draw();
+	void LoadToEdit(const char* path);
 
 private:
 
