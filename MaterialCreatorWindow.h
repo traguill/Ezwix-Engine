@@ -40,7 +40,7 @@ private:
 	float2 u_vec2;
 	float3 u_vec3;
 	float4x4 u_mat;
-	string sampler2d;
+	string u_sampler2d;
 };
 
 #endif

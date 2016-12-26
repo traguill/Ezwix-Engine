@@ -7,6 +7,7 @@
 MaterialCreatorWindow::MaterialCreatorWindow()
 {
 	save_path.resize(512);
+	u_sampler2d.resize(512);
 }
 
 MaterialCreatorWindow::~MaterialCreatorWindow()
@@ -173,19 +174,47 @@ void MaterialCreatorWindow::SetUniformValue()
 		}
 		break;
 	case U_FLOAT:
-		ImGui::Text("error");
+		if(ImGui::InputFloat("###float_u", &u_float))
+		{
+			if (content != nullptr)
+				delete[] content;
+			content = new char[sizeof(float)];
+			memcpy(content, &u_float, sizeof(float));
+		}
 		break;
 	case U_VEC2:
-		ImGui::Text("error");
+		if (ImGui::InputFloat2("###float2_u", u_vec2.ptr()))
+		{
+			if (content != nullptr)
+				delete[] content;
+			content = new char[sizeof(float) * 2];
+			memcpy(content, &u_vec2, sizeof(float) * 2);
+		}
 		break;
 	case U_VEC3:
-		ImGui::Text("error");
+		if (ImGui::InputFloat3("###float3_u", u_vec3.ptr()))
+		{
+			if (content != nullptr)
+				delete[] content;
+			content = new char[sizeof(float) * 3];
+			memcpy(content, &u_vec3, sizeof(float) * 3);
+		}
 		break;
 	case U_MAT4X4:
-		ImGui::Text("error");
+		ImGui::Text("Matrices can be initalized only by code");
 		break;
 	case U_SAMPLER2D:
+		if (ImGui::InputText("###sampler_u", u_sampler2d._Myptr(), u_sampler2d.capacity()))
+		{
+			if (content != nullptr)
+				delete[] content;
+			int sampler_size = u_sampler2d.size();
+			content = new char[sizeof(int) + sampler_size * sizeof(char)];
 
+			memcpy(content, &sampler_size, sizeof(int));
+			char* pointer = content + sizeof(int);
+			memcpy(pointer, u_sampler2d.c_str(), sizeof(char)* sampler_size);
+		}
 		break;
 	}
 }
@@ -220,19 +249,42 @@ void MaterialCreatorWindow::PrintUniforms()
 			break;
 		}
 		case U_FLOAT:
+		{
 			ImGui::Text("Type: float");
+			float uni_float = *(reinterpret_cast<float*>((*it)->value));
+			ImGui::Text("Value: %f", uni_float);
 			break;
+		}
 		case U_VEC2:
+		{
 			ImGui::Text("Type: vec2");
+			float2 uni_vec2 = float2(reinterpret_cast<float*>((*it)->value));
+			ImGui::Text("Value X: %f", uni_vec2.x);
+			ImGui::Text("Value Y: %f", uni_vec2.y);
 			break;
+		}
 		case U_VEC3:
+		{
 			ImGui::Text("Type: vec3");
+			float3 uni_vec3 = float3(reinterpret_cast<float*>((*it)->value));
+			ImGui::Text("Value X: %f", uni_vec3.x);
+			ImGui::Text("Value Y: %f", uni_vec3.y);
+			ImGui::Text("Value Z: %f", uni_vec3.z);
 			break;
+		}
 		case U_MAT4X4:
+		{
 			ImGui::Text("Type: mat4x4");
+			ImGui::Text("Value: No matrix value visualization supported");
 			break;
+		}
 		case U_SAMPLER2D:
 			ImGui::Text("Type: sampler2D");
+			int sampler_size = *(reinterpret_cast<int*>((*it)->value));
+			string sampler_name;
+			sampler_name.resize(sampler_size);
+			memcpy(sampler_name._Myptr(), (*it)->value + sizeof(int), sampler_size);
+			ImGui::Text("Value: %s", sampler_name.data());
 			break;
 		}
 		ImGui::Separator();

@@ -29,14 +29,26 @@ void Material::AddUniform(const std::string& name, UniformType type, char* value
 		memcpy(uni->value, value, sizeof(int));
 		break;
 	case U_FLOAT:
+		uni->value = new char[sizeof(float)];
+		memcpy(uni->value, value, sizeof(float));
 		break;
 	case U_VEC2:
+		uni->value = new char[sizeof(float) * 2];
+		memcpy(uni->value, value, sizeof(float) * 2);
 		break;
 	case U_VEC3:
+		uni->value = new char[sizeof(float) * 3];
+		memcpy(uni->value, value, sizeof(float) * 3);
 		break;
 	case U_MAT4X4:
+		uni->value = new char[sizeof(float) * 16];
+		memcpy(uni->value, value, sizeof(float) * 16);
 		break;
 	case U_SAMPLER2D:
+		int size;
+		memcpy(&size, value, sizeof(int));
+		uni->value = new char[sizeof(int) + sizeof(char) * size];
+		memcpy(uni->value, value, sizeof(int) + sizeof(char) * size);
 		break;
 
 	}
@@ -82,7 +94,9 @@ bool Material::Save(const char * path) const
 			size += sizeof(float) * 16;
 			break;
 		case U_SAMPLER2D:
-			//TODO: know the size of the string. Try first value as int with the size of the string?
+			int sampler_size;
+			memcpy(&sampler_size, (*uni)->value, sizeof(int));
+			size += sizeof(int) + sizeof(char) * sampler_size;
 			break;
 		}
 	}
@@ -142,7 +156,9 @@ bool Material::Save(const char * path) const
 			bytes= sizeof(float) * 16;
 			break;
 		case U_SAMPLER2D:
-			//TODO: know the size of the string. Try first value as int with the size of the string?
+			int sampler_size;
+			memcpy(&sampler_size, (*uni)->value, sizeof(int));
+			bytes = sizeof(int) + sizeof(char) * sampler_size;
 			break;
 		}
 		memcpy(cursor, (*uni)->value, bytes);
@@ -204,9 +220,6 @@ void Material::Load(const char * path)
 				break;
 			case U_INT:
 				bytes = sizeof(int);
-				uniform->value = new char[bytes];
-				memcpy(uniform->value, cursor, bytes);
-				cursor += bytes;
 				break;
 			case U_FLOAT:
 				bytes = sizeof(float);
@@ -221,10 +234,14 @@ void Material::Load(const char * path)
 				bytes = sizeof(float) * 16;
 				break;
 			case U_SAMPLER2D:
-				//TODO: know the size of the string. Try first value as int with the size of the string?
+				int sampler_size;
+				memcpy(&sampler_size, cursor, sizeof(int));
+				bytes = sizeof(int) + sizeof(char) * sampler_size;
 				break;
 			}
-
+			uniform->value = new char[bytes];
+			memcpy(uniform->value, cursor, bytes);
+			cursor += bytes;
 			uniforms.push_back(uniform);
 		}
 	}
