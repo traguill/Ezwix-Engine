@@ -8,8 +8,7 @@ Material::Material()
 
 Material::~Material()
 {
-	for (std::vector<Uniform*>::iterator it = uniforms.begin(); it != uniforms.end(); ++it)
-		delete *it;
+	CleanUp();
 }
 
 void Material::AddUniform(const std::string& name, UniformType type, char* value)
@@ -173,6 +172,8 @@ bool Material::Save(const char * path) const
 
 void Material::Load(const char * path)
 {
+	CleanUp();
+
 	char* buffer = nullptr;
 
 	if (App->file_system->Load(path, &buffer) != 0)
@@ -248,4 +249,10 @@ void Material::Load(const char * path)
 
 	if (buffer)
 		delete[] buffer;
+}
+
+void Material::CleanUp()
+{
+	for (std::vector<Uniform*>::iterator it = uniforms.begin(); it != uniforms.end(); ++it)
+		delete *it;
 }

@@ -32,6 +32,9 @@ public:
 	bool Save(const char* path)const;
 	void Load(const char* path);
 
+private:
+	void CleanUp();
+
 public:
 	std::string vertex_path;
 	std::string fragment_path;

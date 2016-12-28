@@ -260,10 +260,25 @@ void ModuleRenderer3D::Draw(GameObject* obj) const
 	glUniformMatrix4fv(view_location, 1, GL_FALSE, *App->camera->GetCurrentCamera()->GetViewMatrix().v);	
 	//Textures
 	GLint texture_location = glGetUniformLocation(material->shader_id, "_Texture");
-	glUniform1i(texture_location, 0);
+	
+	if (texture_location != -1)
+	{
+		glUniform1i(texture_location, 0);
 
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, material->texture_id);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, material->texture_id);
+	}
+	
+	//Other uniforms
+	for (vector<Uniform*>::const_iterator uni = material->material.uniforms.begin(); uni != material->material.uniforms.end(); ++uni)
+	{
+		//TODO: HANDLE ALL UNIFORMS
+		if ((*uni)->type == UniformType::U_FLOAT)
+		{
+			GLint float_location = glGetUniformLocation(material->shader_id, (*uni)->name.data());
+			glUniform1f(float_location, *reinterpret_cast<GLfloat*>((*uni)->value));
+		}
+	}
 
 	//Buffer vertices
 	glEnableVertexAttribArray(0);

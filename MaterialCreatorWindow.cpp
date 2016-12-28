@@ -221,7 +221,6 @@ void MaterialCreatorWindow::SetUniformValue()
 
 void MaterialCreatorWindow::PrintUniforms()
 {
-	bool uni_bool;
 	for (vector<Uniform*>::iterator it = material.uniforms.begin(); it != material.uniforms.end(); ++it)
 	{
 		ImGui::TextColored(ImVec4(0, 0, 1, 1), "Variable: ");

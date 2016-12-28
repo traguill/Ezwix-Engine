@@ -219,7 +219,20 @@ void MeshImporter::ImportNode(aiNode * node, const aiScene * scene, GameObject* 
 
 				data.AppendArrayValue(tex_data);
 			}
+			else
+			{
+				//Load default material
+				Data tex_data;
+				tex_data.AppendInt("type", ComponentType::C_MATERIAL);
+				tex_data.AppendUInt("UUID", (unsigned int)App->rnd->RandomInt());
+				tex_data.AppendBool("active", true);
+				tex_data.AppendString("path", "");
+
+				tex_data.AppendArray("textures");
+				data.AppendArrayValue(tex_data);
+			}
 		}
+		
 
 		root_data_node.AppendArrayValue(data);
 	}
