@@ -210,7 +210,13 @@ void MeshImporter::ImportNode(aiNode * node, const aiScene * scene, GameObject* 
 				tex_data.AppendInt("type", ComponentType::C_MATERIAL);
 				tex_data.AppendUInt("UUID", (unsigned int)App->rnd->RandomInt());
 				tex_data.AppendBool("active", true);
-				tex_data.AppendString("path", App->resource_manager->FindFile(complete_path).data());
+				tex_data.AppendString("path", "");
+
+				tex_data.AppendArray("textures");
+				Data diffuse_data;
+				diffuse_data.AppendString("path", App->resource_manager->FindFile(complete_path).data());
+				tex_data.AppendArrayValue(diffuse_data);
+
 				data.AppendArrayValue(tex_data);
 			}
 		}

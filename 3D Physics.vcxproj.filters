@@ -453,9 +453,6 @@
     <ClInclude Include="TextureImporter.h">
       <Filter>Sources\Importer</Filter>
     </ClInclude>
-    <ClInclude Include="MaterialImporter.h">
-      <Filter>Sources\Importer</Filter>
-    </ClInclude>
     <ClInclude Include="Material.h">
       <Filter>Sources\Helpers</Filter>
     </ClInclude>
@@ -744,9 +741,6 @@
       <Filter>Sources\Editor\Windows</Filter>
     </ClCompile>
     <ClCompile Include="TextureImporter.cpp">
-      <Filter>Sources\Importer</Filter>
-    </ClCompile>
-    <ClCompile Include="MaterialImporter.cpp">
       <Filter>Sources\Importer</Filter>
     </ClCompile>
     <ClCompile Include="Material.cpp">

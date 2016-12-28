@@ -55,7 +55,6 @@ public:
 	std::string name;
 	//Filled the moment to draw. Do not use it elsewhere.
 	Mesh* mesh_to_draw = nullptr; //Pointer to the mesh to draw in one frame
-	unsigned int texture_to_draw = 0; //Texture to draw in one frame 
 
 	AABB* bounding_box = nullptr; //Only mesh component can Set this.
 	//UUID of the equal GameObject inside the prefab. It's 0 if the GameObject is not a prefab

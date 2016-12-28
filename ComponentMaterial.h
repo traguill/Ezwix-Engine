@@ -2,9 +2,12 @@
 #define __COMPONENT_MATERIAL_H__
 
 #include "Component.h"
+#include "Material.h"
 #include <string>
+#include <map>
 
 class ResourceFileTexture;
+
 class ComponentMaterial : public Component
 {
 public:
@@ -18,8 +21,13 @@ public:
 	void Load(Data& conf);
 
 public:
-	std::string file_path; 
-	ResourceFileTexture* rc_texture = nullptr;
+	std::string material_path;
+	Material material;
+	uint shader_id;
+	uint texture_id;
+private:
+	//Note: All materials must have model, view and projection uniforms. 
+	std::map<string, ResourceFileTexture*> texture_list;
 
 };
 #endif // !__COMPONENT_MATERIAL_H__

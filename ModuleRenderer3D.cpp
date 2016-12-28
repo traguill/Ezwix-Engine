@@ -7,6 +7,7 @@
 #include "GameObject.h"
 #include "ModuleGOManager.h"
 #include "ComponentMesh.h"
+#include "ComponentMaterial.h"
 #include "Octree.h"
 #include <gl/GL.h>
 #include <gl/GLU.h>
@@ -167,6 +168,8 @@ update_status ModuleRenderer3D::PostUpdate()
 			Draw((*obj));
 	}
 
+	glUseProgram(0);
+
 	ImGui::Render();
 	SDL_GL_SwapWindow(App->window->window);
 	return UPDATE_CONTINUE;
@@ -238,30 +241,46 @@ void ModuleRenderer3D::AddToDraw(GameObject* obj)
 
 void ModuleRenderer3D::Draw(GameObject* obj) const
 {
-	glPushMatrix();
-	glMultMatrixf(*(obj->GetGlobalMatrix().Transposed()).v);
+	ComponentMaterial* material = (ComponentMaterial*)obj->GetComponent(C_MATERIAL);
 
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-	glEnable(GL_TEXTURE_2D);
+	if (material == nullptr)
+		return;
 
+	//Use shader
+	glUseProgram(material->shader_id);
+
+	//Set uniforms
+
+	//Matrices
+	GLint model_location = glGetUniformLocation(material->shader_id, "model");
+	glUniformMatrix4fv(model_location, 1, GL_FALSE, *(obj->GetGlobalMatrix().Transposed()).v);
+	GLint projection_location = glGetUniformLocation(material->shader_id, "projection");
+	glUniformMatrix4fv(projection_location, 1, GL_FALSE, *App->camera->GetCurrentCamera()->GetProjectionMatrix().v);
+	GLint view_location = glGetUniformLocation(material->shader_id, "view");
+	glUniformMatrix4fv(view_location, 1, GL_FALSE, *App->camera->GetCurrentCamera()->GetViewMatrix().v);	
+	//Textures
+	GLint texture_location = glGetUniformLocation(material->shader_id, "_Texture");
+	glUniform1i(texture_location, 0);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, material->texture_id);
+
+	//Buffer vertices
+	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, obj->mesh_to_draw->id_vertices);
-	glVertexPointer(3, GL_FLOAT, 0, NULL);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
 
+	//Buffer uvs
+	glEnableVertexAttribArray(1);
 	glBindBuffer(GL_ARRAY_BUFFER, obj->mesh_to_draw->id_uvs);
-	glTexCoordPointer(2, GL_FLOAT, 0, NULL);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
 
-	glBindTexture(GL_TEXTURE_2D, obj->texture_to_draw);
-
+	//Index buffer
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, obj->mesh_to_draw->id_indices);
-	glDrawElements(GL_TRIANGLES, obj->mesh_to_draw->num_indices, GL_UNSIGNED_INT, NULL);
-	
-	
-	glDisable(GL_TEXTURE_2D);
-	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-	glDisableClientState(GL_VERTEX_ARRAY);
+	glDrawElements(GL_TRIANGLES, obj->mesh_to_draw->num_indices, GL_UNSIGNED_INT, (void*)0);
 
-	glPopMatrix();
+	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
 }
 
 void ModuleRenderer3D::SetClearColor(const math::float3 & color) const

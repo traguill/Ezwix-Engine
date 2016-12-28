@@ -3,6 +3,7 @@
 
 #include "Module.h"
 #include <list>
+#include <map>
 #include "ResourceFile.h"
 #include "Material.h"
 
@@ -28,6 +29,13 @@ struct tmp_mesh_file
 	string library_folder;
 };
 
+struct shader_file
+{
+	uint vertex_id;
+	uint fragment_id;
+	uint shader_id;
+};
+
 struct Directory;
 
 class ModuleResourceManager : public Module
@@ -37,6 +45,7 @@ public:
 	~ModuleResourceManager();
 
 	bool Init(Data& config);
+	bool Start();
 	update_status Update();
 	bool CleanUp();
 
@@ -55,6 +64,8 @@ public:
 	void SavePrefab(GameObject* gameobject);
 
 	void SaveMaterial(const Material& material, const char* path);
+	unsigned int LoadShader(const string& vertex_path, const string& fragment_path);
+	unsigned int GetDefaultShaderId()const;
 
 	//Returns the path of the file in library
 	string FindFile(const string& assets_file_path);
@@ -93,6 +104,11 @@ private:
 	unsigned int bytes_in_memory = 0;
 	unsigned int texture_bytes = 0;
 	unsigned int mesh_bytes = 0;
+
+	map<string, uint> vertex_programs;
+	map<string, uint> fragment_programs;
+	list<shader_file> shader_programs;
+	unsigned int default_shader = -1;
 
 
 };

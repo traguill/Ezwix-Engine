@@ -186,3 +186,69 @@ int ShaderCompiler::CompileFragment(const char * path)
 
 	return ret;
 }
+
+int ShaderCompiler::CompileShader(unsigned int vertex_id, unsigned int fragment_id)
+{
+	GLint success;
+	GLuint vertex_shader = vertex_id;
+	GLuint fragment_shader = fragment_id;
+
+	GLuint shader_program = glCreateProgram();
+	glAttachShader(shader_program, vertex_shader);
+	glAttachShader(shader_program, fragment_shader);
+	glLinkProgram(shader_program);
+
+	glGetProgramiv(shader_program, GL_LINK_STATUS, &success);
+	if (success == 0)
+	{
+		GLchar info[512];
+		glGetProgramInfoLog(shader_program, 512, NULL, info);
+		LOG("Shader link error: %s", info);
+	}
+	
+	return shader_program;
+}
+
+int ShaderCompiler::LoadDefaultShader()
+{
+	GLuint vertex_shader, fragment_shader;
+	GLuint shader = glCreateProgram();;
+
+	const GLchar* vertex_code =
+		"#version 330 core \n"
+		"layout(location = 0) in vec3 position;\n"
+		"layout(location = 1) in vec2 texCoord;\n"
+		"out vec2 TexCoord;\n"
+		"uniform mat4 model;\n"
+		"uniform mat4 view;\n"
+		"uniform mat4 projection;\n"
+		"void main()\n"
+		"{\n"
+		"	gl_Position = projection * view * model * vec4(position, 1.0f);\n"
+		"	TexCoord = texCoord;\n"
+		"}\n";
+
+	const GLchar* fragment_code =
+		"#version 330 core\n"
+		"in vec2 TexCoord;\n"
+		"out vec4 color;\n"
+		"uniform sampler2D _Texture;\n"
+		"void main()\n"
+		"{\n"
+		"	color = texture(_Texture, TexCoord);\n"
+		"}\n";
+
+	
+	vertex_shader = glCreateShader(GL_VERTEX_SHADER);
+	fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
+	glShaderSource(vertex_shader, 1, &vertex_code, 0);
+	glShaderSource(fragment_shader, 1, &fragment_code, 0);
+	glCompileShader(vertex_shader);
+	glCompileShader(fragment_shader);
+
+	glAttachShader(shader, vertex_shader);
+	glAttachShader(shader, fragment_shader);
+	glLinkProgram(shader);
+
+	return shader;
+}

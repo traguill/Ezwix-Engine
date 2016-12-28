@@ -9,6 +9,8 @@ namespace ShaderCompiler
 
 	int CompileVertex(const char* file_path);
 	int CompileFragment(const char* file_path);
+	int CompileShader(unsigned int vertex_id, unsigned int fragment_id);
+	int LoadDefaultShader();
 }
 
 #endif // !__SHADER_COMPILER_H__

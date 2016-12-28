@@ -53,6 +53,12 @@ bool ModuleResourceManager::Init(Data & config)
 	return true;
 }
 
+bool ModuleResourceManager::Start()
+{
+	default_shader = ShaderCompiler::LoadDefaultShader();
+	return true;
+}
+
 update_status ModuleResourceManager::Update()
 {
 	//TODO:Only do this in editor mode. NOT in game
@@ -367,6 +373,58 @@ void ModuleResourceManager::SaveMaterial(const Material & material, const char *
 	library_path = library_path + std::to_string(uuid) + ".mat";
 	GenerateMetaFile(path, FileType::MATERIAL, uuid, library_path);
 	material.Save(library_path.data());
+}
+
+unsigned int ModuleResourceManager::LoadShader(const string & vertex_path, const string & fragment_path)
+{
+	uint vertex_id, fragment_id, shader_id;
+
+	map<string, uint>::iterator vertex = vertex_programs.find(vertex_path);
+	if (vertex == vertex_programs.end())
+	{
+		vertex_id = ShaderCompiler::CompileVertex(vertex_path.data());
+		vertex_programs.insert(pair<string, uint>(vertex_path, vertex_id));
+	}
+	else
+		vertex_id = (*vertex).second;
+
+	map<string, uint>::iterator fragment = fragment_programs.find(fragment_path);
+	if (fragment == fragment_programs.end())
+	{
+		fragment_id = ShaderCompiler::CompileFragment(fragment_path.data());
+		fragment_programs.insert(pair<string, uint>(fragment_path, fragment_id));
+	}
+	else
+		fragment_id = (*fragment).second;
+
+	bool found = false;
+	for (list<shader_file>::iterator shader_it = shader_programs.begin(); shader_it != shader_programs.end(); ++shader_it)
+	{
+		if ((*shader_it).vertex_id == vertex_id && (*shader_it).fragment_id == fragment_id)
+		{
+			found = true;
+			shader_id = (*shader_it).shader_id;
+			break;
+		}
+	}
+
+	if (!found)
+	{
+		shader_id = ShaderCompiler::CompileShader(vertex_id, fragment_id);
+		shader_file new_file;
+		new_file.vertex_id = vertex_id;
+		new_file.fragment_id = fragment_id;
+		new_file.shader_id = shader_id;
+
+		shader_programs.push_back(new_file);
+	}
+
+	return shader_id;
+}
+
+unsigned int ModuleResourceManager::GetDefaultShaderId() const
+{
+	return default_shader;
 }
 
 string ModuleResourceManager::FindFile(const string & assets_file_path)
