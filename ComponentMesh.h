@@ -23,6 +23,7 @@ struct Mesh
 
 	//Normals
 	float* normals = nullptr;
+	unsigned int id_normals = 0;
 
 	//Vertex colors
 	float* colors = nullptr;

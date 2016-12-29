@@ -444,6 +444,15 @@ Mesh * MeshImporter::Load(const char * path)
 		glGenBuffers(1, (GLuint*)&(mesh->id_uvs));
 		glBindBuffer(GL_ARRAY_BUFFER, mesh->id_uvs);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 2 * mesh->num_uvs, mesh->uvs, GL_STATIC_DRAW);
+
+		//Load Normals -----------------------------------------------------------------------------------------------------------------------
+
+		if (mesh->normals)
+		{
+			glGenBuffers(1, (GLuint*)&(mesh->id_normals));
+			glBindBuffer(GL_ARRAY_BUFFER, mesh->id_normals);
+			glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 3 * mesh->num_vertices, mesh->normals, GL_STATIC_DRAW);
+		}
 	}
 	if(buffer)
 		delete[] buffer;

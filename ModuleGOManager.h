@@ -10,6 +10,7 @@
 
 class GameObject;
 class ComponentCamera;
+class ComponentLight;
 
 #define OCTREE_SIZE 800
 
@@ -30,6 +31,7 @@ public:
 	bool FastRemoveGameObject(GameObject* object); //Doesn't remove the GameObject from the parent list.
 
 	void GetAllCameras(std::vector<ComponentCamera*>& list, GameObject* from = nullptr) const;
+	ComponentLight* GetDirectionalLight(GameObject* from = nullptr)const;
 
 	void LoadEmptyScene();
 	void LoadPrefabGameObject(const Data& go_data, map<unsigned int, unsigned int>& uuids);

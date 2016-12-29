@@ -7,6 +7,7 @@
 #include "ComponentCamera.h"
 #include "MeshImporter.h"
 #include "RaycastHit.h"
+#include "ComponentLight.h"
 
 GameObject::GameObject()
 {
@@ -223,6 +224,11 @@ Component* GameObject::AddComponent(ComponentType type)
 	case C_CAMERA:
 		if (GetComponent(C_TRANSFORM))
 			item = new ComponentCamera(type, this);
+		break;
+	case C_LIGHT:	
+		if (GetComponent(C_TRANSFORM))
+			item = new ComponentLight(type, this);
+		break;
 	default:
 		break;
 	}

@@ -9,6 +9,7 @@
 #include "ComponentMesh.h"
 #include "ComponentMaterial.h"
 #include "ResourceFileMaterial.h"
+#include "ComponentLight.h"
 #include "Octree.h"
 #include <gl/GL.h>
 #include <gl/GLU.h>
@@ -283,6 +284,17 @@ void ModuleRenderer3D::Draw(GameObject* obj) const
 	if (ambient_color_location != -1)
 		glUniform3f(ambient_color_location, App->lighting->ambient_color.x, App->lighting->ambient_color.y, App->lighting->ambient_color.z);
 
+	ComponentLight* directional = App->go_manager->GetDirectionalLight();
+	GLint directional_intensity_location = glGetUniformLocation(shader_id, "_DirectionalIntensity");
+	if(directional_intensity_location != -1)
+		glUniform1f(directional_intensity_location, directional->GetIntensity());
+	GLint directional_color_location = glGetUniformLocation(shader_id, "_DirectionalColor");
+	if (directional_color_location != -1)
+		glUniform3f(directional_color_location, directional->GetColor().x, directional->GetColor().y, directional->GetColor().z);
+	GLint directional_direction_location = glGetUniformLocation(shader_id, "_DirectionalDirection");
+	if (directional_direction_location != -1)
+		glUniform3f(directional_direction_location, directional->GetDirection().x, directional->GetDirection().y, directional->GetDirection().z);
+
 	
 	//Other uniforms
 	if (material->rc_material)
@@ -307,6 +319,11 @@ void ModuleRenderer3D::Draw(GameObject* obj) const
 	glEnableVertexAttribArray(1);
 	glBindBuffer(GL_ARRAY_BUFFER, obj->mesh_to_draw->id_uvs);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
+
+	//Buffer normals
+	glEnableVertexAttribArray(2);
+	glBindBuffer(GL_ARRAY_BUFFER, obj->mesh_to_draw->id_normals);
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
 
 	//Index buffer
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, obj->mesh_to_draw->id_indices);

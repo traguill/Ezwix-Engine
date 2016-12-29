@@ -6,7 +6,8 @@ enum ComponentType
 	C_TRANSFORM = 0,
 	C_MESH = 1,
 	C_MATERIAL = 2,
-	C_CAMERA = 3
+	C_CAMERA = 3,
+	C_LIGHT = 4
 };
 
 class GameObject;

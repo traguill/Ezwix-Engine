@@ -218,7 +218,9 @@ int ShaderCompiler::LoadDefaultShader()
 		"#version 330 core \n"
 		"layout(location = 0) in vec3 position;\n"
 		"layout(location = 1) in vec2 texCoord;\n"
+		"layout(location = 2) in vec3 normal;\n"
 		"out vec2 TexCoord;\n"
+		"out vec3 normal0;\n"
 		"uniform mat4 model;\n"
 		"uniform mat4 view;\n"
 		"uniform mat4 projection;\n"
@@ -226,27 +228,59 @@ int ShaderCompiler::LoadDefaultShader()
 		"{\n"
 		"	gl_Position = projection * view * model * vec4(position, 1.0f);\n"
 		"	TexCoord = texCoord;\n"
+		"	normal0 = (model * vec4(normal, 0.0f)).xyz;\n"
 		"}\n";
 
 	const GLchar* fragment_code =
 		"#version 330 core\n"
 		"in vec2 TexCoord;\n"
+		"in vec3 normal0;\n"
 		"out vec4 color;\n"
 		"uniform sampler2D _Texture;\n"
 		"uniform float _AmbientIntensity;\n"
 		"uniform vec3 _AmbientColor;\n"
+		"uniform float _DirectionalIntensity;\n"
+		"uniform vec3 _DirectionalColor;\n"
+		"uniform vec3 _DirectionalDirection;\n"
 		"void main()\n"
 		"{\n"
-		"	color = texture(_Texture, TexCoord) * vec4(_AmbientIntensity) * vec4(_AmbientColor, 1.0f);\n"
+		"	vec4 ambient = vec4(_AmbientIntensity) * vec4(_AmbientColor, 1.0f);\n"
+		"	vec4 directional_color = vec4(_DirectionalColor * _DirectionalIntensity, 1.0f);\n"
+		"	float directional_diffuse_factor = dot(normalize(normal0), -_DirectionalDirection);\n"
+		"   vec4 diffuse;\n"
+		"   if(directional_diffuse_factor > 0)\n"
+		"   {\n"
+		"		diffuse = vec4(_DirectionalColor * _DirectionalIntensity * directional_diffuse_factor, 1.0f);\n"
+		"   }\n"
+		"   else\n"
+		"   {\n"
+		"		diffuse = vec4(0,0,0,0);\n"
+		"   }\n"
+		"	color = texture(_Texture, TexCoord) * (ambient + diffuse);\n"
 		"}\n";
 
-	
+	GLint success;
+	GLchar info[512];
+
 	vertex_shader = glCreateShader(GL_VERTEX_SHADER);
 	fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
 	glShaderSource(vertex_shader, 1, &vertex_code, 0);
 	glShaderSource(fragment_shader, 1, &fragment_code, 0);
 	glCompileShader(vertex_shader);
+	
+	glGetShaderiv(vertex_shader, GL_COMPILE_STATUS, &success);
+	if (success == 0)
+	{
+		glGetShaderInfoLog(vertex_shader, 512, NULL, info);
+		LOG("Default shader vertex compilation error (%s)", info);
+	}
 	glCompileShader(fragment_shader);
+	glGetShaderiv(fragment_shader, GL_COMPILE_STATUS, &success);
+	if (success == 0)
+	{
+		glGetShaderInfoLog(fragment_shader, 512, NULL, info);
+		LOG("Default shader fragment compilation error (%s)", info);
+	}
 
 	glAttachShader(shader, vertex_shader);
 	glAttachShader(shader, fragment_shader);

@@ -8,6 +8,7 @@
 #include "RaycastHit.h"
 #include <algorithm>
 #include "MemLeaks.h"
+#include "ComponentLight.h"
 
 ModuleGOManager::ModuleGOManager(const char* name, bool start_enabled) : Module(name, start_enabled)
 {}
@@ -172,6 +173,25 @@ void ModuleGOManager::GetAllCameras(std::vector<ComponentCamera*>& list, GameObj
 	const vector<GameObject*>* childs = go->GetChilds();
 	for (vector<GameObject*>::const_iterator child = childs->begin(); child != childs->end(); ++child)
 		GetAllCameras(list, (*child));
+}
+
+ComponentLight * ModuleGOManager::GetDirectionalLight(GameObject* from) const
+{
+	ComponentLight* light = nullptr;
+	GameObject* go = (from) ? from : root;
+
+	light = (ComponentLight*)go->GetComponent(C_LIGHT);
+	if (light)
+	{
+		if(light->GetLightType() == LightType::DIRECTIONAL_LIGHT)
+			return light;
+	}		
+
+	const vector<GameObject*>* childs = go->GetChilds();
+	for (vector<GameObject*>::const_iterator child = childs->begin(); child != childs->end(); ++child)
+		light = GetDirectionalLight((*child));
+
+	return light;
 }
 
 void ModuleGOManager::LoadEmptyScene()
@@ -580,6 +600,11 @@ void ModuleGOManager::InspectorWindow()
 			if (ImGui::Selectable("Add Camera"))
 			{
 				selected_GO->AddComponent(C_CAMERA);
+			}
+
+			if (ImGui::Selectable("Add Light"))
+			{
+				selected_GO->AddComponent(C_LIGHT);
 			}
 
 			ImGui::EndPopup();
