@@ -24,6 +24,7 @@ Application::Application()
 	editor = new Editor("editor");
 	file_system = new ModuleFileSystem("file_system");
 	go_manager = new ModuleGOManager("go_manager");
+	lighting = new ModuleLighting("lighting");
 
 	//Globals
 	g_Debug = new DebugDraw("debug_draw");
@@ -40,6 +41,7 @@ Application::Application()
 	AddModule(g_Debug);
 	AddModule(audio);
 	AddModule(physics);
+	AddModule(lighting);
 	AddModule(go_manager);
 	
 	// Scenes

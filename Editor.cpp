@@ -14,6 +14,7 @@
 #include "ResourcesWindow.h"
 #include "MaterialCreatorWindow.h"
 #include "ShaderEditorWindow.h"
+#include "LightingWindow.h"
 
 Editor::Editor(const char* name, bool start_enabled) : Module(name, start_enabled)
 {
@@ -44,6 +45,7 @@ bool Editor::Start()
 	windows.push_back(resource_win = new ResourcesWindow());
 	windows.push_back(material_creator_win = new MaterialCreatorWindow());
 	windows.push_back(shader_editor_win = new ShaderEditorWindow());
+	windows.push_back(lighting_win = new LightingWindow());
 
 	return ret;
 }
@@ -60,6 +62,7 @@ bool Editor::CleanUp()
 	delete resource_win;
 	delete material_creator_win;
 	delete shader_editor_win;
+	delete lighting_win;
 
 	windows.clear();
 
@@ -283,6 +286,11 @@ void Editor::EditMenu()
 	if (ImGui::MenuItem("Shaders"))
 	{
 		shader_editor_win->SetActive(true);
+	}
+
+	if (ImGui::MenuItem("Lighting"))
+	{
+		lighting_win->SetActive(true);
 	}
 }
 

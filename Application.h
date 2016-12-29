@@ -20,6 +20,7 @@
 #include "AutoProfile.h"
 #include "Random.h"
 #include "Time.h"
+#include "ModuleLighting.h"
 
 using namespace std; 
 
@@ -72,6 +73,7 @@ public:
 	ModuleFileSystem* file_system;
 	ModuleGOManager* go_manager;
 	ModuleResourceManager* resource_manager;
+	ModuleLighting* lighting;
 	Editor* editor;
 	Random* rnd = nullptr;
 private:

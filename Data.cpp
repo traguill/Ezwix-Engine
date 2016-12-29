@@ -77,7 +77,7 @@ bool Data::AppendFloat3(const char * name,const float * value)
 	JSON_Array* array = json_value_get_array(j_value);
 
 	for (int i = 0; i < 3; i++)
-		json_array_append_number(array, (double)value[i]);
+		json_array_append_number(array, value[i]);
 
 	return json_object_set_value(root, name, j_value) == JSONSuccess;
 }
@@ -177,6 +177,8 @@ float3 Data::GetFloat3(const char * name) const
 		float3 ret((float)json_array_get_number(j_array, 0),
 				   (float)json_array_get_number(j_array, 1),
 				   (float)json_array_get_number(j_array, 2));
+
+		return ret;
 	}
 	return float3::zero;
 }

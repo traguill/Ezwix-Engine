@@ -266,8 +266,7 @@ void ModuleRenderer3D::Draw(GameObject* obj) const
 	GLint view_location = glGetUniformLocation(shader_id, "view");
 	glUniformMatrix4fv(view_location, 1, GL_FALSE, *App->camera->GetCurrentCamera()->GetViewMatrix().v);	
 	//Textures
-	GLint texture_location = glGetUniformLocation(shader_id, "_Texture");
-	
+	GLint texture_location = glGetUniformLocation(shader_id, "_Texture");	
 	if (texture_location != -1)
 	{
 		glUniform1i(texture_location, 0);
@@ -275,6 +274,15 @@ void ModuleRenderer3D::Draw(GameObject* obj) const
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, material->texture_id);
 	}
+
+	//Lighting
+	GLint ambient_intensity_location = glGetUniformLocation(shader_id, "_AmbientIntensity");
+	if (ambient_intensity_location != -1)
+		glUniform1f(ambient_intensity_location, App->lighting->ambient_intensity);
+	GLint ambient_color_location = glGetUniformLocation(shader_id, "_AmbientColor");
+	if (ambient_color_location != -1)
+		glUniform3f(ambient_color_location, App->lighting->ambient_color.x, App->lighting->ambient_color.y, App->lighting->ambient_color.z);
+
 	
 	//Other uniforms
 	if (material->rc_material)

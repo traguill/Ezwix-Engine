@@ -233,9 +233,11 @@ int ShaderCompiler::LoadDefaultShader()
 		"in vec2 TexCoord;\n"
 		"out vec4 color;\n"
 		"uniform sampler2D _Texture;\n"
+		"uniform float _AmbientIntensity;\n"
+		"uniform vec3 _AmbientColor;\n"
 		"void main()\n"
 		"{\n"
-		"	color = texture(_Texture, TexCoord);\n"
+		"	color = texture(_Texture, TexCoord) * vec4(_AmbientIntensity) * vec4(_AmbientColor, 1.0f);\n"
 		"}\n";
 
 	
