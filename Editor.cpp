@@ -13,6 +13,7 @@
 #include "Time.h"
 #include "ResourcesWindow.h"
 #include "MaterialCreatorWindow.h"
+#include "ShaderEditorWindow.h"
 
 Editor::Editor(const char* name, bool start_enabled) : Module(name, start_enabled)
 {
@@ -42,6 +43,7 @@ bool Editor::Start()
 	windows.push_back(camera_win = new CameraWindow());
 	windows.push_back(resource_win = new ResourcesWindow());
 	windows.push_back(material_creator_win = new MaterialCreatorWindow());
+	windows.push_back(shader_editor_win = new ShaderEditorWindow());
 
 	return ret;
 }
@@ -57,6 +59,7 @@ bool Editor::CleanUp()
 	delete camera_win;
 	delete resource_win;
 	delete material_creator_win;
+	delete shader_editor_win;
 
 	windows.clear();
 
@@ -275,6 +278,11 @@ void Editor::EditMenu()
 	if (ImGui::MenuItem("Camera"))
 	{
 		camera_win->SetActive(true);
+	}
+
+	if (ImGui::MenuItem("Shaders"))
+	{
+		shader_editor_win->SetActive(true);
 	}
 }
 

@@ -29,13 +29,6 @@ struct tmp_mesh_file
 	string library_folder;
 };
 
-struct shader_file
-{
-	uint vertex_id;
-	uint fragment_id;
-	uint shader_id;
-};
-
 struct Directory;
 
 class ModuleResourceManager : public Module
@@ -64,7 +57,6 @@ public:
 	void SavePrefab(GameObject* gameobject);
 
 	void SaveMaterial(const Material& material, const char* path);
-	unsigned int LoadShader(const string& vertex_path, const string& fragment_path);
 	unsigned int GetDefaultShaderId()const;
 
 	//Returns the path of the file in library
@@ -88,8 +80,8 @@ private:
 	void ImportFile(const char* path, string base_dir = string(), string base_library_dir = string(), unsigned int uuid = 0)const;
 	void ImageDropped(const char* path, string base_dir = string(), string base_library_dir = string(), unsigned int uuid = 0)const;
 	void MeshDropped(const char* path, string base_dir = string(), string base_library_dir = string(), unsigned int uuid = 0)const;
-	void VertexDropped(const char* path, string base_dir = string(), string base_library_dir = string())const;
-	void FragmentDropped(const char* path, string base_dir = string(), string base_library_dir = string())const;
+	void VertexDropped(const char* path, string base_dir = string(), string base_library_dir = string(), unsigned int uuid = 0)const;
+	void FragmentDropped(const char* path, string base_dir = string(), string base_library_dir = string(), unsigned int uuid = 0)const;
 
 	void LoadPrefabFile(const string& library_path);
 
@@ -105,9 +97,6 @@ private:
 	unsigned int texture_bytes = 0;
 	unsigned int mesh_bytes = 0;
 
-	map<string, uint> vertex_programs;
-	map<string, uint> fragment_programs;
-	list<shader_file> shader_programs;
 	unsigned int default_shader = -1;
 
 

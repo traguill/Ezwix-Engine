@@ -252,3 +252,8 @@ int ShaderCompiler::LoadDefaultShader()
 
 	return shader;
 }
+
+void ShaderCompiler::DeleteShader(unsigned int shader_id)
+{
+	glDeleteShader(shader_id);
+}

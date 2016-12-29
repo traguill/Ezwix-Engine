@@ -8,6 +8,7 @@
 #include "ModuleGOManager.h"
 #include "ComponentMesh.h"
 #include "ComponentMaterial.h"
+#include "ResourceFileMaterial.h"
 #include "Octree.h"
 #include <gl/GL.h>
 #include <gl/GLU.h>
@@ -246,20 +247,26 @@ void ModuleRenderer3D::Draw(GameObject* obj) const
 	if (material == nullptr)
 		return;
 
+	uint shader_id = 0;
+	if (material->rc_material)
+		shader_id = material->rc_material->GetShaderId();
+	else
+		shader_id = App->resource_manager->GetDefaultShaderId();
+
 	//Use shader
-	glUseProgram(material->shader_id);
+	glUseProgram(shader_id);
 
 	//Set uniforms
 
 	//Matrices
-	GLint model_location = glGetUniformLocation(material->shader_id, "model");
+	GLint model_location = glGetUniformLocation(shader_id, "model");
 	glUniformMatrix4fv(model_location, 1, GL_FALSE, *(obj->GetGlobalMatrix().Transposed()).v);
-	GLint projection_location = glGetUniformLocation(material->shader_id, "projection");
+	GLint projection_location = glGetUniformLocation(shader_id, "projection");
 	glUniformMatrix4fv(projection_location, 1, GL_FALSE, *App->camera->GetCurrentCamera()->GetProjectionMatrix().v);
-	GLint view_location = glGetUniformLocation(material->shader_id, "view");
+	GLint view_location = glGetUniformLocation(shader_id, "view");
 	glUniformMatrix4fv(view_location, 1, GL_FALSE, *App->camera->GetCurrentCamera()->GetViewMatrix().v);	
 	//Textures
-	GLint texture_location = glGetUniformLocation(material->shader_id, "_Texture");
+	GLint texture_location = glGetUniformLocation(shader_id, "_Texture");
 	
 	if (texture_location != -1)
 	{
@@ -270,13 +277,16 @@ void ModuleRenderer3D::Draw(GameObject* obj) const
 	}
 	
 	//Other uniforms
-	for (vector<Uniform*>::const_iterator uni = material->material.uniforms.begin(); uni != material->material.uniforms.end(); ++uni)
+	if (material->rc_material)
 	{
-		//TODO: HANDLE ALL UNIFORMS
-		if ((*uni)->type == UniformType::U_FLOAT)
+		for (vector<Uniform*>::const_iterator uni = material->rc_material->material.uniforms.begin(); uni != material->rc_material->material.uniforms.end(); ++uni)
 		{
-			GLint float_location = glGetUniformLocation(material->shader_id, (*uni)->name.data());
-			glUniform1f(float_location, *reinterpret_cast<GLfloat*>((*uni)->value));
+			//TODO: HANDLE ALL UNIFORMS
+			if ((*uni)->type == UniformType::U_FLOAT)
+			{
+				GLint float_location = glGetUniformLocation(shader_id, (*uni)->name.data());
+				glUniform1f(float_location, *reinterpret_cast<GLfloat*>((*uni)->value));
+			}
 		}
 	}
 

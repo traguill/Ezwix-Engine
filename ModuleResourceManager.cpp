@@ -10,6 +10,7 @@
 #include "GameObject.h"
 #include "Assets.h"
 #include "ShaderComplier.h"
+#include "ResourceFileMaterial.h"
 
 #include "Glew\include\glew.h"
 #include <gl\GL.h>
@@ -146,6 +147,10 @@ ResourceFile * ModuleResourceManager::LoadResource(const string & path, Resource
 			texture_bytes += rc_file->GetBytes();
 			num_textures++;
 			break;
+		case RES_MATERIAL:
+			rc_file = new ResourceFileMaterial(type, path, uuid);
+			rc_file->Load();
+			//TODO: save info about the shaders loaded in vram
 		}
 
 		resource_files.push_back(rc_file);
@@ -375,53 +380,6 @@ void ModuleResourceManager::SaveMaterial(const Material & material, const char *
 	material.Save(library_path.data());
 }
 
-unsigned int ModuleResourceManager::LoadShader(const string & vertex_path, const string & fragment_path)
-{
-	uint vertex_id, fragment_id, shader_id;
-
-	map<string, uint>::iterator vertex = vertex_programs.find(vertex_path);
-	if (vertex == vertex_programs.end())
-	{
-		vertex_id = ShaderCompiler::CompileVertex(vertex_path.data());
-		vertex_programs.insert(pair<string, uint>(vertex_path, vertex_id));
-	}
-	else
-		vertex_id = (*vertex).second;
-
-	map<string, uint>::iterator fragment = fragment_programs.find(fragment_path);
-	if (fragment == fragment_programs.end())
-	{
-		fragment_id = ShaderCompiler::CompileFragment(fragment_path.data());
-		fragment_programs.insert(pair<string, uint>(fragment_path, fragment_id));
-	}
-	else
-		fragment_id = (*fragment).second;
-
-	bool found = false;
-	for (list<shader_file>::iterator shader_it = shader_programs.begin(); shader_it != shader_programs.end(); ++shader_it)
-	{
-		if ((*shader_it).vertex_id == vertex_id && (*shader_it).fragment_id == fragment_id)
-		{
-			found = true;
-			shader_id = (*shader_it).shader_id;
-			break;
-		}
-	}
-
-	if (!found)
-	{
-		shader_id = ShaderCompiler::CompileShader(vertex_id, fragment_id);
-		shader_file new_file;
-		new_file.vertex_id = vertex_id;
-		new_file.fragment_id = fragment_id;
-		new_file.shader_id = shader_id;
-
-		shader_programs.push_back(new_file);
-	}
-
-	return shader_id;
-}
-
 unsigned int ModuleResourceManager::GetDefaultShaderId() const
 {
 	return default_shader;
@@ -619,10 +577,10 @@ void ModuleResourceManager::ImportFile(const char * path, string base_dir, strin
 		MeshDropped(path, base_dir, base_library_dir, uuid);
 		break;
 	case VERTEX:
-		VertexDropped(path, base_dir, base_library_dir);
+		VertexDropped(path, base_dir, base_library_dir, uuid);
 		break;
 	case FRAGMENT:
-		FragmentDropped(path, base_dir, base_library_dir);
+		FragmentDropped(path, base_dir, base_library_dir, uuid);
 		break;
 	}
 }
@@ -679,7 +637,7 @@ void ModuleResourceManager::MeshDropped(const char * path, string base_dir, stri
 	MeshImporter::Import(final_mesh_path.data(), file_assets_path.data(), library_dir.data());
 }
 
-void ModuleResourceManager::VertexDropped(const char * path, string base_dir, string base_library_dir) const
+void ModuleResourceManager::VertexDropped(const char * path, string base_dir, string base_library_dir, unsigned int id) const
 {
 	string file_assets_path;
 	if (App->file_system->Exists(path) == false)
@@ -687,7 +645,7 @@ void ModuleResourceManager::VertexDropped(const char * path, string base_dir, st
 	else
 		file_assets_path = path;
 
-	uint uuid = App->rnd->RandomInt();
+	uint uuid = (id == 0) ? App->rnd->RandomInt() : id;
 	string final_fragment_path = base_library_dir;
 	final_fragment_path += std::to_string(uuid) + "/";
 	App->file_system->GenerateDirectory(final_fragment_path.data());
@@ -702,7 +660,7 @@ void ModuleResourceManager::VertexDropped(const char * path, string base_dir, st
 		LOG("Vertex shader %s compiled correctly.", path);
 }
 
-void ModuleResourceManager::FragmentDropped(const char * path, string base_dir, string base_library_dir) const
+void ModuleResourceManager::FragmentDropped(const char * path, string base_dir, string base_library_dir, unsigned int id) const
 {
 	string file_assets_path;
 	if (App->file_system->Exists(path) == false)
@@ -710,7 +668,7 @@ void ModuleResourceManager::FragmentDropped(const char * path, string base_dir, 
 	else
 		file_assets_path = path;
 
-	uint uuid = App->rnd->RandomInt();
+	uint uuid = (id == 0) ? App->rnd->RandomInt() : id;
 	string final_fragment_path = base_library_dir;
 	final_fragment_path += std::to_string(uuid) + "/";
 	App->file_system->GenerateDirectory(final_fragment_path.data());
@@ -758,18 +716,34 @@ void ModuleResourceManager::LoadPrefabFile(const string & library_path)
 
 void ModuleResourceManager::CheckDirectoryModification(Directory * directory)
 {
-	//Note: only working for textures. Meshes, prefabs and scenes are ignored
+	//Note: only working for textures/vertex programs/fragment programs. Meshes, prefabs and scenes are ignored
 	vector<string> files_to_replace;
 	vector<AssetFile*> files_to_remove;
 	vector<unsigned int>uuids;
 	for (vector<AssetFile*>::iterator file = directory->files.begin(); file != directory->files.end(); ++file)
 	{
 		int mod_time = App->file_system->GetLastModificationTime((*file)->original_file.data());
-		if (mod_time != (*file)->time_mod && (*file)->type == FileType::IMAGE)
+		if (mod_time != (*file)->time_mod)
 		{
-			files_to_replace.push_back((*file)->original_file);
-			files_to_remove.push_back(*file);
-			uuids.push_back((*file)->uuid);
+			switch ((*file)->type)
+			{
+				case FileType::IMAGE:
+					files_to_replace.push_back((*file)->original_file);
+					files_to_remove.push_back(*file);
+					uuids.push_back((*file)->uuid);
+				break;
+				case FileType::VERTEX:
+					files_to_replace.push_back((*file)->original_file);
+					files_to_remove.push_back(*file);
+					uuids.push_back((*file)->uuid);
+				break;
+				case FileType::FRAGMENT:
+					files_to_replace.push_back((*file)->original_file);
+					files_to_remove.push_back(*file);
+					uuids.push_back((*file)->uuid);
+				break;
+			} 
+			
 		}
 	}
 

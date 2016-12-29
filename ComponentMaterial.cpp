@@ -5,7 +5,7 @@
 #include "Data.h"
 #include "ResourceFileTexture.h"
 #include "Assets.h"
-
+#include "ResourceFileMaterial.h"
 
 ComponentMaterial::ComponentMaterial(ComponentType type, GameObject* game_object) : Component(type, game_object)
 {}
@@ -34,7 +34,7 @@ void ComponentMaterial::OnInspector()
 		}
 		else
 		{
-			ImGui::Text("Material: %s", material_path.data());
+			ImGui::Text("Material: %s", material_name.data());
 			PrintMaterialProperties();
 		}
 		
@@ -58,9 +58,13 @@ void ComponentMaterial::OnInspector()
 						//TODO: UNLOAD ALL TEXTURES IN TEXTURE LIST
 
 						change_material_enabled = false;
-						material.Load((*it).data());
-						material_path = (*it).data();
-						shader_id = App->resource_manager->LoadShader(material.vertex_path, material.fragment_path);
+						material_name = (*it).data();
+						if (rc_material)
+						{
+							rc_material->Unload();
+						}
+						material_path = App->resource_manager->FindFile(material_name);
+						rc_material = (ResourceFileMaterial*)App->resource_manager->LoadResource(material_path, ResourceFileType::RES_MATERIAL);
 					}
 				}
 				ImGui::EndMenu();
@@ -105,10 +109,9 @@ void ComponentMaterial::Load(Data & conf)
 
 	if (material_path.size() != 0)
 	{
-		//TODO: LOAD SHADER AND SET MATERIAL_PATH
-		material.Load(material_path.data());
+		rc_material = (ResourceFileMaterial*)App->resource_manager->LoadResource(material_path, ResourceFileType::RES_MATERIAL);
 
-		for (vector<Uniform*>::iterator uni = material.uniforms.begin(); uni != material.uniforms.end(); ++uni)
+		for (vector<Uniform*>::iterator uni = rc_material->material.uniforms.begin(); uni != rc_material->material.uniforms.end(); ++uni)
 		{
 			if ((*uni)->type == UniformType::U_SAMPLER2D)
 			{
@@ -121,12 +124,10 @@ void ComponentMaterial::Load(Data & conf)
 				texture_list.insert(pair<string, ResourceFileTexture*>(texture_path, rc_tmp));
 			}
 		}
+
 	}
 	else
 	{
-		//Default shader
-		shader_id = App->resource_manager->GetDefaultShaderId();
-
 		Data texture;
 		unsigned int tex_size = conf.GetArraySize("textures");
 		for (int i = 0; i < tex_size; i++)
@@ -145,7 +146,7 @@ void ComponentMaterial::Load(Data & conf)
 
 void ComponentMaterial::PrintMaterialProperties()
 {
-	for (vector<Uniform*>::iterator it = material.uniforms.begin(); it != material.uniforms.end(); ++it)
+	for (vector<Uniform*>::iterator it = rc_material->material.uniforms.begin(); it != rc_material->material.uniforms.end(); ++it)
 	{
 		ImGui::Text("Variable: ");
 		ImGui::SameLine();

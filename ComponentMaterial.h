@@ -7,6 +7,7 @@
 #include <map>
 
 class ResourceFileTexture;
+class ResourceFileMaterial;
 
 class ComponentMaterial : public Component
 {
@@ -24,11 +25,11 @@ private:
 	void PrintMaterialProperties();
 
 public:
-	std::string material_path;
-	Material material;
-	uint shader_id;
+	std::string material_path; //To Library. If is "" means that this component uses the default material.
+	ResourceFileMaterial* rc_material = nullptr;
 	uint texture_id = 0;
 private:
+	std::string material_name; //Assets path
 	//Note: All materials must have model, view and projection uniforms. 
 	std::map<string, ResourceFileTexture*> texture_list;
 
