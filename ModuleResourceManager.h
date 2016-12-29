@@ -30,6 +30,7 @@ struct tmp_mesh_file
 };
 
 struct Directory;
+class ResourceFileMaterial;
 
 class ModuleResourceManager : public Module
 {
@@ -86,6 +87,10 @@ private:
 	void LoadPrefabFile(const string& library_path);
 
 	void CheckDirectoryModification(Directory* directory);
+
+	//If vertex program is false it will find the fragment program.
+	ResourceFileMaterial* FindMaterialUsing(bool vertex_program, const string& path)const;
+	void FindAllResourcesByType(ResourceFileType type, vector<ResourceFile*>& result)const;
 
 private:
 	list<ResourceFile*> resource_files;

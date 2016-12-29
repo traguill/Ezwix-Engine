@@ -17,6 +17,7 @@ enum UniformType
 
 struct Uniform
 {
+	~Uniform();
 	std::string name;
 	UniformType type;
 	char* value = nullptr;

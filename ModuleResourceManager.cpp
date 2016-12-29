@@ -720,6 +720,10 @@ void ModuleResourceManager::CheckDirectoryModification(Directory * directory)
 	vector<string> files_to_replace;
 	vector<AssetFile*> files_to_remove;
 	vector<unsigned int>uuids;
+	vector<string> vertex_to_replace;
+	vector<string> fragment_to_replace;
+	//Special case for fragment and vertex. If in use, needs to find the shader using it and recompile it.
+
 	for (vector<AssetFile*>::iterator file = directory->files.begin(); file != directory->files.end(); ++file)
 	{
 		int mod_time = App->file_system->GetLastModificationTime((*file)->original_file.data());
@@ -736,11 +740,13 @@ void ModuleResourceManager::CheckDirectoryModification(Directory * directory)
 					files_to_replace.push_back((*file)->original_file);
 					files_to_remove.push_back(*file);
 					uuids.push_back((*file)->uuid);
+					vertex_to_replace.push_back((*file)->original_file);
 				break;
 				case FileType::FRAGMENT:
 					files_to_replace.push_back((*file)->original_file);
 					files_to_remove.push_back(*file);
 					uuids.push_back((*file)->uuid);
+					fragment_to_replace.push_back((*file)->original_file);
 				break;
 			} 
 			
@@ -761,9 +767,59 @@ void ModuleResourceManager::CheckDirectoryModification(Directory * directory)
 			rc->Reload();
 		}
 	}
+
+	for (vector<string>::iterator ver = vertex_to_replace.begin(); ver != vertex_to_replace.end(); ++ver)
+	{
+		ResourceFileMaterial* mat = FindMaterialUsing(true, *ver);
+		if (mat)
+		{
+			mat->UnLoadAll();
+			mat->Reload();
+		}
+	}
+
+	for (vector<string>::iterator fra = fragment_to_replace.begin(); fra != fragment_to_replace.end(); ++fra)
+	{
+		ResourceFileMaterial* mat = FindMaterialUsing(false, *fra);
+		if (mat)
+		{
+			mat->UnLoadAll();
+			mat->Reload();
+		}
+	}
 	
 	for (vector<Directory*>::iterator dir = directory->directories.begin(); dir != directory->directories.end(); ++dir)
 	{
 		CheckDirectoryModification(*dir);
 	}
+}
+
+ResourceFileMaterial * ModuleResourceManager::FindMaterialUsing(bool vertex_program, const string & path) const
+{
+	vector<ResourceFile*> materials;
+	FindAllResourcesByType(ResourceFileType::RES_MATERIAL, materials);
+	ResourceFileMaterial* item;
+	for (vector<ResourceFile*>::const_iterator it = materials.begin(); it != materials.end(); ++it)
+	{
+		item = (ResourceFileMaterial*)(*it);
+		if (vertex_program)
+		{
+			if (item->material.vertex_path.compare(path) == 0)
+				return item;
+		}
+		else //Fragment
+		{
+			if (item->material.fragment_path.compare(path) == 0)
+				return item;
+		}
+	}
+
+	return nullptr;
+}
+
+void ModuleResourceManager::FindAllResourcesByType(ResourceFileType type, vector<ResourceFile*>& result)const
+{
+	for (list<ResourceFile*>::const_iterator it = resource_files.begin(); it != resource_files.end(); ++it)
+		if ((*it)->GetType() == type)
+			result.push_back(*it);
 }

@@ -19,9 +19,9 @@ private:
 public:
 	Material material;
 private:
-	uint shader_id;
-	uint vertex_id;
-	uint fragment_id;
+	uint shader_id = 0;
+	uint vertex_id = 0;
+	uint fragment_id = 0;
 
 };
 

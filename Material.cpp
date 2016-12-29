@@ -255,4 +255,15 @@ void Material::CleanUp()
 {
 	for (std::vector<Uniform*>::iterator it = uniforms.begin(); it != uniforms.end(); ++it)
 		delete *it;
+
+	uniforms.clear();
+}
+
+Uniform::~Uniform()
+{
+	if (value != nullptr)
+	{
+		delete[] value;
+		value = nullptr;
+	}
 }
