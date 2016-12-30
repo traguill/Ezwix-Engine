@@ -25,6 +25,10 @@ struct Mesh
 	float* normals = nullptr;
 	unsigned int id_normals = 0;
 
+	//Tangent
+	float* tangents = nullptr;
+	unsigned int id_tangents = 0;
+
 	//Vertex colors
 	float* colors = nullptr;
 

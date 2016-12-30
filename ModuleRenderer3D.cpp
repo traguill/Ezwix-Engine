@@ -273,8 +273,35 @@ void ModuleRenderer3D::Draw(GameObject* obj, const LightInfo& light) const
 		glUniform1i(texture_location, 0);
 
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, material->texture_id);
+		glBindTexture(GL_TEXTURE_2D, material->GetDiffuseId());
 	}
+	
+	//Normal
+	if (material->GetNormalId() != 0)
+	{
+		GLint has_normalmap_location = glGetUniformLocation(shader_id, "_HasNormalMap");
+		if (has_normalmap_location != -1)
+		{
+			glUniform1i(has_normalmap_location, 1);
+		}
+		GLint normalmap_location = glGetUniformLocation(shader_id, "_NormalMap");
+		if (normalmap_location != -1)
+		{
+			glUniform1i(normalmap_location, 1);
+			glActiveTexture(GL_TEXTURE1);
+			glBindTexture(GL_TEXTURE_2D, material->GetNormalId());
+		}
+	}
+	else
+	{
+		GLint has_normalmap_location = glGetUniformLocation(shader_id, "_HasNormalMap");
+		if (has_normalmap_location != -1)
+		{
+			glUniform1i(has_normalmap_location, 0);
+		}
+	}
+
+	
 
 	//Lighting
 
@@ -329,6 +356,11 @@ void ModuleRenderer3D::Draw(GameObject* obj, const LightInfo& light) const
 	glEnableVertexAttribArray(2);
 	glBindBuffer(GL_ARRAY_BUFFER, obj->mesh_to_draw->id_normals);
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
+
+	//Buffer tangents
+	glEnableVertexAttribArray(3);
+	glBindBuffer(GL_ARRAY_BUFFER, obj->mesh_to_draw->id_tangents);
+	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
 
 	//Index buffer
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, obj->mesh_to_draw->id_indices);

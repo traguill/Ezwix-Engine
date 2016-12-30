@@ -137,11 +137,25 @@ void ComponentMaterial::Load(Data & conf)
 			string tex_path = texture.GetString("path");
 			ResourceFileTexture* rc_tmp = (ResourceFileTexture*)App->resource_manager->LoadResource(tex_path, ResourceFileType::RES_TEXTURE);
 			texture_list.insert(pair<string, ResourceFileTexture*>(tex_path, rc_tmp));
-			texture_id = rc_tmp->GetTexture();
+
+			if(i == 0)
+				diffuse_id = rc_tmp->GetTexture();
+			if (i == 1)
+				normal_id = rc_tmp->GetTexture();
 		}
 
 	}
 	
+}
+
+uint ComponentMaterial::GetDiffuseId() const
+{
+	return diffuse_id;
+}
+
+uint ComponentMaterial::GetNormalId() const
+{
+	return normal_id;
 }
 
 void ComponentMaterial::PrintMaterialProperties()

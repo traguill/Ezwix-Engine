@@ -205,7 +205,27 @@ void MeshImporter::ImportNode(aiNode * node, const aiScene * scene, GameObject* 
 				complete_path = mesh_file_directory + complete_path;
 				complete_path.erase(0, 1);
 
-				//c_material->file_path = App->resource_manager->FindFile(complete_path);
+
+				//Normal map
+				aiString normal_path;
+				material->GetTexture(aiTextureType_HEIGHT, 0, &normal_path);
+				string normal_complete_path;
+				if (normal_path.length > 0)
+				{
+					normal_complete_path = normal_path.data;
+
+					size_t found = normal_complete_path.find_first_of('\\');
+					while (found != string::npos)
+					{
+						normal_complete_path[found] = '/';
+						found = normal_complete_path.find_first_of('\\', found + 1);
+					}
+					normal_complete_path = mesh_file_directory + normal_complete_path;
+					normal_complete_path.erase(0, 1);
+				}
+
+
+
 				Data tex_data;
 				tex_data.AppendInt("type", ComponentType::C_MATERIAL);
 				tex_data.AppendUInt("UUID", (unsigned int)App->rnd->RandomInt());
@@ -216,12 +236,18 @@ void MeshImporter::ImportNode(aiNode * node, const aiScene * scene, GameObject* 
 				Data diffuse_data;
 				diffuse_data.AppendString("path", App->resource_manager->FindFile(complete_path).data());
 				tex_data.AppendArrayValue(diffuse_data);
+				if (normal_path.length > 0)
+				{
+					Data normal_data;
+					normal_data.AppendString("path", App->resource_manager->FindFile(normal_complete_path).data());
+					tex_data.AppendArrayValue(normal_data);
+				}
 
 				data.AppendArrayValue(tex_data);
 			}
 			else
 			{
-				//Load default material
+				//Load default material without textures
 				Data tex_data;
 				tex_data.AppendInt("type", ComponentType::C_MATERIAL);
 				tex_data.AppendUInt("UUID", (unsigned int)App->rnd->RandomInt());
@@ -293,6 +319,13 @@ bool MeshImporter::ImportMesh(const aiMesh * mesh_to_load, const char* folder_pa
 		mesh.colors = new float[mesh.num_vertices * 3];
 		memcpy(mesh.colors, mesh_to_load->mColors, sizeof(float) * mesh.num_vertices * 3);
 	}
+
+	//Tangents  --------------------------------------------------------------------------------------------------------
+	if (mesh_to_load->HasTangentsAndBitangents())
+	{
+		mesh.tangents = new float[mesh.num_vertices * 3];
+		memcpy(mesh.tangents, mesh_to_load->mTangents, sizeof(float)*mesh.num_vertices * 3);
+	}
 		
 	return Save(mesh, folder_path, output_name);
 }
@@ -315,6 +348,7 @@ bool MeshImporter::Save(Mesh& mesh, const char* folder_path, string& output_name
 	if (header[2] != 0) size += sizeof(float) * header[2] * 3;
 	if (header[3] != 0) size += sizeof(float) * header[3] * 3;
 	size += sizeof(float) * header[4] * 2;
+	size += sizeof(float) * header[1] * 3;
 
 	char* data = new char[size];
 	char* cursor = data;
@@ -356,6 +390,12 @@ bool MeshImporter::Save(Mesh& mesh, const char* folder_path, string& output_name
 	//Uvs
 	bytes = sizeof(float) * header[4] * 2;
 	memcpy(cursor, mesh.uvs, bytes);
+	cursor += bytes;
+
+	//Tangents
+	bytes = sizeof(float) * header[1] * 3;
+	memcpy(cursor, mesh.tangents, bytes);
+	cursor += bytes;
 
 	//Generate random UUID for the name
 	ret = App->file_system->SaveUnique(std::to_string((unsigned int)App->rnd->RandomInt()).data(), data, size, folder_path, "msh", output_name);
@@ -424,6 +464,13 @@ Mesh * MeshImporter::Load(const char * path)
 		bytes = sizeof(float) * mesh->num_uvs * 2;
 		mesh->uvs = new float[mesh->num_uvs * 2];
 		memcpy(mesh->uvs, cursor, bytes);
+		cursor += bytes;
+
+		//Tangents
+		bytes = sizeof(float) * mesh->num_vertices * 3;
+		mesh->tangents = new float[mesh->num_vertices * 3];
+		memcpy(mesh->tangents, cursor, bytes);
+		cursor += bytes;
 
 		//Vertices ------------------------------------------------------------------------------------------------------
 		
@@ -453,6 +500,11 @@ Mesh * MeshImporter::Load(const char * path)
 			glBindBuffer(GL_ARRAY_BUFFER, mesh->id_normals);
 			glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 3 * mesh->num_vertices, mesh->normals, GL_STATIC_DRAW);
 		}
+
+		//Load Tangents-----------------------------------------------------------------------------------------------------------------------
+		glGenBuffers(1, (GLuint*)&(mesh->id_tangents));
+		glBindBuffer(GL_ARRAY_BUFFER, mesh->id_tangents);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 3 * mesh->num_vertices, mesh->tangents, GL_STATIC_DRAW);
 	}
 	if(buffer)
 		delete[] buffer;
