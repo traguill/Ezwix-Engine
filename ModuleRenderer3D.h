@@ -7,6 +7,7 @@
 #include "Light.h"
 #include <vector>
 #include "Subject.h"
+#include "ModuleLighting.h"
 
 #define MAX_LIGHTS 8
 
@@ -35,7 +36,7 @@ public:
 
 private:
 
-	void Draw(GameObject* obj)const;
+	void Draw(GameObject* obj, const LightInfo& light)const;
 
 public:
 

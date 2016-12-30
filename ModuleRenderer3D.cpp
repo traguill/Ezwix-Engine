@@ -160,14 +160,14 @@ update_status ModuleRenderer3D::PostUpdate()
 	for (vector<GameObject*>::iterator obj = static_objects.begin(); obj != static_objects.end(); ++obj)
 	{
 		if((*obj)->IsActive()) //TODO: if component mesh is not active don't draw the object.
-			Draw(*obj);
+			Draw(*obj, App->lighting->GetLightInfo());
 	}
 
 	//Draw dynamic GO
 	for (vector<GameObject*>::iterator obj = objects_to_draw.begin(); obj != objects_to_draw.end(); ++obj)
 	{
 		if(current_cam->Intersects(*(*obj)->bounding_box)) //Culling for dynamic Objects
-			Draw((*obj));
+			Draw((*obj), App->lighting->GetLightInfo());
 	}
 
 	glUseProgram(0);
@@ -241,7 +241,7 @@ void ModuleRenderer3D::AddToDraw(GameObject* obj)
 	}
 }
 
-void ModuleRenderer3D::Draw(GameObject* obj) const
+void ModuleRenderer3D::Draw(GameObject* obj, const LightInfo& light) const
 {
 	ComponentMaterial* material = (ComponentMaterial*)obj->GetComponent(C_MATERIAL);
 
@@ -277,24 +277,29 @@ void ModuleRenderer3D::Draw(GameObject* obj) const
 	}
 
 	//Lighting
+
+	//Ambient
 	GLint ambient_intensity_location = glGetUniformLocation(shader_id, "_AmbientIntensity");
 	if (ambient_intensity_location != -1)
-		glUniform1f(ambient_intensity_location, App->lighting->ambient_intensity);
+		glUniform1f(ambient_intensity_location, light.ambient_intensity);
 	GLint ambient_color_location = glGetUniformLocation(shader_id, "_AmbientColor");
 	if (ambient_color_location != -1)
-		glUniform3f(ambient_color_location, App->lighting->ambient_color.x, App->lighting->ambient_color.y, App->lighting->ambient_color.z);
+		glUniform3f(ambient_color_location, light.ambient_color.x, light.ambient_color.y, light.ambient_color.z);
 
-	ComponentLight* directional = App->go_manager->GetDirectionalLight();
-	GLint directional_intensity_location = glGetUniformLocation(shader_id, "_DirectionalIntensity");
-	if(directional_intensity_location != -1)
-		glUniform1f(directional_intensity_location, directional->GetIntensity());
-	GLint directional_color_location = glGetUniformLocation(shader_id, "_DirectionalColor");
-	if (directional_color_location != -1)
-		glUniform3f(directional_color_location, directional->GetColor().x, directional->GetColor().y, directional->GetColor().z);
-	GLint directional_direction_location = glGetUniformLocation(shader_id, "_DirectionalDirection");
-	if (directional_direction_location != -1)
-		glUniform3f(directional_direction_location, directional->GetDirection().x, directional->GetDirection().y, directional->GetDirection().z);
-
+	//Directional
+	if (light.has_directional)
+	{
+		GLint directional_intensity_location = glGetUniformLocation(shader_id, "_DirectionalIntensity");
+		if (directional_intensity_location != -1)
+			glUniform1f(directional_intensity_location, light.directional_intensity);
+		GLint directional_color_location = glGetUniformLocation(shader_id, "_DirectionalColor");
+		if (directional_color_location != -1)
+			glUniform3f(directional_color_location, light.directional_color.x, light.directional_color.y, light.directional_color.z);
+		GLint directional_direction_location = glGetUniformLocation(shader_id, "_DirectionalDirection");
+		if (directional_direction_location != -1)
+			glUniform3f(directional_direction_location, light.directional_direction.x, light.directional_direction.y, light.directional_direction.z);
+	}
+	
 	
 	//Other uniforms
 	if (material->rc_material)
