@@ -15,6 +15,7 @@ ModuleFileSystem::ModuleFileSystem(const char* name, bool start_enabled) : Modul
 
 	// By default we include executable's own directory
 	AddPath(".");
+	AddPath("Resources.zip");
 }
 
 // Destructor
@@ -37,7 +38,6 @@ bool ModuleFileSystem::Init(Data& config)
 	{
 		LOG("File System error while creating write dir: %s\n", PHYSFS_getLastError());
 	}
-
 	//Search Assets and Library folders
 	SearchResourceFolders();
 

@@ -15,6 +15,7 @@
 #include "MaterialCreatorWindow.h"
 #include "ShaderEditorWindow.h"
 #include "LightingWindow.h"
+#include "CubeMap.h"
 
 Editor::Editor(const char* name, bool start_enabled) : Module(name, start_enabled)
 {
@@ -46,6 +47,9 @@ bool Editor::Start()
 	windows.push_back(material_creator_win = new MaterialCreatorWindow());
 	windows.push_back(shader_editor_win = new ShaderEditorWindow());
 	windows.push_back(lighting_win = new LightingWindow());
+
+	//Testing
+	skybox.Init("Resources/Skybox/posz.dds", "Resources/Skybox/negz.dds", "Resources/Skybox/posy.dds", "Resources/Skybox/negy.dds", "Resources/Skybox/posx.dds", "Resources/Skybox/negx.dds");
 
 	return ret;
 }

@@ -88,6 +88,7 @@
     <ClInclude Include="ComponentMesh.h" />
     <ClInclude Include="ComponentTransform.h" />
     <ClInclude Include="Console.h" />
+    <ClInclude Include="CubeMap.h" />
     <ClInclude Include="Data.h" />
     <ClInclude Include="DebugDraw.h" />
     <ClInclude Include="Editor.h" />
@@ -112,6 +113,7 @@
     <ClInclude Include="ModuleLighting.h" />
     <ClInclude Include="ResourceFileMaterial.h" />
     <ClInclude Include="ShaderEditorWindow.h" />
+    <ClInclude Include="Skybox.h" />
     <ClInclude Include="TextureImporter.h" />
     <ClInclude Include="MathGeoLib\include\Algorithm\GJK.h" />
     <ClInclude Include="MathGeoLib\include\Algorithm\Random\LCG.h" />
@@ -224,6 +226,7 @@
     <ClCompile Include="ComponentMesh.cpp" />
     <ClCompile Include="ComponentTransform.cpp" />
     <ClCompile Include="Console.cpp" />
+    <ClCompile Include="CubeMap.cpp" />
     <ClCompile Include="Data.cpp" />
     <ClCompile Include="DebugDraw.cpp" />
     <ClCompile Include="Editor.cpp" />
@@ -245,6 +248,7 @@
     <ClCompile Include="ModuleLighting.cpp" />
     <ClCompile Include="ResourceFileMaterial.cpp" />
     <ClCompile Include="ShaderEditorWindow.cpp" />
+    <ClCompile Include="Skybox.cpp" />
     <ClCompile Include="TextureImporter.cpp" />
     <ClCompile Include="MathGeoLib\include\Algorithm\GJK.cpp" />
     <ClCompile Include="MathGeoLib\include\Algorithm\Random\LCG.cpp" />

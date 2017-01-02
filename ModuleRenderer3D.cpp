@@ -169,7 +169,7 @@ update_status ModuleRenderer3D::PostUpdate()
 		if(current_cam->Intersects(*(*obj)->bounding_box)) //Culling for dynamic Objects
 			Draw((*obj), App->lighting->GetLightInfo());
 	}
-
+	App->editor->skybox.Render();
 	glUseProgram(0);
 
 	ImGui::Render();

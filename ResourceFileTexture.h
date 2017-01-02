@@ -10,7 +10,11 @@ public:
 	~ResourceFileTexture();
 
 	unsigned int GetTexture();
-	void SetProperties(unsigned int texture_id, unsigned int width, unsigned int height, unsigned int depth, unsigned int mips, unsigned int bytes);
+	void SetProperties(unsigned int texture_id, unsigned int width, unsigned int height, unsigned int depth, unsigned int mips, unsigned int bytes, unsigned char* data);
+
+	unsigned int GetWidth()const;
+	unsigned int GetHeight()const;
+	unsigned char* GetData()const;
 
 private:
 
@@ -23,6 +27,7 @@ private:
 	unsigned int height = 0;
 	unsigned int depth = 0;
 	unsigned int mips = 0;
+	unsigned char* data = nullptr;
 };
 
 #endif // !__RESOURCEFILETEXTURE_H__

@@ -7,6 +7,7 @@
 #include "Window.h"
 #include <list>
 #include <vector>
+#include "Skybox.h"
 
 class FPSGraph;
 class WindowOptions;
@@ -54,6 +55,7 @@ private:
 public:
 	Assets* assets = nullptr;
 	MaterialCreatorWindow* material_creator_win = nullptr;
+	Skybox skybox;
 
 private:
 
@@ -70,6 +72,7 @@ private:
 
 	bool save_scene_win = false;
 	string scene_name_to_save;
+
 };
 
 #endif

@@ -25,6 +25,8 @@ public:
 	math::float4x4 GetProjectionMatrix()const;
 	math::float3 GetBackgroundColor()const;
 	math::float3 GetWorldRight()const;
+	math::float4x4 GetViewMatrix()const;
+	math::float4x4 GetWorldMatrix()const;
 
 	void SetNearPlane(float value);
 	void SetFarPlane(float value);
@@ -33,7 +35,6 @@ public:
 	void SetBackgroundColor(const math::float3 color);
 	bool Intersects(const math::AABB& box)const;
 
-	math::float4x4 GetViewMatrix()const;
 
 	void Save(Data& file)const;
 	void Load(Data& conf);

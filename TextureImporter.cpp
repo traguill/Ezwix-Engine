@@ -61,8 +61,8 @@ bool TextureImporter::Load(ResourceFileTexture * res)
 		{
 			ILinfo info;
 			iluGetImageInfo(&info);
-
-			res->SetProperties(ilutGLBindTexImage(), info.Width, info.Height, info.Depth, info.NumMips, info.SizeOfData);
+			
+			res->SetProperties(ilutGLBindTexImage(), info.Width, info.Height, info.Depth, info.NumMips, info.SizeOfData, info.Data);
 
 			ilDeleteImages(1, &id);
 			ret = true;

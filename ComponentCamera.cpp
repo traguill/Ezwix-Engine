@@ -221,6 +221,11 @@ math::float4x4 ComponentCamera::GetViewMatrix() const
 	return matrix.Transposed();
 }
 
+math::float4x4 ComponentCamera::GetWorldMatrix() const
+{
+	return frustum.WorldMatrix();
+}
+
 void ComponentCamera::Save(Data & file)const
 {
 	Data data;
