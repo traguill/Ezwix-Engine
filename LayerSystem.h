@@ -19,6 +19,13 @@ public:
 	void Load(Data& data);
 	void Save(Data& data)const;
 
+	void DisplayLayerSelector(int* value);
+
+private:
+	///Works with short numbers. 
+	int BinaryToDecimal(int value);
+	int DecimalToBinary(int value);
+
 private:
 	std::vector<std::string> layers;
 };

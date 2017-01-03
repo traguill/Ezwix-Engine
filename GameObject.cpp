@@ -25,7 +25,7 @@ GameObject::GameObject(GameObject* parent) : parent(parent)
 	AddComponent(C_TRANSFORM);
 }
 
-GameObject::GameObject(const char* name, unsigned int uuid, GameObject* parent, bool active, bool is_static, bool is_prefab) : name(name), uuid(uuid), parent(parent), active(active), is_static(is_static), is_prefab(is_prefab)
+GameObject::GameObject(const char* name, unsigned int uuid, GameObject* parent, bool active, bool is_static, bool is_prefab, int layer) : name(name), uuid(uuid), parent(parent), active(active), is_static(is_static), is_prefab(is_prefab), layer(layer)
 {
 	AddComponent(C_TRANSFORM);
 }
@@ -320,6 +320,7 @@ void GameObject::Save(Data & file) const
 	data.AppendBool("active", active);
 	data.AppendBool("static", is_static);
 	data.AppendBool("is_prefab", is_prefab);
+	data.AppendInt("layer", layer);
 	data.AppendArray("components");
 
 	//Components data

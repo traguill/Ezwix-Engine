@@ -1,5 +1,7 @@
 #include "LayerSystem.h"
 #include "Globals.h"
+#include "imgui\imgui.h"
+#include <bitset>
 
 LayerSystem::LayerSystem()
 {
@@ -52,4 +54,98 @@ void LayerSystem::Save(Data & data) const
 		layer.AppendString("name", layers[i].data());
 		data.AppendArrayValue(layer);
 	}
+}
+
+void LayerSystem::DisplayLayerSelector(int * value)
+{
+	int bin_value = *value;
+
+	bool everything = false, nothing = false;
+
+	if (*value == -1)
+	{
+		everything = true;
+	}
+
+	if (*value == 0)
+	{
+		nothing = true;
+	}
+
+	//Else decompose
+	if (ImGui::BeginMenu("Layers: "))
+	{
+		if (ImGui::MenuItem("Nothing", NULL, nothing))
+		{
+			*value = 0;
+		}
+
+		if (ImGui::MenuItem("Everything", NULL, everything))
+		{
+			*value = -1;
+		}
+
+		for (int i = 0; i < MAX_LAYERS; ++i)
+		{
+			if (layers[i].size() != 0)
+			{
+				bool enabled = false;
+				
+				if (everything)
+				{
+					enabled = true;
+				}
+				else
+				{
+					if(!nothing)
+						enabled = (bin_value >> i) & 1;
+				}
+				
+				
+				if (ImGui::MenuItem(layers[i].data(), NULL, enabled))
+				{
+					int decimal_value = Pow(2, i);
+					if (enabled == false)
+						*value += decimal_value;
+					else
+						*value -= decimal_value;
+				}
+			}
+		}
+
+		ImGui::EndMenu();
+	}
+	
+}
+
+int LayerSystem::BinaryToDecimal(int value)
+{
+	int ret = 0;
+	int i = 0;
+	int remainder;
+
+	while (value != 0)
+	{
+		remainder = value % 10;
+		value /= 10;
+		ret += remainder * Pow(2, i);
+		++i;
+	}
+	return ret;
+}
+
+int LayerSystem::DecimalToBinary(int value)
+{
+	int ret = 0;
+	int remainder;
+	int i = 1;
+
+	while (value != 0)
+	{
+		remainder = value % 2;
+		value /= 2;
+		ret += remainder*i;
+		i *= 10;
+	}
+	return ret;
 }
