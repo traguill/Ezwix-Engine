@@ -64,6 +64,9 @@
     <Filter Include="Sources\Modules\EventSystem">
       <UniqueIdentifier>{2f2d6e60-e9b5-4335-a5bc-d2f4be9a4c98}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Modules\SmallSystems">
+      <UniqueIdentifier>{01646e79-397a-4d0a-bbec-167603124d0b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -477,6 +480,15 @@
     <ClInclude Include="Skybox.h">
       <Filter>Sources\Helpers</Filter>
     </ClInclude>
+    <ClInclude Include="OpenGLFunc.h">
+      <Filter>Sources\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="LayerSystem.h">
+      <Filter>Sources\Modules\SmallSystems</Filter>
+    </ClInclude>
+    <ClInclude Include="LayersWindow.h">
+      <Filter>Sources\Editor\Windows</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -787,6 +799,15 @@
     </ClCompile>
     <ClCompile Include="Skybox.cpp">
       <Filter>Sources\Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="OpenGLFunc.cpp">
+      <Filter>Sources\Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="LayerSystem.cpp">
+      <Filter>Sources\Modules\SmallSystems</Filter>
+    </ClCompile>
+    <ClCompile Include="LayersWindow.cpp">
+      <Filter>Sources\Editor\Windows</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

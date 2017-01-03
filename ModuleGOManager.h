@@ -11,6 +11,7 @@
 class GameObject;
 class ComponentCamera;
 class ComponentLight;
+class LayerSystem;
 
 #define OCTREE_SIZE 800
 
@@ -71,6 +72,8 @@ private:
 
 	bool debug_inspector = false;
 public: 
+	LayerSystem* layer_system = nullptr;
+
 	//GameObjects TODO:Add functionallity to make it private
 	Octree<GameObject*> octree; //Static
 	list<GameObject*> dynamic_gameobjects;

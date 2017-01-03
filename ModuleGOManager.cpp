@@ -7,8 +7,8 @@
 #include "ComponentMesh.h"
 #include "RaycastHit.h"
 #include <algorithm>
-#include "MemLeaks.h"
 #include "ComponentLight.h"
+#include "LayerSystem.h"
 
 ModuleGOManager::ModuleGOManager(const char* name, bool start_enabled) : Module(name, start_enabled)
 {}
@@ -20,6 +20,7 @@ ModuleGOManager::~ModuleGOManager()
 
 	selected_GO = nullptr;
 	dynamic_gameobjects.clear();
+	delete layer_system;
 }
 
 bool ModuleGOManager::Init(Data & config)
@@ -40,6 +41,9 @@ bool ModuleGOManager::Init(Data & config)
 	{
 		LoadEmptyScene();
 	}
+
+	layer_system = new LayerSystem();
+	layer_system->Load(config);
 	
 	return true;
 }
@@ -114,6 +118,8 @@ update_status ModuleGOManager::Update()
 void ModuleGOManager::SaveBeforeClosing(Data& data) const
 {
 	data.AppendString("current_scene_path", current_scene_path.data());
+	data.AppendArray("layers");
+	layer_system->Save(data);
 }
 
 GameObject* ModuleGOManager::CreateGameObject(GameObject* parent)
@@ -202,6 +208,7 @@ void ModuleGOManager::LoadEmptyScene()
 	root = new GameObject();
 	root->name = "Root";
 	current_scene_path = "";
+	App->camera->ChangeCurrentCamera(App->camera->GetEditorCamera());
 }
 
 bool ModuleGOManager::IsRoot(const GameObject * go) const

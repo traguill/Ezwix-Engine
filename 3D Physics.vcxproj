@@ -105,12 +105,15 @@
     <ClInclude Include="Imgui\stb_textedit.h" />
     <ClInclude Include="Imgui\stb_truetype.h" />
     <ClInclude Include="JSON\parson.h" />
+    <ClInclude Include="LayersWindow.h" />
+    <ClInclude Include="LayerSystem.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="LightingWindow.h" />
     <ClInclude Include="LinearAllocator.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="MaterialCreatorWindow.h" />
     <ClInclude Include="ModuleLighting.h" />
+    <ClInclude Include="OpenGLFunc.h" />
     <ClInclude Include="ResourceFileMaterial.h" />
     <ClInclude Include="ShaderEditorWindow.h" />
     <ClInclude Include="Skybox.h" />
@@ -238,6 +241,8 @@
     <ClCompile Include="Imgui\imgui_draw.cpp" />
     <ClCompile Include="Imgui\imgui_impl_sdl_gl3.cpp" />
     <ClCompile Include="JSON\parson.c" />
+    <ClCompile Include="LayersWindow.cpp" />
+    <ClCompile Include="LayerSystem.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="LightingWindow.cpp" />
     <ClCompile Include="LinearAllocator.cpp" />
@@ -246,6 +251,7 @@
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="MaterialCreatorWindow.cpp" />
     <ClCompile Include="ModuleLighting.cpp" />
+    <ClCompile Include="OpenGLFunc.cpp" />
     <ClCompile Include="ResourceFileMaterial.cpp" />
     <ClCompile Include="ShaderEditorWindow.cpp" />
     <ClCompile Include="Skybox.cpp" />

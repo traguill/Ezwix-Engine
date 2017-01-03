@@ -19,6 +19,7 @@ class ResourcesWindow;
 class MaterialCreatorWindow;
 class ShaderEditorWindow;
 class LightingWindow;
+class LayersWindow;
 
 class Editor : public Module
 {
@@ -69,6 +70,7 @@ private:
 	ResourcesWindow* resource_win = nullptr;
 	ShaderEditorWindow* shader_editor_win = nullptr;
 	LightingWindow* lighting_win = nullptr;
+	LayersWindow* layers_win = nullptr;
 
 	bool save_scene_win = false;
 	string scene_name_to_save;
