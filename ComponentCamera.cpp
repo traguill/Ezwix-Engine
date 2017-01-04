@@ -4,6 +4,7 @@
 #include "DebugDraw.h"
 #include "GameObject.h"
 #include "ComponentTransform.h"
+#include "LayerSystem.h"
 
 ComponentCamera::ComponentCamera(ComponentType type, GameObject* game_object) : Component(type, game_object)
 {
@@ -66,6 +67,10 @@ void ComponentCamera::OnInspector()
 		{
 			this->color = color;
 		}
+
+		App->go_manager->layer_system->DisplayLayerMask(layer_mask);
+		
+		ImGui::Separator();
 
 		if (ImGui::Button("Remove ###cam_rem"))
 		{
@@ -226,6 +231,11 @@ math::float4x4 ComponentCamera::GetWorldMatrix() const
 	return frustum.WorldMatrix();
 }
 
+int ComponentCamera::GetLayerMask() const
+{
+	return layer_mask;
+}
+
 void ComponentCamera::Save(Data & file)const
 {
 	Data data;
@@ -238,6 +248,7 @@ void ComponentCamera::Save(Data & file)const
 	data.AppendFloat("fov", fov);
 	data.AppendFloat("aspect_ratio", aspect_ratio);
 	data.AppendFloat3("color", color.ptr());
+	data.AppendInt("layer_mask", layer_mask);
 
 	file.AppendArrayValue(data);
 }
@@ -252,6 +263,7 @@ void ComponentCamera::Load(Data & conf)
 	fov = conf.GetFloat("fov");
 	aspect_ratio = conf.GetFloat("aspect_ratio");
 	color = conf.GetFloat3("color");
+	layer_mask = conf.GetInt("layer_mask");
 
 	//Init frustrum
 	float vertical_fov = DegToRad(fov);

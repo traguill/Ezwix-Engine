@@ -240,6 +240,7 @@ int ShaderCompiler::LoadDefaultShader()
 		"in vec3 normal0;\n"
 		"in vec3 tangent0;\n"
 		"out vec4 color;\n"
+		"uniform bool _HasTexture;\n"
 		"uniform sampler2D _Texture;\n"
 		"uniform sampler2D _NormalMap;\n"
 		"uniform bool _HasNormalMap;\n"
@@ -277,7 +278,8 @@ int ShaderCompiler::LoadDefaultShader()
 		"   {\n"
 		"		diffuse = vec4(0,0,0,0);\n"
 		"   }\n"
-		"	color = texture(_Texture, TexCoord) * (ambient + diffuse);\n"
+		"   vec4 tex_color = (_HasTexture) ? texture(_Texture, TexCoord) : vec4(1,1,1,1);\n"
+		"	color = tex_color * (ambient + diffuse);\n"
 		"}\n";
 
 	GLint success;

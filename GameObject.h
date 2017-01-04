@@ -59,7 +59,7 @@ public:
 	AABB* bounding_box = nullptr; //Only mesh component can Set this.
 	//UUID of the equal GameObject inside the prefab. It's 0 if the GameObject is not a prefab
 	unsigned int local_uuid = 0;
-	int layer = 1;
+	int layer = 0;
 private:
 	GameObject* parent = NULL;
 	std::vector<GameObject*> childs;

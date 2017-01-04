@@ -19,7 +19,8 @@ public:
 	void Load(Data& data);
 	void Save(Data& data)const;
 
-	void DisplayLayerSelector(int* value);
+	void DisplayLayerMask(int& value);
+	void DisplayLayerSelector(int& value);
 
 private:
 	///Works with short numbers. 

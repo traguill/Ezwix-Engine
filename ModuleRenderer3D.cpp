@@ -153,21 +153,28 @@ update_status ModuleRenderer3D::PreUpdate()
 update_status ModuleRenderer3D::PostUpdate()
 {
 	ComponentCamera* current_cam = App->camera->GetCurrentCamera();
+	int layer_mask = current_cam->GetLayerMask();
 	//Draw Static GO
 	vector<GameObject*> static_objects;
 	App->go_manager->octree.Intersect(static_objects, *current_cam); //Culling for static objects
 
 	for (vector<GameObject*>::iterator obj = static_objects.begin(); obj != static_objects.end(); ++obj)
 	{
-		if((*obj)->IsActive()) //TODO: if component mesh is not active don't draw the object.
-			Draw(*obj, App->lighting->GetLightInfo());
+		if ((*obj)->IsActive()) //TODO: if component mesh is not active don't draw the object.
+		{
+			if(layer_mask == (layer_mask | (1 << (*obj)->layer)))
+				Draw(*obj, App->lighting->GetLightInfo());
+		}
 	}
 
 	//Draw dynamic GO
 	for (vector<GameObject*>::iterator obj = objects_to_draw.begin(); obj != objects_to_draw.end(); ++obj)
 	{
-		if(current_cam->Intersects(*(*obj)->bounding_box)) //Culling for dynamic Objects
-			Draw((*obj), App->lighting->GetLightInfo());
+		if (current_cam->Intersects(*(*obj)->bounding_box))
+		{
+			if (layer_mask == (layer_mask | (1 << (*obj)->layer)))
+				Draw((*obj), App->lighting->GetLightInfo());
+		}
 	}
 	App->editor->skybox.Render();
 	glUseProgram(0);
@@ -267,14 +274,31 @@ void ModuleRenderer3D::Draw(GameObject* obj, const LightInfo& light) const
 	GLint view_location = glGetUniformLocation(shader_id, "view");
 	glUniformMatrix4fv(view_location, 1, GL_FALSE, *App->camera->GetCurrentCamera()->GetViewMatrix().v);	
 	//Textures
-	GLint texture_location = glGetUniformLocation(shader_id, "_Texture");	
-	if (texture_location != -1)
+	if (material->GetDiffuseId() != 0)
 	{
-		glUniform1i(texture_location, 0);
+		GLint has_texture_location = glGetUniformLocation(shader_id, "_HasTexture");
+		if (has_texture_location != -1)
+		{
+			glUniform1i(has_texture_location, 1);
+		}
+		GLint texture_location = glGetUniformLocation(shader_id, "_Texture");
+		if (texture_location != -1)
+		{
+			glUniform1i(texture_location, 0);
 
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, material->GetDiffuseId());
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, material->GetDiffuseId());
+		}
 	}
+	else
+	{
+		GLint has_texture_location = glGetUniformLocation(shader_id, "_HasTexture");
+		if (has_texture_location != -1)
+		{
+			glUniform1i(has_texture_location, 0);
+		}
+	}
+	
 	
 	//Normal
 	if (material->GetNormalId() != 0)

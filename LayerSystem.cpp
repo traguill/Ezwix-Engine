@@ -56,33 +56,32 @@ void LayerSystem::Save(Data & data) const
 	}
 }
 
-void LayerSystem::DisplayLayerSelector(int * value)
+void LayerSystem::DisplayLayerMask(int& value)
 {
-	int bin_value = *value;
+	int bin_value = value;
 
 	bool everything = false, nothing = false;
 
-	if (*value == -1)
+	if (value == -1)
 	{
 		everything = true;
 	}
 
-	if (*value == 0)
+	if (value == 0)
 	{
 		nothing = true;
 	}
 
-	//Else decompose
 	if (ImGui::BeginMenu("Layers: "))
 	{
 		if (ImGui::MenuItem("Nothing", NULL, nothing))
 		{
-			*value = 0;
+			value = 0;
 		}
 
 		if (ImGui::MenuItem("Everything", NULL, everything))
 		{
-			*value = -1;
+			value = -1;
 		}
 
 		for (int i = 0; i < MAX_LAYERS; ++i)
@@ -106,9 +105,9 @@ void LayerSystem::DisplayLayerSelector(int * value)
 				{
 					int decimal_value = Pow(2, i);
 					if (enabled == false)
-						*value += decimal_value;
+						value += decimal_value;
 					else
-						*value -= decimal_value;
+						value -= decimal_value;
 				}
 			}
 		}
@@ -116,6 +115,30 @@ void LayerSystem::DisplayLayerSelector(int * value)
 		ImGui::EndMenu();
 	}
 	
+}
+
+void LayerSystem::DisplayLayerSelector(int & value)
+{
+	int tmp_value = value;
+
+	std::string menu_name = "Layer: " + layers[value];
+	if (ImGui::BeginMenu(menu_name.data()))
+	{
+		for (int i = 0; i < MAX_LAYERS; ++i)
+		{
+			if (layers[i].size() != 0)
+			{
+				bool enabled = (tmp_value == i) ? true : false;
+
+				if (ImGui::MenuItem(layers[i].data(), NULL, enabled))
+				{
+					value = i;
+				}
+			}
+		}
+
+		ImGui::EndMenu();
+	}
 }
 
 int LayerSystem::BinaryToDecimal(int value)

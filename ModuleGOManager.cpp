@@ -572,7 +572,7 @@ void ModuleGOManager::InspectorWindow()
 		}
 
 		ImGui::Separator();
-		layer_system->DisplayLayerSelector(&selected_GO->layer);
+		layer_system->DisplayLayerSelector(selected_GO->layer);
 
 		if (debug_inspector)
 		{

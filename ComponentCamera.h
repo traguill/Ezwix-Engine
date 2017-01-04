@@ -27,6 +27,7 @@ public:
 	math::float3 GetWorldRight()const;
 	math::float4x4 GetViewMatrix()const;
 	math::float4x4 GetWorldMatrix()const;
+	int GetLayerMask()const;
 
 	void SetNearPlane(float value);
 	void SetFarPlane(float value);
@@ -52,6 +53,7 @@ private:
 	float aspect_ratio;
 	math::Frustum frustum;
 	math::float3 color; 
+	int layer_mask = -1;
 
 };
 #endif // !__COMPONENT_MATERIAL_H__
