@@ -415,6 +415,26 @@ string ModuleResourceManager::FindFile(const string & assets_file_path)
 	return ret;
 }
 
+ResourceFileType ModuleResourceManager::GetResourceType(const string & path) const
+{
+	char* texture_extension = "dds";
+	char* mesh_extension = "msh";
+	char* render_texture_extension = "rtx";
+
+	string extension = path.substr(path.find_last_of(".") + 1);
+
+	if (extension.compare(texture_extension) == 0)
+		return ResourceFileType::RES_TEXTURE;
+
+	if (extension.compare(mesh_extension) == 0)
+		return ResourceFileType::RES_MESH;
+
+	if (extension.compare(render_texture_extension) == 0)
+		return ResourceFileType::RES_RENDER_TEX;
+
+	return ResourceFileType::RES_MATERIAL; //TODO: CREATE A NULL VALUE FOR THIS
+}
+
 int ModuleResourceManager::GetNumberResources() const
 {
 	return resource_files.size();

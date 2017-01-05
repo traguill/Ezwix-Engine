@@ -160,60 +160,13 @@ update_status ModuleRenderer3D::PostUpdate()
 	{
 		if (cameras[i]->render_texture)
 		{
-			cameras[i]->render_texture->Bind();
-			int layer_mask = cameras[i]->GetLayerMask();
-			//Draw Static GO
-			vector<GameObject*> static_objects;
-			App->go_manager->octree.Intersect(static_objects, *cameras[i]); //Culling for static objects
-
-			for (vector<GameObject*>::iterator obj = static_objects.begin(); obj != static_objects.end(); ++obj)
-			{
-				if ((*obj)->IsActive()) //TODO: if component mesh is not active don't draw the object.
-				{
-					if (layer_mask == (layer_mask | (1 << (*obj)->layer)))
-						Draw(*obj, App->lighting->GetLightInfo());
-				}
-			}
-
-			//Draw dynamic GO
-			for (vector<GameObject*>::iterator obj = objects_to_draw.begin(); obj != objects_to_draw.end(); ++obj)
-			{
-				if (cameras[i]->Intersects(*(*obj)->bounding_box))
-				{
-					if (layer_mask == (layer_mask | (1 << (*obj)->layer)))
-						Draw((*obj), App->lighting->GetLightInfo());
-				}
-			}
-			App->editor->skybox.Render();
-			cameras[i]->render_texture->Unbind();
+			DrawScene(cameras[i], true);
 		}
 	}
 
+	//Current Camera
 	ComponentCamera* current_cam = App->camera->GetCurrentCamera();
-	int layer_mask = current_cam->GetLayerMask();
-	//Draw Static GO
-	vector<GameObject*> static_objects;
-	App->go_manager->octree.Intersect(static_objects, *current_cam); //Culling for static objects
-
-	for (vector<GameObject*>::iterator obj = static_objects.begin(); obj != static_objects.end(); ++obj)
-	{
-		if ((*obj)->IsActive()) //TODO: if component mesh is not active don't draw the object.
-		{
-			if(layer_mask == (layer_mask | (1 << (*obj)->layer)))
-				Draw(*obj, App->lighting->GetLightInfo());
-		}
-	}
-
-	//Draw dynamic GO
-	for (vector<GameObject*>::iterator obj = objects_to_draw.begin(); obj != objects_to_draw.end(); ++obj)
-	{
-		if (current_cam->Intersects(*(*obj)->bounding_box))
-		{
-			if (layer_mask == (layer_mask | (1 << (*obj)->layer)))
-				Draw((*obj), App->lighting->GetLightInfo());
-		}
-	}
-	App->editor->skybox.Render();
+	DrawScene(current_cam);
 	glUseProgram(0);
 
 	ImGui::Render();
@@ -285,7 +238,44 @@ void ModuleRenderer3D::AddToDraw(GameObject* obj)
 	}
 }
 
-void ModuleRenderer3D::Draw(GameObject* obj, const LightInfo& light) const
+void ModuleRenderer3D::DrawScene(ComponentCamera* cam, bool has_render_tex) const
+{
+	if (has_render_tex)
+	{
+		cam->render_texture->Bind();
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	}
+
+	int layer_mask = cam->GetLayerMask();
+	//Draw Static GO
+	vector<GameObject*> static_objects;
+	App->go_manager->octree.Intersect(static_objects, *cam); //Culling for static objects
+
+	for (vector<GameObject*>::iterator obj = static_objects.begin(); obj != static_objects.end(); ++obj)
+	{
+		if ((*obj)->IsActive()) //TODO: if component mesh is not active don't draw the object.
+		{
+			if (layer_mask == (layer_mask | (1 << (*obj)->layer)))
+				Draw(*obj, App->lighting->GetLightInfo(), cam);
+		}
+	}
+
+	//Draw dynamic GO
+	for (vector<GameObject*>::const_iterator obj = objects_to_draw.begin(); obj != objects_to_draw.end(); ++obj)
+	{
+		if (cam->Intersects(*(*obj)->bounding_box))
+		{
+			if (layer_mask == (layer_mask | (1 << (*obj)->layer)))
+				Draw((*obj), App->lighting->GetLightInfo(), cam);
+		}
+	}
+	App->editor->skybox.Render();
+
+	if(has_render_tex)
+		cam->render_texture->Unbind();
+}
+
+void ModuleRenderer3D::Draw(GameObject* obj, const LightInfo& light, ComponentCamera* cam) const
 {
 	ComponentMaterial* material = (ComponentMaterial*)obj->GetComponent(C_MATERIAL);
 
@@ -307,9 +297,9 @@ void ModuleRenderer3D::Draw(GameObject* obj, const LightInfo& light) const
 	GLint model_location = glGetUniformLocation(shader_id, "model");
 	glUniformMatrix4fv(model_location, 1, GL_FALSE, *(obj->GetGlobalMatrix().Transposed()).v);
 	GLint projection_location = glGetUniformLocation(shader_id, "projection");
-	glUniformMatrix4fv(projection_location, 1, GL_FALSE, *App->camera->GetCurrentCamera()->GetProjectionMatrix().v);
+	glUniformMatrix4fv(projection_location, 1, GL_FALSE, *cam->GetProjectionMatrix().v);
 	GLint view_location = glGetUniformLocation(shader_id, "view");
-	glUniformMatrix4fv(view_location, 1, GL_FALSE, *App->camera->GetCurrentCamera()->GetViewMatrix().v);	
+	glUniformMatrix4fv(view_location, 1, GL_FALSE, *cam->GetViewMatrix().v);	
 	//Textures
 	if (material->GetDiffuseId() != 0)
 	{
@@ -321,10 +311,9 @@ void ModuleRenderer3D::Draw(GameObject* obj, const LightInfo& light) const
 		GLint texture_location = glGetUniformLocation(shader_id, "_Texture");
 		if (texture_location != -1)
 		{
-			glUniform1i(texture_location, 0);
-
 			glActiveTexture(GL_TEXTURE0);
 			glBindTexture(GL_TEXTURE_2D, material->GetDiffuseId());
+			glUniform1i(texture_location, 0);
 		}
 	}
 	else

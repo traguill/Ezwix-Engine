@@ -12,12 +12,17 @@ ResourceFileRenderTexture::~ResourceFileRenderTexture()
 
 void ResourceFileRenderTexture::Bind()
 {
-	OpenGLFunc::BindFrameBuffer(frame_buffer, width, height);
+	OpenGLFunc::Bind(frame_buffer);
 }
 
 void ResourceFileRenderTexture::Unbind()
 {
-	OpenGLFunc::UnbindCurrentFrameBuffer();
+	OpenGLFunc::Unbind();
+}
+
+int ResourceFileRenderTexture::GetTexture() const
+{
+	return texture_buffer;
 }
 
 void ResourceFileRenderTexture::LoadInMemory()
@@ -32,15 +37,7 @@ void ResourceFileRenderTexture::LoadInMemory()
 		height = data.GetInt("height");
 		use_depth_as_texture = data.GetBool("use_depth_as_texture");
 
-		frame_buffer = OpenGLFunc::CreateFrameBuffer();
-		texture_buffer = OpenGLFunc::CreateTextureAttachment(width, height);
-
-		if (use_depth_as_texture)
-			depth_buffer = OpenGLFunc::CreateDepthTextureAttachment(width, height);
-		else
-			depth_buffer = OpenGLFunc::CreateDepthBufferAttachment(width, height);
-
-		OpenGLFunc::UnbindCurrentFrameBuffer();
+		frame_buffer = OpenGLFunc::CreateFBO(width, height, texture_buffer, depth_buffer);
 	}
 	else
 		LOG("Could not load resource %s", file_path.data());
@@ -52,10 +49,10 @@ void ResourceFileRenderTexture::LoadInMemory()
 
 void ResourceFileRenderTexture::UnloadInMemory()
 {
-	OpenGLFunc::DeleteFrameBuffer(frame_buffer);
+	/*OpenGLFunc::DeleteFrameBuffer(frame_buffer);
 	OpenGLFunc::DeleteTexture(texture_buffer);
 	if (use_depth_as_texture)
 		OpenGLFunc::DeleteTexture(depth_buffer);
 	else
-		OpenGLFunc::DeleteRenderBuffer(depth_buffer);
+		OpenGLFunc::DeleteRenderBuffer(depth_buffer);*/
 }

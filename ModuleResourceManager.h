@@ -64,6 +64,7 @@ public:
 	//Returns the path of the file in library
 	string FindFile(const string& assets_file_path);
 
+	ResourceFileType GetResourceType(const string& path)const;
 	int GetNumberResources()const;
 	int GetNumberTexures()const;
 	int GetNumberMeshes()const;

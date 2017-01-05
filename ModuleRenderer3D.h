@@ -15,6 +15,7 @@ using namespace math;
 
 class Mesh;
 class GameObject;
+class ComponentCamera;
 
 class ModuleRenderer3D : public Module, public Subject
 {
@@ -36,7 +37,8 @@ public:
 
 private:
 
-	void Draw(GameObject* obj, const LightInfo& light)const;
+	void DrawScene(ComponentCamera* cam, bool has_render_tex = false)const;
+	void Draw(GameObject* obj, const LightInfo& light, ComponentCamera* cam)const;
 
 public:
 

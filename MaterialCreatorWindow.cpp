@@ -208,6 +208,7 @@ void MaterialCreatorWindow::SetUniformValue()
 		{
 			vector<string> textures_list;
 			App->editor->assets->GetAllFilesByType(FileType::IMAGE, textures_list);
+			App->editor->assets->GetAllFilesByType(FileType::RENDER_TEXTURE, textures_list);
 
 			for (int i = 0; i < textures_list.size(); ++i)
 			{

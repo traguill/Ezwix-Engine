@@ -6,6 +6,7 @@
 #include "ResourceFileTexture.h"
 #include "Assets.h"
 #include "ResourceFileMaterial.h"
+#include "ResourceFileRenderTexture.h"
 
 ComponentMaterial::ComponentMaterial(ComponentType type, GameObject* game_object) : Component(type, game_object)
 {}
@@ -77,6 +78,14 @@ void ComponentMaterial::OnInspector()
 								ResourceFileTexture* rc_tmp = (ResourceFileTexture*)App->resource_manager->LoadResource(texture_path, ResourceFileType::RES_TEXTURE);
 								texture_list.insert(pair<string, ResourceFileTexture*>(texture_path, rc_tmp));
 
+								if (rc_tmp == nullptr)
+								{
+
+									ResourceFileRenderTexture* rc_rndtx = (ResourceFileRenderTexture*)App->resource_manager->LoadResource(texture_path, ResourceFileType::RES_RENDER_TEX);
+									diffuse_id = rc_rndtx->GetTexture();
+									continue;
+								}
+
 								if (diffuse_id == 0)
 									diffuse_id = rc_tmp->GetTexture();
 								else
@@ -143,14 +152,26 @@ void ComponentMaterial::Load(Data & conf)
 				texture_path.resize(name_size);
 				memcpy(texture_path._Myptr(), (*uni)->value + sizeof(int), name_size);
 
-				ResourceFileTexture* rc_tmp = (ResourceFileTexture*)App->resource_manager->LoadResource(texture_path, ResourceFileType::RES_TEXTURE);
-				texture_list.insert(pair<string, ResourceFileTexture*>(texture_path, rc_tmp));
 
-				if (diffuse_id == 0)
-					diffuse_id = rc_tmp->GetTexture();
+				ResourceFileType type = App->resource_manager->GetResourceType(texture_path.data());
+
+				if (type == ResourceFileType::RES_TEXTURE)
+				{
+					ResourceFileTexture* rc_tmp = (ResourceFileTexture*)App->resource_manager->LoadResource(texture_path, ResourceFileType::RES_TEXTURE);
+					texture_list.insert(pair<string, ResourceFileTexture*>(texture_path, rc_tmp));
+					if (diffuse_id == 0)
+						diffuse_id = rc_tmp->GetTexture();
+					else
+						if (normal_id == 0)
+							normal_id = rc_tmp->GetTexture();
+				}
 				else
-					if (normal_id == 0)
-						normal_id = rc_tmp->GetTexture();
+				{	
+					ResourceFileRenderTexture* rc_rndtx = (ResourceFileRenderTexture*)App->resource_manager->LoadResource(texture_path, ResourceFileType::RES_RENDER_TEX);
+					diffuse_id = rc_rndtx->GetTexture();
+				}
+
+				
 			}
 		}
 
@@ -165,12 +186,16 @@ void ComponentMaterial::Load(Data & conf)
 
 			string tex_path = texture.GetString("path");
 			ResourceFileTexture* rc_tmp = (ResourceFileTexture*)App->resource_manager->LoadResource(tex_path, ResourceFileType::RES_TEXTURE);
-			texture_list.insert(pair<string, ResourceFileTexture*>(tex_path, rc_tmp));
+			if (rc_tmp)
+			{
+				texture_list.insert(pair<string, ResourceFileTexture*>(tex_path, rc_tmp));
 
-			if(i == 0)
-				diffuse_id = rc_tmp->GetTexture();
-			if (i == 1)
-				normal_id = rc_tmp->GetTexture();
+				if (i == 0)
+					diffuse_id = rc_tmp->GetTexture();
+				if (i == 1)
+					normal_id = rc_tmp->GetTexture();
+			}
+			
 		}
 
 	}
@@ -220,12 +245,12 @@ void ComponentMaterial::PrintMaterialProperties()
 			tex_name.resize(*reinterpret_cast<int*>((*it)->value));
 			memcpy(tex_name._Myptr(), (*it)->value + sizeof(int), *reinterpret_cast<int*>((*it)->value));
 
-			ResourceFileTexture* rc = texture_list.at(tex_name.data());
+			/*ResourceFileTexture* rc = texture_list.at(tex_name.data());
 			if (rc)
 			{
 				ImGui::Text("Texture: %s", tex_name.data());
 				ImGui::Image((ImTextureID)rc->GetTexture(), ImVec2(50, 50));
-			}
+			}*/
 			break;
 		}
 		ImGui::Separator();
