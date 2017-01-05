@@ -5,6 +5,8 @@
 #include "GameObject.h"
 #include "ComponentTransform.h"
 #include "LayerSystem.h"
+#include "ResourceFileRenderTexture.h"
+#include "Assets.h"
 
 ComponentCamera::ComponentCamera(ComponentType type, GameObject* game_object) : Component(type, game_object)
 {
@@ -30,6 +32,8 @@ ComponentCamera::ComponentCamera(ComponentType type, GameObject* game_object) : 
 ComponentCamera::~ComponentCamera()
 {
 	App->renderer3D->RemoveObserver(this);
+	if(render_texture)
+		render_texture->Unload();
 }
 
 void ComponentCamera::Update()
@@ -68,7 +72,28 @@ void ComponentCamera::OnInspector()
 			this->color = color;
 		}
 
+		//LayerMask
 		App->go_manager->layer_system->DisplayLayerMask(layer_mask);
+
+		//RenderTexture
+		string ren_name = "RenderTexture: " + ((render_texture) ? render_texture_path : "none");
+		if (ImGui::BeginMenu(ren_name.data()))
+		{
+			vector<string> rentex_list;
+			App->editor->assets->GetAllFilesByType(FileType::RENDER_TEXTURE, rentex_list);
+
+			for (vector<string>::iterator rentex = rentex_list.begin(); rentex != rentex_list.end(); rentex++)
+			{
+				if (ImGui::MenuItem((*rentex).data()))
+				{
+					render_texture_path = (*rentex).data();
+					render_texture_path_lib = App->resource_manager->FindFile(render_texture_path);
+					render_texture = (ResourceFileRenderTexture*)App->resource_manager->LoadResource(render_texture_path_lib, ResourceFileType::RES_RENDER_TEX);
+				}
+			}
+
+			ImGui::EndMenu();
+		}
 		
 		ImGui::Separator();
 
@@ -249,6 +274,8 @@ void ComponentCamera::Save(Data & file)const
 	data.AppendFloat("aspect_ratio", aspect_ratio);
 	data.AppendFloat3("color", color.ptr());
 	data.AppendInt("layer_mask", layer_mask);
+	data.AppendString("render_texture_path", render_texture_path.data());
+	data.AppendString("render_texture_path_lib", render_texture_path_lib.data());
 
 	file.AppendArrayValue(data);
 }
@@ -264,6 +291,8 @@ void ComponentCamera::Load(Data & conf)
 	aspect_ratio = conf.GetFloat("aspect_ratio");
 	color = conf.GetFloat3("color");
 	layer_mask = conf.GetInt("layer_mask");
+	render_texture_path = conf.GetString("render_texture_path");
+	render_texture_path_lib = conf.GetString("render_texture_path_lib");
 
 	//Init frustrum
 	float vertical_fov = DegToRad(fov);
@@ -278,6 +307,10 @@ void ComponentCamera::Load(Data & conf)
 	frustum.SetVerticalFovAndAspectRatio(DegToRad(fov), aspect_ratio);
 
 	OnTransformModified();
+
+	//Init render texture
+	if (render_texture_path_lib.size() != 0)
+		render_texture = (ResourceFileRenderTexture*)App->resource_manager->LoadResource(render_texture_path_lib, ResourceFileType::RES_RENDER_TEX);
 }
 
 math::Ray ComponentCamera::CastCameraRay(math::float2 screen_pos)

@@ -65,6 +65,25 @@ void ComponentMaterial::OnInspector()
 						}
 						material_path = App->resource_manager->FindFile(material_name);
 						rc_material = (ResourceFileMaterial*)App->resource_manager->LoadResource(material_path, ResourceFileType::RES_MATERIAL);
+						for (vector<Uniform*>::iterator uni = rc_material->material.uniforms.begin(); uni != rc_material->material.uniforms.end(); ++uni)
+						{
+							if ((*uni)->type == UniformType::U_SAMPLER2D)
+							{
+								string texture_path;
+								int name_size = *reinterpret_cast<int*>((*uni)->value);
+								texture_path.resize(name_size);
+								memcpy(texture_path._Myptr(), (*uni)->value + sizeof(int), name_size);
+
+								ResourceFileTexture* rc_tmp = (ResourceFileTexture*)App->resource_manager->LoadResource(texture_path, ResourceFileType::RES_TEXTURE);
+								texture_list.insert(pair<string, ResourceFileTexture*>(texture_path, rc_tmp));
+
+								if (diffuse_id == 0)
+									diffuse_id = rc_tmp->GetTexture();
+								else
+									if (normal_id == 0)
+										normal_id = rc_tmp->GetTexture();
+							}
+						}
 					}
 				}
 				ImGui::EndMenu();
@@ -103,6 +122,10 @@ void ComponentMaterial::Save(Data & file)const
 
 void ComponentMaterial::Load(Data & conf)
 {
+	//Reset
+	diffuse_id = 0;
+	normal_id = 0;
+
 	uuid = conf.GetUInt("UUID");
 	active = conf.GetBool("active");
 	material_path = conf.GetString("path");
@@ -122,11 +145,17 @@ void ComponentMaterial::Load(Data & conf)
 
 				ResourceFileTexture* rc_tmp = (ResourceFileTexture*)App->resource_manager->LoadResource(texture_path, ResourceFileType::RES_TEXTURE);
 				texture_list.insert(pair<string, ResourceFileTexture*>(texture_path, rc_tmp));
+
+				if (diffuse_id == 0)
+					diffuse_id = rc_tmp->GetTexture();
+				else
+					if (normal_id == 0)
+						normal_id = rc_tmp->GetTexture();
 			}
 		}
 
 	}
-	else
+	else //Default material
 	{
 		Data texture;
 		unsigned int tex_size = conf.GetArraySize("textures");
@@ -181,25 +210,22 @@ void ComponentMaterial::PrintMaterialProperties()
 			ImGui::InputFloat2("###float2_u", reinterpret_cast<float*>((*it)->value));
 			break;
 		case U_VEC3:
-			ImGui::InputFloat2("###float2_u", reinterpret_cast<float*>((*it)->value));
+			ImGui::InputFloat3("###float3_u", reinterpret_cast<float*>((*it)->value));
 			break;
 		case U_MAT4X4:
 			ImGui::Text("Matrices can be initalized only by code");
 			break;
 		case U_SAMPLER2D:
-			/*if (ImGui::InputText("###sampler_u", u_sampler2d._Myptr(), u_sampler2d.capacity()))
-			{
-				if (content != nullptr)
-					delete[] content;
-				int sampler_size = u_sampler2d.size();
-				content = new char[sizeof(int) + sampler_size * sizeof(char)];
+			string tex_name;
+			tex_name.resize(*reinterpret_cast<int*>((*it)->value));
+			memcpy(tex_name._Myptr(), (*it)->value + sizeof(int), *reinterpret_cast<int*>((*it)->value));
 
-				memcpy(content, &sampler_size, sizeof(int));
-				char* pointer = content + sizeof(int);
-				memcpy(pointer, u_sampler2d.c_str(), sizeof(char)* sampler_size);
-			}*/
-			ImGui::Text("Textures not visible right now");
-			//TODO: Do it.
+			ResourceFileTexture* rc = texture_list.at(tex_name.data());
+			if (rc)
+			{
+				ImGui::Text("Texture: %s", tex_name.data());
+				ImGui::Image((ImTextureID)rc->GetTexture(), ImVec2(50, 50));
+			}
 			break;
 		}
 		ImGui::Separator();

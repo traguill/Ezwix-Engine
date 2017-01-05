@@ -19,7 +19,8 @@ enum FileType
 	SCENE,
 	VERTEX,
 	FRAGMENT,
-	MATERIAL
+	MATERIAL,
+	RENDER_TEXTURE
 };
 
 struct tmp_mesh_file
@@ -69,6 +70,9 @@ public:
 	int GetTotalBytesInMemory()const;
 	int GetTextureBytes()const;
 	int GetMeshBytes()const;
+
+	void CreateRenderTexture(const string& assets_path, const string& library_path);
+	void SaveRenderTexture(const string& assets_path, const string& library_path, int width, int height, bool use_depth_as_texture)const;
 
 private:
 

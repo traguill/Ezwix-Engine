@@ -20,6 +20,7 @@ class MaterialCreatorWindow;
 class ShaderEditorWindow;
 class LightingWindow;
 class LayersWindow;
+class RenderTexEditorWindow;
 
 class Editor : public Module
 {
@@ -56,6 +57,7 @@ private:
 public:
 	Assets* assets = nullptr;
 	MaterialCreatorWindow* material_creator_win = nullptr;
+	RenderTexEditorWindow* rendertex_win = nullptr;
 	Skybox skybox;
 
 private:

@@ -16,6 +16,7 @@
 #include "ShaderEditorWindow.h"
 #include "LightingWindow.h"
 #include "LayersWindow.h"
+#include "RenderTexEditorWindow.h"
 
 Editor::Editor(const char* name, bool start_enabled) : Module(name, start_enabled)
 {
@@ -48,6 +49,7 @@ bool Editor::Start()
 	windows.push_back(shader_editor_win = new ShaderEditorWindow());
 	windows.push_back(lighting_win = new LightingWindow());
 	windows.push_back(layers_win = new LayersWindow());
+	windows.push_back(rendertex_win = new RenderTexEditorWindow());
 
 	//Testing
 	skybox.Init("Resources/Skybox/posz.dds", "Resources/Skybox/negz.dds", "Resources/Skybox/posy.dds", "Resources/Skybox/negy.dds", "Resources/Skybox/posx.dds", "Resources/Skybox/negx.dds");
@@ -69,6 +71,7 @@ bool Editor::CleanUp()
 	delete shader_editor_win;
 	delete lighting_win;
 	delete layers_win;
+	delete rendertex_win;
 
 	windows.clear();
 
@@ -302,6 +305,11 @@ void Editor::EditMenu()
 	if (ImGui::MenuItem("Layers"))
 	{
 		layers_win->SetActive(true);
+	}
+
+	if (ImGui::MenuItem("RenderTexture"))
+	{
+		rendertex_win->SetActive(true);
 	}
 }
 

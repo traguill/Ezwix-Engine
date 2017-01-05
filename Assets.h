@@ -61,11 +61,13 @@ private:
 
 	void OpenInExplorer(const std::string* file = NULL)const;
 
+	void GeneralOptions();
 	void MeshFileOptions();
 	void SceneFileOptions();
 	void DirectoryOptions();
 	void PrefabFileOptions();
 	void MaterialFileOptions();
+	void RenderTextureOptions();
 
 	void DeleteAssetDirectory(Directory* directory);
 

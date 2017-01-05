@@ -3,6 +3,7 @@
 #include "ModuleFileSystem.h"
 #include "TextureImporter.h"
 #include "MaterialCreatorWindow.h"
+#include "RenderTexEditorWindow.h"
 #include <stack>
 
 Assets::Assets()
@@ -21,6 +22,12 @@ void Assets::Draw()
 		return;
 
 	ImGui::Begin("Assets", &active);
+
+	//Options
+	if (ImGui::IsMouseHoveringWindow())
+		if (ImGui::IsMouseClicked(1))
+			ImGui::OpenPopup("GeneralOptions");
+	
 
 	ImGui::Text(current_dir->path.data());
 
@@ -118,6 +125,15 @@ void Assets::Draw()
 					ImGui::OpenPopup("MaterialOptions");
 				}
 				break;
+			case FileType::RENDER_TEXTURE:
+				ImGui::Image((ImTextureID)file_id, ImVec2(15, 15));
+				ImGui::SameLine();
+				if (ImGui::Selectable((*file)->name.data()))
+				{
+					file_selected = (*file);
+					ImGui::OpenPopup("RenderTextureOptions");
+				}
+				break;
 			}
 			
 		}
@@ -130,6 +146,9 @@ void Assets::Draw()
 	SceneFileOptions();
 	PrefabFileOptions();
 	MaterialFileOptions();
+	RenderTextureOptions();
+	GeneralOptions();
+
 	
 	ImGui::End();
 }
@@ -414,7 +433,28 @@ void Assets::OpenInExplorer(const std::string* file_name)const
 	SDL_free(base_path);
 }
 
-void Assets::MeshFileOptions() 
+void Assets::GeneralOptions()
+{
+	if (ImGui::BeginPopup("GeneralOptions"))
+	{
+		if (ImGui::BeginMenu("Create"))
+		{
+			if (ImGui::MenuItem("Folder"))
+			{
+				//TODO:
+			}
+			if (ImGui::MenuItem("Render Texture"))
+			{
+				App->resource_manager->CreateRenderTexture(current_dir->path, current_dir->library_path);
+			}
+			ImGui::EndMenu();
+		}
+
+		ImGui::EndPopup();
+	}
+}
+
+void Assets::MeshFileOptions()
 {
 	if (ImGui::BeginPopup("FileMeshOptions"))
 	{
@@ -520,6 +560,25 @@ void Assets::MaterialFileOptions()
 		{
 			App->editor->material_creator_win->SetActive(true);
 			App->editor->material_creator_win->LoadToEdit(file_selected->content_path.data());
+		}
+
+		if (ImGui::Selectable("Remove"))
+		{
+			DeleteAssetFile(file_selected);
+		}
+
+		ImGui::EndPopup();
+	}
+}
+
+void Assets::RenderTextureOptions()
+{
+	if (ImGui::BeginPopup("RenderTextureOptions"))
+	{
+		if (ImGui::Selectable("Edit"))
+		{
+			App->editor->rendertex_win->SetActive(true);
+			App->editor->rendertex_win->LoadToEdit(file_selected->content_path.data());
 		}
 
 		if (ImGui::Selectable("Remove"))

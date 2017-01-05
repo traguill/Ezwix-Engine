@@ -7,7 +7,8 @@ enum ResourceFileType
 {
 	RES_MESH,
 	RES_TEXTURE,
-	RES_MATERIAL
+	RES_MATERIAL,
+	RES_RENDER_TEX,
 };
 
 class ResourceFile

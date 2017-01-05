@@ -67,6 +67,9 @@
     <Filter Include="Sources\Modules\SmallSystems">
       <UniqueIdentifier>{01646e79-397a-4d0a-bbec-167603124d0b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Editor\Windows\Edit">
+      <UniqueIdentifier>{e13ba9a3-3138-4541-a0a0-365cfbbed148}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -402,9 +405,6 @@
     <ClInclude Include="ComponentCamera.h">
       <Filter>Sources\GameObjects\Components</Filter>
     </ClInclude>
-    <ClInclude Include="CameraWindow.h">
-      <Filter>Sources\Editor\Windows</Filter>
-    </ClInclude>
     <ClInclude Include="Data.h">
       <Filter>Sources\Tools</Filter>
     </ClInclude>
@@ -459,17 +459,11 @@
     <ClInclude Include="Material.h">
       <Filter>Sources\Helpers</Filter>
     </ClInclude>
-    <ClInclude Include="ShaderEditorWindow.h">
-      <Filter>Sources\Editor\Windows</Filter>
-    </ClInclude>
     <ClInclude Include="ResourceFileMaterial.h">
       <Filter>Sources\Resources</Filter>
     </ClInclude>
     <ClInclude Include="ModuleLighting.h">
       <Filter>Sources\Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="LightingWindow.h">
-      <Filter>Sources\Editor\Windows</Filter>
     </ClInclude>
     <ClInclude Include="ComponentLight.h">
       <Filter>Sources\GameObjects\Components</Filter>
@@ -486,8 +480,23 @@
     <ClInclude Include="LayerSystem.h">
       <Filter>Sources\Modules\SmallSystems</Filter>
     </ClInclude>
+    <ClInclude Include="ResourceFileRenderTexture.h">
+      <Filter>Sources\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraWindow.h">
+      <Filter>Sources\Editor\Windows\Edit</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderEditorWindow.h">
+      <Filter>Sources\Editor\Windows\Edit</Filter>
+    </ClInclude>
+    <ClInclude Include="LightingWindow.h">
+      <Filter>Sources\Editor\Windows\Edit</Filter>
+    </ClInclude>
     <ClInclude Include="LayersWindow.h">
-      <Filter>Sources\Editor\Windows</Filter>
+      <Filter>Sources\Editor\Windows\Edit</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderTexEditorWindow.h">
+      <Filter>Sources\Editor\Windows\Edit</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -731,9 +740,6 @@
     <ClCompile Include="ComponentCamera.cpp">
       <Filter>Sources\GameObjects\Components</Filter>
     </ClCompile>
-    <ClCompile Include="CameraWindow.cpp">
-      <Filter>Sources\Editor\Windows</Filter>
-    </ClCompile>
     <ClCompile Include="Data.cpp">
       <Filter>Sources\Tools</Filter>
     </ClCompile>
@@ -779,17 +785,11 @@
     <ClCompile Include="Material.cpp">
       <Filter>Sources\Helpers</Filter>
     </ClCompile>
-    <ClCompile Include="ShaderEditorWindow.cpp">
-      <Filter>Sources\Editor\Windows</Filter>
-    </ClCompile>
     <ClCompile Include="ResourceFileMaterial.cpp">
       <Filter>Sources\Resources</Filter>
     </ClCompile>
     <ClCompile Include="ModuleLighting.cpp">
       <Filter>Sources\Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="LightingWindow.cpp">
-      <Filter>Sources\Editor\Windows</Filter>
     </ClCompile>
     <ClCompile Include="ComponentLight.cpp">
       <Filter>Sources\GameObjects\Components</Filter>
@@ -806,8 +806,23 @@
     <ClCompile Include="LayerSystem.cpp">
       <Filter>Sources\Modules\SmallSystems</Filter>
     </ClCompile>
+    <ClCompile Include="ResourceFileRenderTexture.cpp">
+      <Filter>Sources\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraWindow.cpp">
+      <Filter>Sources\Editor\Windows\Edit</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderEditorWindow.cpp">
+      <Filter>Sources\Editor\Windows\Edit</Filter>
+    </ClCompile>
+    <ClCompile Include="LightingWindow.cpp">
+      <Filter>Sources\Editor\Windows\Edit</Filter>
+    </ClCompile>
     <ClCompile Include="LayersWindow.cpp">
-      <Filter>Sources\Editor\Windows</Filter>
+      <Filter>Sources\Editor\Windows\Edit</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderTexEditorWindow.cpp">
+      <Filter>Sources\Editor\Windows\Edit</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

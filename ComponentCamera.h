@@ -5,6 +5,8 @@
 #include "MathGeoLib\include\MathGeoLib.h"
 #include "Observer.h"
 
+class ResourceFileRenderTexture;
+
 class ComponentCamera : public Component, public Observer
 {
 public:
@@ -45,7 +47,7 @@ public:
 public:
 
 	bool properties_modified = false;
-
+	ResourceFileRenderTexture* render_texture = nullptr;
 private:
 	float near_plane = 0.3f;
 	float far_plane = 1000.0f;
@@ -54,6 +56,10 @@ private:
 	math::Frustum frustum;
 	math::float3 color; 
 	int layer_mask = -1;
+	
+	///Assets path
+	string render_texture_path;
+	string render_texture_path_lib;
 
 };
 #endif // !__COMPONENT_MATERIAL_H__

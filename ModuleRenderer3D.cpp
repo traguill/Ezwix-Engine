@@ -10,6 +10,7 @@
 #include "ComponentMaterial.h"
 #include "ResourceFileMaterial.h"
 #include "ComponentLight.h"
+#include "ResourceFileRenderTexture.h"
 #include "Octree.h"
 #include <gl/GL.h>
 #include <gl/GLU.h>
@@ -152,6 +153,42 @@ update_status ModuleRenderer3D::PreUpdate()
 // PostUpdate present buffer to screen
 update_status ModuleRenderer3D::PostUpdate()
 {
+	//RenderTextures
+	vector<ComponentCamera*> cameras;
+	App->go_manager->GetAllCameras(cameras);
+	for (int i = 0; i < cameras.size(); ++i)
+	{
+		if (cameras[i]->render_texture)
+		{
+			cameras[i]->render_texture->Bind();
+			int layer_mask = cameras[i]->GetLayerMask();
+			//Draw Static GO
+			vector<GameObject*> static_objects;
+			App->go_manager->octree.Intersect(static_objects, *cameras[i]); //Culling for static objects
+
+			for (vector<GameObject*>::iterator obj = static_objects.begin(); obj != static_objects.end(); ++obj)
+			{
+				if ((*obj)->IsActive()) //TODO: if component mesh is not active don't draw the object.
+				{
+					if (layer_mask == (layer_mask | (1 << (*obj)->layer)))
+						Draw(*obj, App->lighting->GetLightInfo());
+				}
+			}
+
+			//Draw dynamic GO
+			for (vector<GameObject*>::iterator obj = objects_to_draw.begin(); obj != objects_to_draw.end(); ++obj)
+			{
+				if (cameras[i]->Intersects(*(*obj)->bounding_box))
+				{
+					if (layer_mask == (layer_mask | (1 << (*obj)->layer)))
+						Draw((*obj), App->lighting->GetLightInfo());
+				}
+			}
+			App->editor->skybox.Render();
+			cameras[i]->render_texture->Unbind();
+		}
+	}
+
 	ComponentCamera* current_cam = App->camera->GetCurrentCamera();
 	int layer_mask = current_cam->GetLayerMask();
 	//Draw Static GO
@@ -325,8 +362,6 @@ void ModuleRenderer3D::Draw(GameObject* obj, const LightInfo& light) const
 		}
 	}
 
-	
-
 	//Lighting
 
 	//Ambient
@@ -357,31 +392,64 @@ void ModuleRenderer3D::Draw(GameObject* obj, const LightInfo& light) const
 	{
 		for (vector<Uniform*>::const_iterator uni = material->rc_material->material.uniforms.begin(); uni != material->rc_material->material.uniforms.end(); ++uni)
 		{
-			//TODO: HANDLE ALL UNIFORMS
-			if ((*uni)->type == UniformType::U_FLOAT)
+			GLint uni_location = glGetUniformLocation(shader_id, (*uni)->name.data());
+			
+			if(uni_location != -1)
+			switch ((*uni)->type)
 			{
-				GLint float_location = glGetUniformLocation(shader_id, (*uni)->name.data());
-				glUniform1f(float_location, *reinterpret_cast<GLfloat*>((*uni)->value));
+			case UniformType::U_BOOL:
+			{
+				glUniform1i(uni_location, *reinterpret_cast<bool*>((*uni)->value));
+			}
+				break;
+			case U_INT:
+			{
+				glUniform1i(uni_location, *reinterpret_cast<int*>((*uni)->value));
+			}
+				break;
+			case U_FLOAT:
+			{
+				glUniform1f(uni_location, *reinterpret_cast<GLfloat*>((*uni)->value));
+			}
+				break;
+			case U_VEC2:
+			{
+				glUniform2fv(uni_location, 1, reinterpret_cast<GLfloat*>((*uni)->value));
+			}
+				break;
+			case U_VEC3:
+			{
+				glUniform3fv(uni_location, 1, reinterpret_cast<GLfloat*>((*uni)->value));
+			}
+				break;
+			case U_MAT4X4:
+			{
+				glUniformMatrix4fv(uni_location, 1, GL_FALSE, reinterpret_cast<GLfloat*>((*uni)->value));
+			}
+				break;
+			case U_SAMPLER2D:
+				//Already handled before.
+				break;
 			}
 		}
 	}
 
-	//Buffer vertices
+	//Buffer vertices == 0
 	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, obj->mesh_to_draw->id_vertices);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
 
-	//Buffer uvs
+	//Buffer uvs == 1
 	glEnableVertexAttribArray(1);
 	glBindBuffer(GL_ARRAY_BUFFER, obj->mesh_to_draw->id_uvs);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
 
-	//Buffer normals
+	//Buffer normals == 2
 	glEnableVertexAttribArray(2);
 	glBindBuffer(GL_ARRAY_BUFFER, obj->mesh_to_draw->id_normals);
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
 
-	//Buffer tangents
+	//Buffer tangents == 3
 	glEnableVertexAttribArray(3);
 	glBindBuffer(GL_ARRAY_BUFFER, obj->mesh_to_draw->id_tangents);
 	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);

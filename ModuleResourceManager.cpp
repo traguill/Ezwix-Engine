@@ -11,6 +11,8 @@
 #include "Assets.h"
 #include "ShaderComplier.h"
 #include "ResourceFileMaterial.h"
+#include "ResourceFileRenderTexture.h"
+#include "RenderTexEditorWindow.h"
 
 #include "Glew\include\glew.h"
 #include <gl\GL.h>
@@ -151,6 +153,11 @@ ResourceFile * ModuleResourceManager::LoadResource(const string & path, Resource
 			rc_file = new ResourceFileMaterial(type, path, uuid);
 			rc_file->Load();
 			//TODO: save info about the shaders loaded in vram
+			break;
+		case RES_RENDER_TEX:
+			rc_file = new ResourceFileRenderTexture(type, path, uuid);
+			rc_file->Load();
+			break;
 		}
 
 		resource_files.push_back(rc_file);
@@ -438,6 +445,58 @@ int ModuleResourceManager::GetMeshBytes() const
 	return mesh_bytes;
 }
 
+void ModuleResourceManager::CreateRenderTexture(const string & assets_path, const string & library_path)
+{
+	string assets_name = assets_path + "RenderTexture.rtx";
+
+	uint uuid = App->rnd->RandomInt();
+
+	string library_name = library_path;
+	library_name += std::to_string(uuid) + "/";
+	App->file_system->GenerateDirectory(library_name.data());
+
+	library_name += std::to_string(uuid) + ".rtx";
+
+	char* buffer;
+
+	Data data;
+	data.AppendInt("width", 0);
+	data.AppendInt("height", 0);
+	data.AppendBool("use_depth_as_texture", false);
+	data.AppendString("assets_path", assets_name.data());
+	data.AppendString("library_path", library_name.data());
+
+	int size = data.Serialize(&buffer);
+	
+	App->file_system->Save(assets_name.data(), buffer, size);
+	GenerateMetaFile(assets_name.data(), FileType::RENDER_TEXTURE, uuid, library_name);
+	App->file_system->Save(library_name.data(), buffer, size);
+
+	delete[] buffer;
+
+	//Open edit window automatically
+	App->editor->rendertex_win->LoadToEdit(library_name.data());
+	App->editor->rendertex_win->SetActive(true);
+}
+
+void ModuleResourceManager::SaveRenderTexture(const string & assets_path, const string & library_path, int width, int height, bool use_depth_as_texture) const
+{
+	char* buffer;
+	Data data;
+	data.AppendInt("width", width);
+	data.AppendInt("height", height);
+	data.AppendBool("use_depth_as_texture", use_depth_as_texture);
+	data.AppendString("assets_path", assets_path.data());
+	data.AppendString("library_path", library_path.data());
+
+	int size = data.Serialize(&buffer);
+
+	App->file_system->Save(assets_path.data(), buffer, size);
+	App->file_system->Save(library_path.data(), buffer, size);
+
+	delete[] buffer;
+}
+
 ///Given a path returns if the file is one of the valid extensions to import.
 FileType ModuleResourceManager::GetFileExtension(const char * path) const
 {
@@ -446,6 +505,7 @@ FileType ModuleResourceManager::GetFileExtension(const char * path) const
 	char* scene_extension = "ezx";
 	char* vertex_extension = "ver";
 	char* fragment_extension = "fra";
+	char* render_texture_extension = "rtx";
 
 	string name = path;
 	string extension = name.substr(name.find_last_of(".") + 1);
@@ -466,6 +526,9 @@ FileType ModuleResourceManager::GetFileExtension(const char * path) const
 
 	if (extension.compare(fragment_extension) == 0)
 		return FileType::FRAGMENT;
+
+	if (extension.compare(render_texture_extension) == 0)
+		return FileType::RENDER_TEXTURE;
 	
 	return NONE;
 }

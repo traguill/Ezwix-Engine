@@ -204,16 +204,30 @@ void MaterialCreatorWindow::SetUniformValue()
 		ImGui::Text("Matrices can be initalized only by code");
 		break;
 	case U_SAMPLER2D:
-		if (ImGui::InputText("###sampler_u", u_sampler2d._Myptr(), u_sampler2d.capacity()))
+		if (ImGui::BeginMenu("Select a texture:"))
 		{
-			if (content != nullptr)
-				delete[] content;
-			int sampler_size = u_sampler2d.size();
-			content = new char[sizeof(int) + sampler_size * sizeof(char)];
+			vector<string> textures_list;
+			App->editor->assets->GetAllFilesByType(FileType::IMAGE, textures_list);
 
-			memcpy(content, &sampler_size, sizeof(int));
-			char* pointer = content + sizeof(int);
-			memcpy(pointer, u_sampler2d.c_str(), sizeof(char)* sampler_size);
+			for (int i = 0; i < textures_list.size(); ++i)
+			{
+				if (ImGui::MenuItem(textures_list[i].data()))
+				{
+					if (content != nullptr)
+						delete[] content;
+
+					u_sampler2d = App->resource_manager->FindFile(textures_list[i]);
+
+					int sampler_size = u_sampler2d.size();
+					content = new char[sizeof(int) + sampler_size * sizeof(char)];
+
+					memcpy(content, &sampler_size, sizeof(int));
+					char* pointer = content + sizeof(int);
+					memcpy(pointer, u_sampler2d.c_str(), sizeof(char)* sampler_size);
+				}
+			}
+
+			ImGui::EndMenu();
 		}
 		break;
 	}
@@ -221,6 +235,8 @@ void MaterialCreatorWindow::SetUniformValue()
 
 void MaterialCreatorWindow::PrintUniforms()
 {
+	vector<Uniform*> uniforms_to_remove;
+	int i = 0;
 	for (vector<Uniform*>::iterator it = material.uniforms.begin(); it != material.uniforms.end(); ++it)
 	{
 		ImGui::TextColored(ImVec4(0, 0, 1, 1), "Variable: ");
@@ -286,7 +302,20 @@ void MaterialCreatorWindow::PrintUniforms()
 			ImGui::Text("Value: %s", sampler_name.data());
 			break;
 		}
+		ImGui::PushID(i);
+		if (ImGui::Button("Remove"))
+		{
+			uniforms_to_remove.push_back(*it);
+		}
+		ImGui::PopID();
 		ImGui::Separator();
+		++i;
+	}
+
+	for (vector<Uniform*>::iterator it = uniforms_to_remove.begin(); it != uniforms_to_remove.end(); it++)
+	{
+		delete *it;
+		material.uniforms.erase(std::find(material.uniforms.begin(), material.uniforms.end(), *it));
 	}
 }
 

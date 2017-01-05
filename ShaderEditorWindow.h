@@ -17,6 +17,9 @@ private:
 	std::string fragment_path = "";
 
 	char* program = nullptr;
+
+	//texture testing
+	int id = 0;
 };
 
 #endif
