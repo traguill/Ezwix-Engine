@@ -26,6 +26,10 @@ void Time::UpdateFrame()
 	}
 	
 	frame_started_at = SDL_GetPerformanceCounter();
+
+	time_unitary += real_delta_time;
+	if (time_unitary > 1.0f)
+		time_unitary -= 1.0f;
 }
 
 double Time::RealTimeSinceStartup()const
@@ -98,6 +102,11 @@ void Time::SetTimeScale(float time_scale)
 {
 	if (time_scale >= 0)
 		this->time_scale = time_scale;
+}
+
+float Time::GetUnitaryTime()
+{
+	return time_unitary;
 }
 
 

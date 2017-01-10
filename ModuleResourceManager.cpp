@@ -373,10 +373,10 @@ void ModuleResourceManager::SavePrefab(GameObject * gameobject)
 	gameobject->SetParent(parent);
 }
 
-void ModuleResourceManager::SaveMaterial(const Material & material, const char * path)
+void ModuleResourceManager::SaveMaterial(const Material & material, const char * path, uint _uuid)
 {
 	material.Save(path);
-	uint uuid = App->rnd->RandomInt();
+	uint uuid = (_uuid == 0) ? App->rnd->RandomInt() : _uuid;
 	string assets_folder = path;
 	assets_folder = assets_folder.substr(0, assets_folder.find_last_of("/\\")+1);
 	string library_path = App->editor->assets->FindLibraryDirectory(assets_folder);

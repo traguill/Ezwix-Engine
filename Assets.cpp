@@ -106,6 +106,7 @@ void Assets::Draw()
 				if (ImGui::Selectable((*file)->name.data()))
 				{
 					file_selected = (*file);
+					ImGui::OpenPopup("VertexFragmentOptions");
 				}
 				break;
 			case FileType::FRAGMENT:
@@ -114,6 +115,7 @@ void Assets::Draw()
 				if (ImGui::Selectable((*file)->name.data()))
 				{
 					file_selected = (*file);
+					ImGui::OpenPopup("VertexFragmentOptions");
 				}
 				break;
 			case FileType::MATERIAL:
@@ -148,6 +150,7 @@ void Assets::Draw()
 	MaterialFileOptions();
 	RenderTextureOptions();
 	GeneralOptions();
+	VertexFragmentOptions();
 
 	
 	ImGui::End();
@@ -579,6 +582,24 @@ void Assets::RenderTextureOptions()
 		{
 			App->editor->rendertex_win->SetActive(true);
 			App->editor->rendertex_win->LoadToEdit(file_selected->content_path.data());
+		}
+
+		if (ImGui::Selectable("Remove"))
+		{
+			DeleteAssetFile(file_selected);
+		}
+
+		ImGui::EndPopup();
+	}
+}
+
+void Assets::VertexFragmentOptions()
+{
+	if (ImGui::BeginPopup("VertexFragmentOptions"))
+	{
+		if (ImGui::MenuItem("Edit"))
+		{
+			OpenInExplorer(&file_selected->original_file);
 		}
 
 		if (ImGui::Selectable("Remove"))

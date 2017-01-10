@@ -27,6 +27,7 @@ ComponentCamera::ComponentCamera(ComponentType type, GameObject* game_object) : 
 	color = float3(0, 0, 0); //Black to clear the screen by default
 
 	App->renderer3D->AddObserver(this);
+
 }
 
 ComponentCamera::~ComponentCamera()

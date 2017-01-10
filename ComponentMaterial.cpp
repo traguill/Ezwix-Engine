@@ -57,6 +57,8 @@ void ComponentMaterial::OnInspector()
 					if (ImGui::MenuItem((*it).data()))
 					{
 						//TODO: UNLOAD ALL TEXTURES IN TEXTURE LIST
+						texture_ids.clear();
+						texture_list.clear();
 
 						change_material_enabled = false;
 						material_name = (*it).data();
@@ -75,22 +77,22 @@ void ComponentMaterial::OnInspector()
 								texture_path.resize(name_size);
 								memcpy(texture_path._Myptr(), (*uni)->value + sizeof(int), name_size);
 
-								ResourceFileTexture* rc_tmp = (ResourceFileTexture*)App->resource_manager->LoadResource(texture_path, ResourceFileType::RES_TEXTURE);
-								texture_list.insert(pair<string, ResourceFileTexture*>(texture_path, rc_tmp));
+								ResourceFileType type = App->resource_manager->GetResourceType(texture_path.data());
 
-								if (rc_tmp == nullptr)
+								if (type == ResourceFileType::RES_TEXTURE)
 								{
+									ResourceFileTexture* rc_tmp = (ResourceFileTexture*)App->resource_manager->LoadResource(texture_path, ResourceFileType::RES_TEXTURE);
+									texture_list.insert(pair<string, ResourceFileTexture*>(texture_path, rc_tmp));
 
+									texture_ids.insert(pair<string, uint>((*uni)->name.data(), rc_tmp->GetTexture()));
+								}
+								else
+								{
 									ResourceFileRenderTexture* rc_rndtx = (ResourceFileRenderTexture*)App->resource_manager->LoadResource(texture_path, ResourceFileType::RES_RENDER_TEX);
 									diffuse_id = rc_rndtx->GetTexture();
-									continue;
-								}
 
-								if (diffuse_id == 0)
-									diffuse_id = rc_tmp->GetTexture();
-								else
-									if (normal_id == 0)
-										normal_id = rc_tmp->GetTexture();
+									texture_ids.insert(pair<string, uint>((*uni)->name.data(), rc_rndtx->GetTexture()));
+								}
 							}
 						}
 					}
@@ -159,16 +161,15 @@ void ComponentMaterial::Load(Data & conf)
 				{
 					ResourceFileTexture* rc_tmp = (ResourceFileTexture*)App->resource_manager->LoadResource(texture_path, ResourceFileType::RES_TEXTURE);
 					texture_list.insert(pair<string, ResourceFileTexture*>(texture_path, rc_tmp));
-					if (diffuse_id == 0)
-						diffuse_id = rc_tmp->GetTexture();
-					else
-						if (normal_id == 0)
-							normal_id = rc_tmp->GetTexture();
+
+					texture_ids.insert(pair<string, uint>((*uni)->name.data(), rc_tmp->GetTexture()));
 				}
 				else
 				{	
 					ResourceFileRenderTexture* rc_rndtx = (ResourceFileRenderTexture*)App->resource_manager->LoadResource(texture_path, ResourceFileType::RES_RENDER_TEX);
 					diffuse_id = rc_rndtx->GetTexture();
+
+					texture_ids.insert(pair<string, uint>((*uni)->name.data(), rc_rndtx->GetTexture()));
 				}
 
 				
@@ -236,6 +237,9 @@ void ComponentMaterial::PrintMaterialProperties()
 			break;
 		case U_VEC3:
 			ImGui::InputFloat3("###float3_u", reinterpret_cast<float*>((*it)->value));
+			break;
+		case U_VEC4:
+			ImGui::InputFloat4("###float4_u", reinterpret_cast<float*>((*it)->value));
 			break;
 		case U_MAT4X4:
 			ImGui::Text("Matrices can be initalized only by code");

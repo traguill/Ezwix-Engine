@@ -195,9 +195,13 @@ ComponentLight * ModuleGOManager::GetDirectionalLight(GameObject* from) const
 
 	const vector<GameObject*>* childs = go->GetChilds();
 	for (vector<GameObject*>::const_iterator child = childs->begin(); child != childs->end(); ++child)
+	{
 		light = GetDirectionalLight((*child));
+		if (light)
+			return light;
+	}
 
-	return light;
+	return nullptr;
 }
 
 void ModuleGOManager::LoadEmptyScene()

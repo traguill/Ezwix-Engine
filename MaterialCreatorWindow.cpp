@@ -125,6 +125,12 @@ void MaterialCreatorWindow::SetUniforms()
 			uniform_type = UniformType::U_VEC3;
 		}
 
+		if (ImGui::MenuItem("Vec4"))
+		{
+			uniform_type_char = "Vec4";
+			uniform_type = UniformType::U_VEC4;
+		}
+
 		if (ImGui::MenuItem("Mat4x4"))
 		{
 			uniform_type_char = "Mat4x4";
@@ -198,6 +204,15 @@ void MaterialCreatorWindow::SetUniformValue()
 				delete[] content;
 			content = new char[sizeof(float) * 3];
 			memcpy(content, &u_vec3, sizeof(float) * 3);
+		}
+		break;
+	case U_VEC4:
+		if (ImGui::InputFloat4("###float4_u", u_vec4.ptr()))
+		{
+			if (content != nullptr)
+				delete[] content;
+			content = new char[sizeof(float) * 4];
+			memcpy(content, &u_vec4, sizeof(float) * 4);
 		}
 		break;
 	case U_MAT4X4:
@@ -286,6 +301,16 @@ void MaterialCreatorWindow::PrintUniforms()
 			ImGui::Text("Value X: %f", uni_vec3.x);
 			ImGui::Text("Value Y: %f", uni_vec3.y);
 			ImGui::Text("Value Z: %f", uni_vec3.z);
+			break;
+		}
+		case U_VEC4:
+		{
+			ImGui::Text("Type: vec4");
+			float4 uni_vec4 = float4(reinterpret_cast<float*>((*it)->value));
+			ImGui::Text("Value X: %f", uni_vec4.x);
+			ImGui::Text("Value Y: %f", uni_vec4.y);
+			ImGui::Text("Value Z: %f", uni_vec4.z);
+			ImGui::Text("Value W: %f", uni_vec4.w);
 			break;
 		}
 		case U_MAT4X4:

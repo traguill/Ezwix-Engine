@@ -68,6 +68,7 @@ private:
 	void PrefabFileOptions();
 	void MaterialFileOptions();
 	void RenderTextureOptions();
+	void VertexFragmentOptions();
 
 	void DeleteAssetDirectory(Directory* directory);
 

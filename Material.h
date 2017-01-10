@@ -11,6 +11,7 @@ enum UniformType
 	U_FLOAT,
 	U_VEC2,
 	U_VEC3,
+	U_VEC4,
 	U_MAT4X4,
 	U_SAMPLER2D
 };
@@ -40,6 +41,7 @@ public:
 	std::string vertex_path;
 	std::string fragment_path;
 	std::vector<Uniform*> uniforms;
+	uint uuid = 0;
 };
 
 #endif // !__MATERIAL_H__

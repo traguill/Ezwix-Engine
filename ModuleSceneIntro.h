@@ -11,6 +11,7 @@
 class Mesh;
 class GameObject;
 class ComponentTransform;
+class ComponentCamera;
 
 class ModuleSceneIntro : public Module
 {
@@ -24,5 +25,13 @@ public:
 	update_status Update();
 	bool CleanUp();
 
+private:
+
+	GameObject* FindGameObject(GameObject* start, const string& name)const;
+
+private:
+	//Hacks to make the water work. This should go inside a script.
+	ComponentTransform* maincam = nullptr;
+	ComponentTransform* reflection_tra = nullptr;
 };
 #endif // !__MODULESCENEINTRO_H__

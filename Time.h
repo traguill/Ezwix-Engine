@@ -21,6 +21,8 @@ public:
 	float RealDeltaTime()const;
 	float GetTimeScale()const;
 	void SetTimeScale(float time_scale);
+	//Returns time since start from 0 to 1
+	float GetUnitaryTime();
 
 private:
 	//Real time clock
@@ -40,6 +42,8 @@ private:
 	float delta_time = 0; //Of the game
 	float real_delta_time = 0; //Of the Application
 	float time_scale = 1.0f; 
+
+	float time_unitary = 0.0f;
 };
 
 extern Time* time;

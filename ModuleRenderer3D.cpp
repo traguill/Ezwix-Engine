@@ -153,6 +153,7 @@ update_status ModuleRenderer3D::PreUpdate()
 // PostUpdate present buffer to screen
 update_status ModuleRenderer3D::PostUpdate()
 {
+	glEnable(GL_CLIP_DISTANCE0);
 	//RenderTextures
 	vector<ComponentCamera*> cameras;
 	App->go_manager->GetAllCameras(cameras);
@@ -164,6 +165,7 @@ update_status ModuleRenderer3D::PostUpdate()
 		}
 	}
 
+	glDisable(GL_CLIP_DISTANCE0);
 	//Current Camera
 	ComponentCamera* current_cam = App->camera->GetCurrentCamera();
 	DrawScene(current_cam);
@@ -269,7 +271,7 @@ void ModuleRenderer3D::DrawScene(ComponentCamera* cam, bool has_render_tex) cons
 				Draw((*obj), App->lighting->GetLightInfo(), cam);
 		}
 	}
-	App->editor->skybox.Render();
+	App->editor->skybox.Render(cam);
 
 	if(has_render_tex)
 		cam->render_texture->Unbind();
@@ -300,8 +302,25 @@ void ModuleRenderer3D::Draw(GameObject* obj, const LightInfo& light, ComponentCa
 	glUniformMatrix4fv(projection_location, 1, GL_FALSE, *cam->GetProjectionMatrix().v);
 	GLint view_location = glGetUniformLocation(shader_id, "view");
 	glUniformMatrix4fv(view_location, 1, GL_FALSE, *cam->GetViewMatrix().v);	
+
+	int count = 0;
+	//Good code for textures. The code above must be removed.
+	for (map<string, uint>::iterator tex = material->texture_ids.begin(); tex != material->texture_ids.end(); ++tex)
+	{
+		GLint tex_location = glGetUniformLocation(shader_id, (*tex).first.data());
+		if (tex_location != -1)
+		{
+			glActiveTexture(GL_TEXTURE0 + count);
+			glBindTexture(GL_TEXTURE_2D, (*tex).second);
+			glUniform1i(tex_location, count);
+			++count;
+		}
+	}
+
+	
+
 	//Textures
-	if (material->GetDiffuseId() != 0)
+	/*if (material->GetDiffuseId() != 0)
 	{
 		GLint has_texture_location = glGetUniformLocation(shader_id, "_HasTexture");
 		if (has_texture_location != -1)
@@ -324,7 +343,7 @@ void ModuleRenderer3D::Draw(GameObject* obj, const LightInfo& light, ComponentCa
 			glUniform1i(has_texture_location, 0);
 		}
 	}
-	
+
 	
 	//Normal
 	if (material->GetNormalId() != 0)
@@ -349,7 +368,7 @@ void ModuleRenderer3D::Draw(GameObject* obj, const LightInfo& light, ComponentCa
 		{
 			glUniform1i(has_normalmap_location, 0);
 		}
-	}
+	}*/
 
 	//Lighting
 
@@ -411,6 +430,11 @@ void ModuleRenderer3D::Draw(GameObject* obj, const LightInfo& light, ComponentCa
 				glUniform3fv(uni_location, 1, reinterpret_cast<GLfloat*>((*uni)->value));
 			}
 				break;
+			case U_VEC4:
+			{
+				glUniform4fv(uni_location, 1, reinterpret_cast<GLfloat*>((*uni)->value));
+			}
+			break;
 			case U_MAT4X4:
 			{
 				glUniformMatrix4fv(uni_location, 1, GL_FALSE, reinterpret_cast<GLfloat*>((*uni)->value));
@@ -421,6 +445,13 @@ void ModuleRenderer3D::Draw(GameObject* obj, const LightInfo& light, ComponentCa
 				break;
 			}
 		}
+	}
+
+	//Time(special)
+	GLint time_location = glGetUniformLocation(shader_id, "time");
+	if (time_location != -1)
+	{
+		glUniform1f(time_location, time->GetUnitaryTime());
 	}
 
 	//Buffer vertices == 0

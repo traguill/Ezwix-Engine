@@ -39,6 +39,7 @@ private:
 	float u_float;
 	float2 u_vec2;
 	float3 u_vec3;
+	float4 u_vec4;
 	float4x4 u_mat;
 	string u_sampler2d;
 };

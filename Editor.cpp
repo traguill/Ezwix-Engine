@@ -100,9 +100,12 @@ update_status Editor::Update()
 	ret = EditorWindows(); //Update the windows of the editor
 	
 	//Draw Grid
-	Plane_P grid(0,1,0,0);
-	grid.axis = true;
-	grid.Render();
+	if (!disable_grid)
+	{
+		Plane_P grid(0, 1, 0, 0);
+		grid.axis = true;
+		grid.Render();
+	}
 
 	//Shortcut to save. TODO: Do a better implementation of the shortcuts
 	if (App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN)
@@ -311,6 +314,9 @@ void Editor::EditMenu()
 	{
 		rendertex_win->SetActive(true);
 	}
+
+	ImGui::MenuItem("Disable grid", NULL, &disable_grid);
+	
 }
 
 void Editor::DebugMenu()

@@ -18,7 +18,7 @@ public:
 	~Skybox();
 
 	void Init(const string& posx_filename, const string& negx_filename, const string& posy_filename, const string& negy_filename, const string& posz_filename, const string& negz_filename);
-	void Render();
+	void Render(ComponentCamera* cam);
 
 private:
 	ComponentCamera* camera = nullptr;

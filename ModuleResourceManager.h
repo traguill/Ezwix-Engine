@@ -58,7 +58,7 @@ public:
 	bool LoadScene(const char* file_name);
 	void SavePrefab(GameObject* gameobject);
 
-	void SaveMaterial(const Material& material, const char* path);
+	void SaveMaterial(const Material& material, const char* path, uint uuid = 0);
 	unsigned int GetDefaultShaderId()const;
 
 	//Returns the path of the file in library

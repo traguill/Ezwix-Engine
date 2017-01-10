@@ -39,6 +39,10 @@ void Material::AddUniform(const std::string& name, UniformType type, char* value
 		uni->value = new char[sizeof(float) * 3];
 		memcpy(uni->value, value, sizeof(float) * 3);
 		break;
+	case U_VEC4:
+		uni->value = new char[sizeof(float) * 4];
+		memcpy(uni->value, value, sizeof(float) * 4);
+		break;
 	case U_MAT4X4:
 		uni->value = new char[sizeof(float) * 16];
 		memcpy(uni->value, value, sizeof(float) * 16);
@@ -88,6 +92,9 @@ bool Material::Save(const char * path) const
 			break;
 		case U_VEC3:
 			size += sizeof(float) * 3;
+			break;
+		case U_VEC4:
+			size += sizeof(float) * 4;
 			break;
 		case U_MAT4X4:
 			size += sizeof(float) * 16;
@@ -151,6 +158,9 @@ bool Material::Save(const char * path) const
 		case U_VEC3:
 			bytes= sizeof(float) * 3;
 			break;
+		case U_VEC4:
+			bytes = sizeof(float) * 4;
+			break;
 		case U_MAT4X4:
 			bytes= sizeof(float) * 16;
 			break;
@@ -173,6 +183,13 @@ bool Material::Save(const char * path) const
 void Material::Load(const char * path)
 {
 	CleanUp();
+
+	string s_path = path;
+	size_t init = s_path.find_last_of("/\\") + 1;
+	size_t end = s_path.find_last_of('.');
+	s_path = s_path.substr(init, end - init);
+
+	uuid = std::stoul(s_path);
 
 	char* buffer = nullptr;
 
@@ -231,6 +248,9 @@ void Material::Load(const char * path)
 			case U_VEC3:
 				bytes = sizeof(float) * 3;
 				break;
+			case U_VEC4:
+				bytes = sizeof(float) * 4;
+				break;
 			case U_MAT4X4:
 				bytes = sizeof(float) * 16;
 				break;
@@ -257,6 +277,7 @@ void Material::CleanUp()
 		delete *it;
 
 	uniforms.clear();
+	uuid = 0;
 }
 
 Uniform::~Uniform()

@@ -39,7 +39,7 @@ void Skybox::Init(const string & posx_filename, const string & negx_filename, co
 	shader_id = ShaderCompiler::CompileShader(vertex_id, fragment_id);
 }
 
-void Skybox::Render()
+void Skybox::Render(ComponentCamera* camera)
 {
 	glUseProgram(shader_id);
 
@@ -51,7 +51,6 @@ void Skybox::Render()
 	glCullFace(GL_FRONT);
 	glDepthFunc(GL_LEQUAL);
 
-	camera = App->camera->GetCurrentCamera();
 	if (camera)
 	{
 		math::float3 translate = camera->GetGameObject()->GetGlobalMatrix().TranslatePart();

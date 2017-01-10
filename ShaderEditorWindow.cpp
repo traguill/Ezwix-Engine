@@ -88,10 +88,10 @@ void ShaderEditorWindow::Draw()
 		}
 	}
 	
-	ImGui::InputTextMultiline("###code_shader", program, sizeof(program), ImVec2(-1.0f, ImGui::GetTextLineHeight() * 30), ImGuiInputTextFlags_AllowTabInput | 0);
+	ImGui::InputTextMultiline("###code_shader", program, sizeof(program), ImVec2(-1.0f, ImGui::GetTextLineHeight() * 10), ImGuiInputTextFlags_AllowTabInput | 0);
 
 	ImGui::InputInt("fdhalofha", &id);
-	ImGui::Image((ImTextureID)id, ImVec2(100, 100));
+	ImGui::Image((ImTextureID)id, ImVec2(600, 600));
 
 	ImGui::End();
 }
