@@ -8,6 +8,7 @@
 
 class ResourceFileTexture;
 class ResourceFileMaterial;
+class ResourceFile;
 
 class ComponentMaterial : public Component
 {
@@ -21,31 +22,20 @@ public:
 	void Save(Data& file)const;
 	void Load(Data& conf);
 
-	//First approach. Remove this and update to the new method.
-	uint GetDiffuseId()const;
-	///Returns 0 if doesn't have a normal map.
-	uint GetNormalId()const;
-
-	
-
 private:
 	void PrintMaterialProperties();
+	void CleanUp();
 
 public:
 	std::string material_path; //To Library. If is "" means that this component uses the default material.
 	ResourceFileMaterial* rc_material = nullptr;
-	std::map<string, uint> texture_ids;
+	std::map<string, uint> texture_ids; //name of the variable texture in the shader and id
 private:
 	std::string material_name; //Assets path
 	//Note: All materials must have model, view and projection uniforms. 
-	std::map<string, ResourceFileTexture*> texture_list;
-
-	
-
+	std::vector<ResourceFile*> tex_resources;
+	std::vector<std::string> list_textures_paths; //Default textures from fbx
 	bool change_material_enabled = false;
-
-	uint diffuse_id = 0;
-	uint normal_id = 0;
 
 };
 #endif // !__COMPONENT_MATERIAL_H__

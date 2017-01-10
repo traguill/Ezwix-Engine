@@ -307,6 +307,32 @@ void ModuleRenderer3D::Draw(GameObject* obj, const LightInfo& light, ComponentCa
 	//Good code for textures. The code above must be removed.
 	for (map<string, uint>::iterator tex = material->texture_ids.begin(); tex != material->texture_ids.end(); ++tex)
 	{
+		//Default first texture diffuse (if no specified)
+		if ((*tex).first.size() == 0 && count == 0)
+		{
+			GLint has_tex_location = glGetUniformLocation(shader_id, "_HasTexture");
+			glUniform1i(has_tex_location, 1);
+			GLint texture_location = glGetUniformLocation(shader_id, "_Texture");
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, (*tex).second);
+			glUniform1i(texture_location, 0);
+			count++;
+			continue;
+		}
+
+		//Default second texture normal (if no specified)
+		if ((*tex).first.size() == 0 && count == 1)
+		{
+			GLint has_normal_location = glGetUniformLocation(shader_id, "_HasNormalMap");
+			glUniform1i(has_normal_location, 1);
+			GLint texture_location = glGetUniformLocation(shader_id, "_HasNormalMap");
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, (*tex).second);
+			glUniform1i(texture_location, 1);
+			count++;
+			continue;
+		}
+
 		GLint tex_location = glGetUniformLocation(shader_id, (*tex).first.data());
 		if (tex_location != -1)
 		{

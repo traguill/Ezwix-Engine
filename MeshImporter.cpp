@@ -43,23 +43,10 @@ bool MeshImporter::Import(const char * file, const char * path, const char* base
 		aiNode* root = scene->mRootNode;
 		vector<GameObject*> objects_created;
 
-		//Level-Order Load Nodes
-		queue<aiNode*> queue;
-		aiNode* tmp_node;
+		aiNode* tmp_node = root;
 
-		queue.push(root);
-		while (queue.empty() == false)
-		{
-			tmp_node = queue.front();
-			queue.pop();
+		MeshImporter::ImportNode(tmp_node, scene, NULL, file_mesh_directory, objects_created, base_path, root_node);
 
-			if(tmp_node != root) //Do not load the root node(unnecessary)
-				MeshImporter::ImportNode(tmp_node, scene, NULL, file_mesh_directory, objects_created, base_path, root_node);
-
-			for (int i = 0; i < tmp_node->mNumChildren; i++)
-				queue.push(tmp_node->mChildren[i]);
-		}
-		
 		for (vector<GameObject*>::iterator go = objects_created.begin(); go != objects_created.end(); ++go)
 			delete (*go);
 
@@ -262,6 +249,9 @@ void MeshImporter::ImportNode(aiNode * node, const aiScene * scene, GameObject* 
 
 		root_data_node.AppendArrayValue(data);
 	}
+
+	for (int i = 0; i < node->mNumChildren; i++)
+		MeshImporter::ImportNode(node->mChildren[i], scene, go_root, mesh_file_directory, objects_created, folder_path, root_data_node);
 }
 
 bool MeshImporter::ImportMesh(const aiMesh * mesh_to_load, const char* folder_path, string& output_name)

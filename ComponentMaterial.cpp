@@ -13,10 +13,7 @@ ComponentMaterial::ComponentMaterial(ComponentType type, GameObject* game_object
 
 ComponentMaterial::~ComponentMaterial()
 {
-	for (map<string, ResourceFileTexture*>::iterator it = texture_list.begin(); it != texture_list.end(); it++)
-	{
-		(*it).second->Unload();
-	}
+	CleanUp();
 }
 
 void ComponentMaterial::OnInspector()
@@ -27,10 +24,10 @@ void ComponentMaterial::OnInspector()
 		{
 			ImGui::Text("Material: Default material");
 
-			for (map<string, ResourceFileTexture*>::iterator it = texture_list.begin(); it != texture_list.end(); it++)
+			for (map<string, uint>::iterator it = texture_ids.begin(); it != texture_ids.end(); it++)
 			{
 				ImGui::Text("%s", (*it).first.data());
-				ImGui::Image((ImTextureID)(*it).second->GetTexture(), ImVec2(50, 50));
+				ImGui::Image((ImTextureID)(*it).second, ImVec2(50, 50));
 			}
 		}
 		else
@@ -58,7 +55,7 @@ void ComponentMaterial::OnInspector()
 					{
 						//TODO: UNLOAD ALL TEXTURES IN TEXTURE LIST
 						texture_ids.clear();
-						texture_list.clear();
+						CleanUp();
 
 						change_material_enabled = false;
 						material_name = (*it).data();
@@ -82,15 +79,13 @@ void ComponentMaterial::OnInspector()
 								if (type == ResourceFileType::RES_TEXTURE)
 								{
 									ResourceFileTexture* rc_tmp = (ResourceFileTexture*)App->resource_manager->LoadResource(texture_path, ResourceFileType::RES_TEXTURE);
-									texture_list.insert(pair<string, ResourceFileTexture*>(texture_path, rc_tmp));
-
+									tex_resources.push_back(rc_tmp);
 									texture_ids.insert(pair<string, uint>((*uni)->name.data(), rc_tmp->GetTexture()));
 								}
 								else
 								{
 									ResourceFileRenderTexture* rc_rndtx = (ResourceFileRenderTexture*)App->resource_manager->LoadResource(texture_path, ResourceFileType::RES_RENDER_TEX);
-									diffuse_id = rc_rndtx->GetTexture();
-
+									tex_resources.push_back(rc_rndtx);
 									texture_ids.insert(pair<string, uint>((*uni)->name.data(), rc_rndtx->GetTexture()));
 								}
 							}
@@ -120,10 +115,10 @@ void ComponentMaterial::Save(Data & file)const
 	if (material_path.size() == 0)
 	{
 		data.AppendArray("textures");
-		for (map<string, ResourceFileTexture*>::const_iterator it = texture_list.begin(); it != texture_list.end(); it++)
+		for (vector<string>::const_iterator it = list_textures_paths.begin(); it != list_textures_paths.end(); it++)
 		{
 			Data texture;
-			texture.AppendString("path", (*it).first.data());
+			texture.AppendString("path", (*it).data());
 			data.AppendArrayValue(texture);
 		}
 	}
@@ -133,9 +128,6 @@ void ComponentMaterial::Save(Data & file)const
 
 void ComponentMaterial::Load(Data & conf)
 {
-	//Reset
-	diffuse_id = 0;
-	normal_id = 0;
 
 	uuid = conf.GetUInt("UUID");
 	active = conf.GetBool("active");
@@ -160,15 +152,13 @@ void ComponentMaterial::Load(Data & conf)
 				if (type == ResourceFileType::RES_TEXTURE)
 				{
 					ResourceFileTexture* rc_tmp = (ResourceFileTexture*)App->resource_manager->LoadResource(texture_path, ResourceFileType::RES_TEXTURE);
-					texture_list.insert(pair<string, ResourceFileTexture*>(texture_path, rc_tmp));
-
+					tex_resources.push_back(rc_tmp);
 					texture_ids.insert(pair<string, uint>((*uni)->name.data(), rc_tmp->GetTexture()));
 				}
 				else
 				{	
 					ResourceFileRenderTexture* rc_rndtx = (ResourceFileRenderTexture*)App->resource_manager->LoadResource(texture_path, ResourceFileType::RES_RENDER_TEX);
-					diffuse_id = rc_rndtx->GetTexture();
-
+					tex_resources.push_back(rc_rndtx);
 					texture_ids.insert(pair<string, uint>((*uni)->name.data(), rc_rndtx->GetTexture()));
 				}
 
@@ -189,28 +179,19 @@ void ComponentMaterial::Load(Data & conf)
 			ResourceFileTexture* rc_tmp = (ResourceFileTexture*)App->resource_manager->LoadResource(tex_path, ResourceFileType::RES_TEXTURE);
 			if (rc_tmp)
 			{
-				texture_list.insert(pair<string, ResourceFileTexture*>(tex_path, rc_tmp));
-
-				if (i == 0)
-					diffuse_id = rc_tmp->GetTexture();
-				if (i == 1)
-					normal_id = rc_tmp->GetTexture();
+				tex_resources.push_back(rc_tmp);
+				texture_ids.insert(pair<string, uint>("", rc_tmp->GetTexture()));
+				list_textures_paths.push_back(tex_path);
+			}
+			else
+			{
+				LOG("Material: error while loading texture %s", tex_path.data());
 			}
 			
 		}
 
 	}
 	
-}
-
-uint ComponentMaterial::GetDiffuseId() const
-{
-	return diffuse_id;
-}
-
-uint ComponentMaterial::GetNormalId() const
-{
-	return normal_id;
 }
 
 void ComponentMaterial::PrintMaterialProperties()
@@ -258,5 +239,13 @@ void ComponentMaterial::PrintMaterialProperties()
 			break;
 		}
 		ImGui::Separator();
+	}
+}
+
+void ComponentMaterial::CleanUp()
+{
+	for (vector<ResourceFile*>::iterator it = tex_resources.begin(); it != tex_resources.end(); it++)
+	{
+		(*it)->Unload();
 	}
 }
