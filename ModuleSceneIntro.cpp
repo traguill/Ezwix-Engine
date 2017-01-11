@@ -61,30 +61,37 @@ GameObject * ModuleSceneIntro::FindGameObject(GameObject * start, const string &
 // Update
 update_status ModuleSceneIntro::Update()
 {
-	if (reflection_tra == nullptr)
+	if (water_hack_enabled)
 	{
-		GameObject* camref = FindGameObject(App->go_manager->root, "ReflectionCam");
-		GameObject* cammain = FindGameObject(App->go_manager->root, "MainCamera");
-		if (camref && cammain)
+		if (reflection_tra == nullptr)
 		{
-			reflection_tra = (ComponentTransform*)camref->GetComponent(C_TRANSFORM);
-			maincam = (ComponentTransform*)cammain->GetComponent(C_TRANSFORM);
+			GameObject* camref = FindGameObject(App->go_manager->root, "ReflectionCam");
+			GameObject* cammain = FindGameObject(App->go_manager->root, "MainCamera");
+			if (camref && cammain)
+			{
+				reflection_tra = (ComponentTransform*)camref->GetComponent(C_TRANSFORM);
+				maincam = (ComponentTransform*)cammain->GetComponent(C_TRANSFORM);
+			}
+		}
+		else
+		{
+			float3 position = maincam->GetPosition();
+			position.x = 0;
+			position.z = 0;
+			position.y = -(position.y - (-5.0f)) * 2.0f;
+			reflection_tra->SetPosition(position);
+
+			float3 rotation = maincam->GetRotationEuler();
+			rotation.x = -rotation.x * 2.0f;
+			rotation.y = 0;
+			rotation.z = 0;
+			reflection_tra->SetRotation(rotation);
 		}
 	}
-	else
-	{
-		float3 position = maincam->GetPosition();
-		position.x = 0;
-		position.z = 0;
-		position.y = -(position.y - (-5.0f)) * 2.0f;
-		reflection_tra->SetPosition(position);
 
-		float3 rotation = maincam->GetRotationEuler();
-		rotation.x = -rotation.x * 2.0f;
-		rotation.y = 0;
-		rotation.z = 0;
-		reflection_tra->SetRotation(rotation);
-	}
+	if (App->input->GetKey(SDL_SCANCODE_F2) == KEY_UP)
+		water_hack_enabled = !water_hack_enabled;
+	
 
 	return UPDATE_CONTINUE;
 }

@@ -56,7 +56,7 @@ void Skybox::Render(ComponentCamera* camera)
 		math::float3 translate = camera->GetGameObject()->GetGlobalMatrix().TranslatePart();
 		math::float4x4 model_matrix = math::float4x4::identity;
 		model_matrix.SetTranslatePart(translate);
-		model_matrix.Scale(20, 20, 20);
+		model_matrix.Scale(200, 200, 200);
 		math::float4x4 wvp_matrix = model_matrix.Transposed() * camera->GetViewMatrix() * camera->GetProjectionMatrix();
 
 		GLint wvp_location = glGetUniformLocation(shader_id, "_WVP");

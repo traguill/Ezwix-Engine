@@ -33,5 +33,6 @@ private:
 	//Hacks to make the water work. This should go inside a script.
 	ComponentTransform* maincam = nullptr;
 	ComponentTransform* reflection_tra = nullptr;
+	bool water_hack_enabled = false;
 };
 #endif // !__MODULESCENEINTRO_H__

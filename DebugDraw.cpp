@@ -364,8 +364,6 @@ void DebugDraw::Draw()
 {
 	std::list<DebugPrimitive*>::iterator item = draw_list.begin();
 
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
 	for (item; item != draw_list.end(); item++)
 	{
 		glColor3f((*item)->color.x, (*item)->color.y, (*item)->color.z);
@@ -387,7 +385,7 @@ void DebugDraw::Draw()
 
 		glPopMatrix();
 	}
-	glColor3f(1, 1, 1); //Reset color. 
+	//glColor3f(1, 1, 1); //Reset color. 
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
 

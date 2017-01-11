@@ -53,8 +53,6 @@ void ComponentMaterial::OnInspector()
 				{
 					if (ImGui::MenuItem((*it).data()))
 					{
-						//TODO: UNLOAD ALL TEXTURES IN TEXTURE LIST
-						texture_ids.clear();
 						CleanUp();
 
 						change_material_enabled = false;
@@ -248,4 +246,8 @@ void ComponentMaterial::CleanUp()
 	{
 		(*it)->Unload();
 	}
+
+	texture_ids.clear();
+	list_textures_paths.clear();
+
 }

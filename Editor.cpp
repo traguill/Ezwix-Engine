@@ -52,7 +52,7 @@ bool Editor::Start()
 	windows.push_back(rendertex_win = new RenderTexEditorWindow());
 
 	//Testing
-	skybox.Init("Resources/Skybox/posz.dds", "Resources/Skybox/negz.dds", "Resources/Skybox/posy.dds", "Resources/Skybox/negy.dds", "Resources/Skybox/posx.dds", "Resources/Skybox/negx.dds");
+	skybox.Init("Resources/Skybox/s_left.dds", "Resources/Skybox/s_right.dds", "Resources/Skybox/s_up.dds", "Resources/Skybox/s_down.dds", "Resources/Skybox/s_front.dds", "Resources/Skybox/s_back.dds");
 
 	return ret;
 }
@@ -106,6 +106,7 @@ update_status Editor::Update()
 		grid.axis = true;
 		grid.Render();
 	}
+	
 
 	//Shortcut to save. TODO: Do a better implementation of the shortcuts
 	if (App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN)
