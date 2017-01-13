@@ -750,8 +750,8 @@ ImGuiStyle::ImGuiStyle()
 
     Colors[ImGuiCol_Text]                   = ImVec4(0.58f, 0.58, 0.58, 1.00f);
     Colors[ImGuiCol_TextDisabled]           = ImVec4(0.60f, 0.60f, 0.60f, 1.00f);  //TODO
-    Colors[ImGuiCol_WindowBg]               = ImVec4(0.22f, 0.22f, 0.22f, 0.60f);
-    Colors[ImGuiCol_ChildWindowBg]          = ImVec4(0.16f, 0.16f, 0.16f, 0.60f);
+    Colors[ImGuiCol_WindowBg]               = ImVec4(0.22f, 0.22f, 0.22f, 1.00f);
+    Colors[ImGuiCol_ChildWindowBg]          = ImVec4(0.16f, 0.16f, 0.16f, 1.00f);
     Colors[ImGuiCol_PopupBg]                = ImVec4(0.05f, 0.05f, 0.10f, 0.90f); //TODO
     Colors[ImGuiCol_Border]                 = ImVec4(0.28f, 0.28f, 0.28f, 1.00f); 
     Colors[ImGuiCol_BorderShadow]           = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);

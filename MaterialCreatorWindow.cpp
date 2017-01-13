@@ -68,7 +68,7 @@ void MaterialCreatorWindow::Draw()
 		if (ShaderCompiler::TryCompileShader(vertex.data(), fragment.data()))
 		{
 			compilation_result = "Shader creation success!";
-			App->resource_manager->SaveMaterial(material, save_path.data());
+			App->resource_manager->SaveMaterial(material, save_path.data(), material.uuid);
 		}
 		else
 			compilation_result = "Compilation failed";
