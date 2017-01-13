@@ -8,8 +8,27 @@ Repository: https://github.com/traguill/Ezwix-Engine
 
 License: https://github.com/traguill/Ezwix-Engine/blob/master/LICENSE.txt
 
+Demo video: https://www.youtube.com/watch?v=dHFYKukKWSc
+
 HOW TO USE IT
 ----------------------------
+
+Shaders
+----------------------------
+The last assignment for the engines class was to incorporate shaders in the engine. Here is how it works:
+
+1- Drop the vertex program and/or fragment program to import it. There is a message in the console with the result of the compilation.
+2- Go to Window/MaterialCreator
+3- Write the path to save the material. Ex: /Assets/test.mat
+(Must have .mat extension)
+4- Choose the vertex and fragment program to use
+5- Add all the uniforms that the shader is using. If it's a sampler2D select an imported texture or rendertexture.
+6- Click create shader. The result message shows if it has been successful.
+7- Select a gameobject with a mesh and material and change the material.
+
+All objects uses the default shader if no material is specified. The default shader uses:
+- Diffuse texture (if has)
+- Normal map (if has)
 
 Editor movement
 ------------------------------
@@ -27,11 +46,18 @@ File:
 	- Create New Scene: removes the current scene and creates an empty one
 Edit:
 	- Camera: show the editor camera options. If the scene has at least one camera it's possible to switch the editor camera to one in the scene
+	- Shaders: wip. The last input option shows a texture loaded in memory by it's id.
+	- Lighting: ambient light configuration
+	- Layers: create new layers or rename.
+	- RenderTexture: configuration of a render texture
+
 Windows:
 	- Configuration: configuration of the editor windows
 	- Console: Displays the console
 	- Profiler: Displays the profiler.
 	- Assets: it's open by default.
+	- Resources: shows the amount of resources loaded in the GPU.
+	- MaterialCreator: to create a new material.
 Debug:
 	- Show/Hide Octree: draws the boxes of the octree. 
 
