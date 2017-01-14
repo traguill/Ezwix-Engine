@@ -1,11 +1,11 @@
-# Ezwix engine
 
-list:
+Custom enigne created for a subject at university. The engine uses OpenGL and SDL.
 
-*list
-*list
+**Author**: Guillem Travila
+**Repository**:  https://github.com/traguill/Ezwix-Engine
+**License**: https://github.com/traguill/Ezwix-Engine/blob/master/LICENSE.txt
 
-list:
+The following demo shows how to create water using shaders with the engine:
 
-1.thing
-2.Thing
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/dHFYKukKWSc/0.jpg)](https://www.youtube.com/watch?v=dHFYKukKWSc)
+
